@@ -89,6 +89,9 @@ TIME_ZONE = "Europe/Zurich"
 USE_I18N = True
 USE_TZ = True
 
+# Champs URL sans schéma : https par défaut (comportement de Django 6.0).
+FORMS_URLFIELD_ASSUME_HTTPS = True
+
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
