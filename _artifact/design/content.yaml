@@ -1,0 +1,293 @@
+# All texts of the shared artifact "Bożena Polok", verbatim (HTML entities decoded).
+# Source: https://claude.ai/code/artifact/f461231a-537c-4c98-a850-eff07e9cd3b9
+# Language of the copy: English. Organised as pages -> sections, in page order.
+# Long paragraphs use folded scalars (">-"): a line break is a space, no trailing newline.
+
+site:
+  title: "Bożena Polok"
+  language: en
+  copyright: "© 2026 Bożena Karolina Polok."
+  json_ld:
+    type: Person
+    name: "Bożena Karolina Polok"
+    alternate_name: "Bozena Polok"
+    job_title: "Associate Global Medical Director"
+    works_for: "Santen"
+    email: "mailto:bozena@bkpolok.com"
+    same_as:
+      - "https://www.linkedin.com/in/dr-bozena-p-4666053"
+    knows_language: [pl, fr, en, de, it]
+    alumni_of:
+      - "University of Freiburg"
+      - "Jagiellonian University"
+    description: "Medical affairs leader in ophthalmology and beyond, with a research background in zebrafish genetics of hereditary eye disease."
+
+pages:
+  home:
+    path: "/"
+
+    nav:
+      brand: "B. Polok"
+      links:
+        - { label: "About", href: "#about" }
+        - { label: "Expertise", href: "#services" }
+        - { label: "Experience", href: "#experience" }
+        - { label: "Publications", href: "#publications" }
+        - { label: "Personal", href: "#personal" }
+        - { label: "Contact", href: "#contact" }
+
+    hero:
+      eyebrow: "Medical Affairs Leadership — Multiple Therapeutic Areas"
+      h1:
+        first_name: "Bożena"
+        last_name: "Polok"   # rendered in italic, accent colour
+      role: "15 years in medical affairs, built on a research career at the bench."
+      status_badge: "Currently at Santen · open to hearing about senior medical affairs opportunities"
+      thesis: >-
+        I trained as a geneticist studying zebrafish models of eye disease, then spent 15 years
+        building medical affairs functions across Europe — in immunology, rheumatology and
+        gastroenterology at UCB, established products in hematology, nephrology and pain at
+        Sanofi, eye care at Allergan — retina and glaucoma — and now ophthalmology at Santen,
+        with a focus on glaucoma, dry eye and myopia. The same thread runs through all of it:
+        curiosity, the courage to step outside my comfort zone, and keeping people at the
+        center of the science.
+      buttons:
+        - { label: "Get in touch", href: "#contact", variant: primary }
+        - { label: "LinkedIn ↗", href: "https://www.linkedin.com/in/dr-bozena-p-4666053", variant: ghost, external: true }
+        - { label: "See publications", href: "#publications", variant: ghost }
+      image_alt: "Portrait of Bożena Polok"
+
+    about:
+      id: about
+      eyebrow: "About"
+      h2: "From a zebrafish lab in Sion to medical affairs across five regions"
+      paragraphs:
+        - >-
+          I grew up moving between countries — my parents were both nuclear physicists — living
+          in the Netherlands and Switzerland before eight years in Germany and, for the past two
+          decades, Switzerland again. At 13, a book about genetics decided the rest: I wanted to
+          work on hereditary disease, and by the time I finished a biotechnology degree at the
+          Jagiellonian University in Kraków I was already looking for lab benches wherever I
+          could find them.
+        - >-
+          My PhD in Molecular and Developmental Biology (University of Freiburg) took me through
+          cancer research in Marburg and molecular cardiology in Frankfurt before I found the
+          model that held my attention: zebrafish. In 2006, Prof. Daniel Schorderet invited me to
+          the Institut de Recherche en Ophtalmologie in Sion to build one of Switzerland's first
+          zebrafish labs and lead my own research group on hereditary eye disease — work that
+          produced the papers below, and, in time, a TSR interview and national press coverage.
+        - >-
+          Industry found me almost by accident, through a microscopy role at Olympus Suisse in
+          2011. Fifteen years on — after Medical Science Liaison and medical manager roles
+          spanning immunology, rheumatology and gastroenterology at UCB, and established products
+          in hematology, nephrology and pain at Sanofi, then a senior advisor post in eye care at
+          Allergan (AbbVie) — I lead Medical Affairs at Santen across the Nordics, UK & Ireland,
+          DACH and the Middle East, with interim responsibility for France. I've grown that team
+          from two people to eleven, managing a multi-million-euro budget behind four product
+          launches.
+        - "Swiss and Polish, I work across five languages."
+      languages: ["Polski", "Français", "English", "Deutsch", "Italiano"]
+      languages_caption: "Polish (mother tongue) · French & English (full professional) · German (full professional) · Italian (intermediate)"
+
+    pull_quote:
+      text: "“It is far more important to know what person the disease has than what disease the person has.”"
+      cite: "— Hippocrates"
+
+    expertise:
+      id: services
+      eyebrow: "Expertise"
+      h2: "Where I add the most value"
+      lede: >-
+        Built on what I've actually done across seven therapeutic areas, not a generic list —
+        from growing a regional team to running patient-facing programs from scratch.
+      therapeutic_areas:
+        - "Ophthalmology"
+        - "Immunology"
+        - "Rheumatology"
+        - "Gastroenterology"
+        - "Hematology"
+        - "Nephrology"
+        - "Pain"
+      services:
+        - title: "Medical Affairs Strategy & Team Leadership"
+          text: "Building and scaling regional medical affairs functions — most recently taking Santen's team from two people to eleven across five markets."
+        - title: "Product Launch & Lifecycle Leadership"
+          text: "Regional launch readiness and execution — most recently Roclanda, Catiolanze, Ryjunea and Verkazia — from evidence generation through affiliate rollout."
+        - title: "Scientific & Publication Strategy"
+          text: "Co-developing publication plans and translating clinical evidence into medical strategy, materials and training that cross-functional teams can actually use."
+        - title: "KOL & Patient-Centric Programs"
+          text: "Advisory boards and investigator meetings, plus programs I've built from scratch — Fit & Fun for rheumatology patients at UCB, Save the Case at Allergan."
+        - title: "Bench-to-Bedside Translation"
+          text: "A PhD and postdoc career in zebrafish genetics and hereditary eye disease that still shapes how I read a clinical dossier."
+        - title: "Multi-Market, Multilingual Coverage"
+          text: "Nordics, UK & Ireland, DACH, Middle East and interim France, worked in five languages rather than through a translator."
+      offer:
+        lead: "Also available on a freelance or interim basis, across three kinds of engagement:"
+        items:
+          - title: "Medical Affairs Consulting"
+            text: "Project-based support with launch readiness, KOL engagement or publication strategy for teams that need senior medical affairs expertise without a full-time hire."
+          - title: "Patient Programs & Advocacy"
+            text: >-
+              Designing and running patient-facing initiatives — awareness days, peer-support and
+              physical-activity programs, patient-story campaigns — in the spirit of Kids Day,
+              Fit & Fun and “No Limits: The Story of Roland.” I also support patient-led
+              initiatives directly — structure, ideas, project management — alongside the
+              patients and associations driving them.
+          - title: "Coaching"
+            text: "One-to-one coaching for medical affairs professionals building a career in the field, and for managers leading their first team or launch."
+
+    experience:
+      id: experience
+      eyebrow: "Experience"
+      h2: "Fifteen years in industry, eleven years of research before it"
+      groups:
+        - label: "Industry — 2011 to present"
+          items:
+            - date: "DEC 2022 — PRESENT"
+              role: "Associate Global Medical Director"
+              org: "Santen — Nordics / UK & Ireland / DACH / Middle East (interim France)"
+              org_desc: "Global pharmaceutical company specializing exclusively in ophthalmology, with more than 130 years of history."
+              summary: "Regional medical affairs leadership: EMEA medical plans, evidence-generation strategy, launch readiness, and cross-functional and affiliate partnership — with a therapeutic focus on glaucoma, dry eye and myopia."
+              achievements:
+                - "Grew the team from two people to eleven, including medical managers leading their own local teams"
+                - "Manages a multi-million-euro budget across five markets"
+                - "Led launches of Roclanda, Catiolanze and Ryjunea in multiple countries, and Verkazia in the Middle East"
+                - "Created the team's annual Kids Day patient-awareness event and contributed to \"No Limits: The Story of Roland,\" a Santen patient-story initiative"
+            - date: "JUN 2019 — NOV 2022"
+              role: "Senior Medical Advisor, Eye Care"
+              org: "Allergan, an AbbVie company — Switzerland, Austria & Netherlands"
+              org_desc: "Pharmaceutical and medical-aesthetics company known for ophthalmology and aesthetic medicine; part of AbbVie since 2020."
+              summary: "Medical strategy and publication plans for the eye-care portfolio; advisory boards, investigator meetings, grants & sponsorships — with a therapeutic focus on retina and glaucoma."
+              achievements:
+                - "Created \"Save the Case,\" a hybrid scientific-exchange format pairing an in-person practice discussion with an online audience"
+                - "Helped secure a Swiss price increase for an established product, working closely with regulatory colleagues"
+            - date: "NOV 2017 — MAY 2019"
+              role: "Medical Manager & MSL, Established Products"
+              org: "Sanofi SA — Vernier, Switzerland"
+              org_desc: "French multinational healthcare company and one of the world's largest pharmaceutical groups, with a diversified portfolio spanning vaccines, specialty care and general medicines."
+              summary: "Medical and publication plans across hematology, nephrology and pain; advisory board and medical event support; KOL and patient-organization engagement."
+            - date: "FEB 2016 — OCT 2017"
+              role: "Medical Science Liaison, Immunology"
+              org: "UCB Pharma — Bulle, Switzerland · Gastroenterology & Rheumatology"
+              org_desc: "Global biopharmaceutical company headquartered in Belgium, focused on severe chronic diseases in immunology and neurology."
+              summary: "Scientific exchange with HCPs, clinical study and site support, internal training."
+              achievements:
+                - "Created \"Fit & Fun,\" educational and physical-activity events for people living with rheumatologic conditions"
+            - date: "APR 2011 — JAN 2016"
+              role: "Microscopy Specialist & Area Sales Manager"
+              org: "Olympus Suisse SA — Le Mont-sur-Lausanne · Life & Material Sciences"
+              org_desc: "World leader in medical technology, particularly endoscopy and minimally invasive surgical solutions."
+              summary: "Scientific and technical consulting in microscopy; custom imaging solutions; training and workshops. My first industry role after eleven years of research — and where I first learned to sell."
+              image:
+                alt: "Olympus IXplore SpinSR spinning-disk confocal super-resolution microscope system"
+                caption: "IXplore SpinSR"
+                link: { label: "Evident/Olympus →", href: "https://evidentscientific.com/en/products/inverted/ix85-spin-sr" }
+        - label: "Research — 2000 to 2011"
+          items:
+            - date: "JUN 2010 — MAR 2011"
+              role: "Senior Postdoc, Scientific Advisor"
+              org: "Centre Médical Universitaire, Geneva · Diabetes diagnostics"
+              summary: "Established a zebrafish research platform; supervised students and technical staff."
+            - date: "JAN — MAR 2010"
+              role: "Short-Term Postdoc"
+              org: "BIDMC, Harvard Medical School, Boston · Cardiology & nephrology"
+              summary: "The high point of my academic path, though financially unsustainable to continue — I returned to Switzerland after three months."
+            - date: "SEP 2006 — SEP 2009"
+              role: "Postdoc & Zebrafish Group Principal Investigator"
+              org: "Institut de Recherche en Ophtalmologie (IRO) — Sion, Switzerland · Human eye diseases, retinoblastoma"
+              org_desc: "Swiss research foundation dedicated to advancing scientific knowledge in ophthalmology."
+              summary: "Invited by Prof. Daniel Schorderet to build one of Switzerland's first zebrafish labs and lead my own research group."
+              achievements:
+                - "Established the zebrafish facility and organized the first Zebrafish Swiss Meeting"
+                - "Collaborated with Hôpital Jules Gonin, Lausanne on hereditary ophthalmic disease, linking clinical and family studies to experimental models"
+            - date: "2000 — 2006"
+              role: "PhD, Molecular & Developmental Biology"
+              org: "Universities of Marburg, Frankfurt & Freiburg"
+              summary: "Began in cancer research (Marburg), moved through molecular cardiology (Frankfurt), then pivoted to zebrafish developmental biology under Prof. Wolfgang Driever in Freiburg from 2002."
+              achievements:
+                - "Selected as one of 12 international scientists for the Marine Biological Laboratory's zebrafish course, Woods Hole, USA (2004)"
+              # The IRO and PhD items are rendered as a pair sharing these two thumbnails.
+              paired_images:
+                - alt: "Whole-mount in situ hybridization of zebrafish myc-family genes in wildtype and Pou5f1-deficient embryos at 60% epiboly"
+                  caption: "FIG. 1"
+                  link: { label: "Kotkamp et al., 2014 →", href: "#pub-02" }
+                - alt: "Morphological analysis of mych knockdown and mRNA rescue in zebrafish embryos and larvae"
+                  caption: "FIG. 5"
+                  link: { label: "Kotkamp et al., 2014 →", href: "#pub-02" }
+      education:
+        eyebrow: "Education"
+        h3: "Research training"
+        cards:
+          - degree: "PhD, Molecular & Developmental Biology"
+            institution: "University of Freiburg"
+          - degree: "Diploma, Biotechnology (Molecular Biology)"
+            institution: "Jagiellonian University, Kraków"
+
+    publications:
+      id: publications
+      eyebrow: "Publications & Media"
+      h2: "Zebrafish genetics, before the clinic"
+      lede: "Ten peer-reviewed papers from the research years, largely on eye disease genetics using the zebrafish model."
+      papers:
+        - { number: "01", title: "Mutations in CNNM4 cause recessive cone-rod dystrophy with amelogenesis imperfecta", authors: "Polok B, Escher P, Ambresin A, et al.", journal: "Am J Hum Genet", year: 2009, pmid: "19200527", url: "https://pubmed.ncbi.nlm.nih.gov/19200527/" }
+        - { number: "02", id: "pub-02", title: "Pou5f1/Oct4 promotes cell survival via direct activation of mych expression during zebrafish gastrulation", authors: "Kotkamp K, Kur E, Wendik B, Polok BK, et al.", journal: "PLoS One", year: 2014, pmid: "24643012", url: "https://pubmed.ncbi.nlm.nih.gov/24643012/" }
+        - { number: "03", title: "Bigh3 is upregulated in regenerating zebrafish fin", authors: "Page L, Polok B, Bustamante M, Schorderet DF", journal: "Zebrafish", year: 2013, pmid: "23536989", url: "https://pubmed.ncbi.nlm.nih.gov/23536989/" }
+        - { number: "04", title: "Zebrafish Pou5f1-dependent transcriptional networks in temporal control of early development", authors: "Onichtchouk D, Geier F, Polok B, et al.", journal: "Mol Syst Biol", year: 2010, pmid: "20212526", url: "https://pubmed.ncbi.nlm.nih.gov/20212526/" }
+        - { number: "05", title: "Report of the European Zebrafish Principal Investigator Meeting, Padua, Italy", authors: "Brennan C, Dosch R, Haramis AP, et al., incl. Polok B", journal: "Zebrafish", year: 2010, pmid: "20874494", url: "https://pubmed.ncbi.nlm.nih.gov/20874494/" }
+        - { number: "06", title: "Essential role for Pbx1 in corneal morphogenesis", authors: "Murphy MJ, Polok BK, Schorderet DF, Cleary ML", journal: "Invest Ophthalmol Vis Sci", year: 2010, pmid: "19797217", url: "https://pubmed.ncbi.nlm.nih.gov/19797217/" }
+        - { number: "07", title: "Mutation in the human homeobox gene NKX5-3 causes an oculo-auricular syndrome", authors: "Schorderet DF, Nichini O, Boisset G, Polok B, et al.", journal: "Am J Hum Genet", year: 2008, pmid: "18423520", url: "https://pubmed.ncbi.nlm.nih.gov/18423520/" }
+        - { number: "08", title: "Characterization of pip5k3 fleck corneal dystrophy-linked gene in zebrafish", authors: "Boisset G, Polok BK, Schorderet DF", journal: "Gene Expr Patterns", year: 2008, pmid: "18558518", url: "https://pubmed.ncbi.nlm.nih.gov/18558518/" }
+        - { number: "09", title: "Inversin, the gene product mutated in nephronophthisis type II, functions as a molecular switch between Wnt signaling pathways", authors: "Simons M, Gloy J, Ganner A, et al., incl. Polok B", journal: "Nat Genet", year: 2005, pmid: "15852005", url: "https://pubmed.ncbi.nlm.nih.gov/15852005/" }
+        - { number: "10", title: "Generation of nitric oxide as a predictive parameter in medicine", authors: "Bratasz A, Polok B, et al.", journal: "Current Topics in Biophysics", year: 2002 }   # no PMID / link in the source
+      pubmed_link: { label: "Full record on PubMed →", href: "https://pubmed.ncbi.nlm.nih.gov/?term=polok+bozena" }
+      meta_format: "{authors} · <em>{journal}</em>, {year} · <a>PMID {pmid}</a>"
+      # Media/press titles are displayed inside straight double quotes: "{title}".
+      # When `url` is present the quoted title is the link text; the source is followed by " — ".
+      media:
+        television:
+          eyebrow: "Media"
+          h3: "Television"
+          items:
+            - { date: "19.05.2008", source: "TSR", title: "New gene discovery in IRO" }
+            - { date: "14.01.2009", source: "TSR", title: "Visually impaired: glimmers of hope", url: "https://www.rts.ch/play/tv/36-9/video/liro-a-sion-a-la-pointe-dun-travail-de-genotypage?urn=urn:rts:video:71039" }
+          note:
+            text: "Video not currently available online — browse the RTS archive catalogue (TSR was renamed RTS in 2010) at"
+            link: { label: "rts.ch/archives", href: "https://www.rts.ch/archives/" }
+        press:
+          h3: "Press"
+          items:
+            - { date: "18.04.2008", source: "swissinfo.ch", title: "Importante découverte ophtalmique à Sion", url: "https://www.swissinfo.ch/fre/sci-tech/importante-d%C3%A9couverte-ophtalmique-%C3%A0-sion/6596030" }
+            - { date: "—", source: "RTS", title: "Maladie génétique: découverte sédunoise", url: "https://www.rts.ch/info/sciences-tech/1027320-maladie-genetique-decouverte-sedunoise.html" }
+          note:
+            text: "Further coverage of the same IRO (Sion) genetic-disease research."
+
+    personal:
+      id: personal
+      eyebrow: "Off the clock"
+      h2: "What the bench, the barre and the microscope have in common"
+      lede: "All are, in their own way, an exercise in close attention — to a specimen, a frame, a pattern of movement, or a student's next step."
+      image_alt: "Bożena Polok"
+      cards:
+        - title: "Zebrafish & genetics"
+          text: "The model that decided my scientific path after I wrote, unannounced, to Prof. Wolfgang Driever's lab in Freiburg. I went on to lead my own zebrafish research group at the IRO in Sion, and was selected as one of twelve scientists worldwide for the Marine Biological Laboratory's zebrafish course in Woods Hole."
+        - title: "Microscopy"
+          text: "What started as a job at Olympus Suisse became a lasting fascination: I collect historical microscopes, keep a small private lab, and ran hands-on microscopy workshops for primary-school children between 2016 and 2022, introducing them to biology through live zebrafish embryos."
+        - title: "Ballet"
+          text: "Professional ballet school alongside my science baccalaureate — a qualification that also covered dance pedagogy, ethnography and costume history. I taught ballet to children and performed for several years in semi-professional companies; it's where I first learned that discipline and repetition get you to ambitious goals."
+        - title: "Photography"
+          text: "A surprising gift from my Olympus years — colleagues there taught me to shoot on Olympus cameras, and the habit of composing a frame stayed with me long after I left the company."
+        - title: "Mentoring"
+          wide: true
+          text: "I mentor students exploring a path into biology, genetics or medicine — the same encouragement I once got from a book at 13, and later from Professor Driever, who spent nearly an hour on the phone with a stranger asking about zebrafish."
+      asides:
+        - "I'm also a volunteer ski guide with GRSA, a Swiss Romandy group for skiers who are blind or have low vision. Many of the people I've guided have become friends — they say I simply lend them my eyes; in return, they've taught me at least as much about courage and trust."
+        - "I've also run simple microscopy sessions for school classes in past years — an hour of discovering the world from a different angle: how light behaves, what a leaf or a piece of fabric looks like up close, the textures hiding in ordinary things. If your child's school is looking for something like it, I'm happy to run another one."
+
+    contact:
+      id: contact
+      eyebrow: "Contact"
+      h2: "Let's talk medical affairs."
+      email: { label: "bozena@bkpolok.com", href: "mailto:bozena@bkpolok.com" }
+      linkedin: { label: "linkedin.com/in/dr-bozena-p-4666053", href: "https://www.linkedin.com/in/dr-bozena-p-4666053" }
+      language_codes: ["PL", "FR", "EN", "DE", "IT"]
+      copyright: "© 2026 Bożena Karolina Polok."
