@@ -5,7 +5,7 @@
 
 {% block content %}
 <article class="page page--home">
-  {% if not page.body %}
+  {% if not page.has_hero %}
   <header class="page-header"><h1>{{ page.title }}</h1></header>
   {% endif %}
   {% include_block page.body %}

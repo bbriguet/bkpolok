@@ -1,21 +1,47 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.shortcuts import redirect
 from wagtail.admin.panels import FieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, path
 from wagtail.fields import StreamField
 from wagtail.models import Page
 
+from apps.contact.forms import ContactForm
+from apps.contact.services import submit_contact_form
+
 from .blocks import BodyStreamBlock
-from .services import get_contact_details
+from .services import count_heroes, get_contact_details
 
 
 class BodyPage(Page):
     """Common base: a Wagtail page whose content is a StreamField."""
 
     body = StreamField(BodyStreamBlock(), blank=True, use_json_field=True)
+    og_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Share image",
+        help_text="Shown when the page is shared (Open Graph). Falls back to the site profile.",
+    )
 
     content_panels = [*Page.content_panels, FieldPanel("body")]
+    promote_panels = [*Page.promote_panels, FieldPanel("og_image")]
 
     class Meta:
         abstract = True
+
+    @property
+    def has_hero(self) -> bool:
+        """Vrai si le corps contient un bandeau d'accueil, qui porte alors le <h1> de la page."""
+        return count_heroes(self.body) > 0
+
+    def clean(self):
+        super().clean()
+        if count_heroes(self.body) > 1:
+            raise ValidationError({"body": "A page can only have one hero (it holds the h1)."})
 
 
 class HomePage(BodyPage):
@@ -41,7 +67,7 @@ class StandardPage(BodyPage):
         verbose_name_plural = "pages standard"
 
 
-class ContactPage(BodyPage):
+class ContactPage(RoutablePageMixin, BodyPage):
     max_count = 1
     parent_page_types = ["pages.HomePage"]
     subpage_types = []
@@ -70,3 +96,24 @@ class ContactPage(BodyPage):
         context = super().get_context(request, *args, **kwargs)
         context["contact"] = get_contact_details(self, request)
         return context
+
+    @path("")
+    def index(self, request):
+        """Affiche le formulaire ; sur POST valide, enregistre, envoie, puis redirige (PRG)."""
+        form = ContactForm(request.POST) if request.method == "POST" else ContactForm()
+        if request.method == "POST" and form.is_valid():
+            submit_contact_form(form, get_contact_details(self, request)["email"])
+            return redirect(self.url + self.reverse_subpage("thank_you"))
+        status = 422 if form.is_bound else 200
+        response = self.render(request, context_overrides={"form": form})
+        response.status_code = status
+        return response
+
+    @path("thank-you/")
+    def thank_you(self, request):
+        """Page de confirmation (non indexée)."""
+        return self.render(
+            request,
+            template="pages/contact_thank_you_page.html",
+            context_overrides={"noindex": True},
+        )

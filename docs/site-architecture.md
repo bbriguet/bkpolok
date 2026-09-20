@@ -16,9 +16,35 @@ Created as **unpublished drafts** by `python manage.py create_site_pages` (idemp
 | `/experience/` | `StandardPage` | timeline + education blocks |
 | `/publications/` | `StandardPage` | publication + media blocks |
 | `/personal/` | `StandardPage` | card grid ("off the clock" layout) + aside notes |
-| `/contact/` | `ContactPage` | page fields override the site profile |
+| `/contact/` | `ContactPage` | contact form + details; page fields override the site profile |
+| `/contact/thank-you/` | route of `ContactPage` (`RoutablePageMixin`) | confirmation after a valid submission; `noindex`, not in the sitemap |
 
 The nav lists live, "show in menus" pages under the home page, in tree order; the label is the page title.
+
+## Contact form (`apps/contact`)
+
+A real Django form (`ContactForm`, a `ModelForm` on `ContactMessage`) served by `ContactPage`:
+CSRF token (passed explicitly to the include, which uses `only`), server-side validation (422 with
+errors and the typed values kept), honeypot field `website` (hidden off-screen; a filled one is
+answered with the normal redirect but nothing is saved or sent). A valid submission is saved, then
+emailed (`apps/contact/services.py`) to the page email, else the site profile email, with the
+sender in `Reply-To`, then redirected (POST/redirect/GET) to `/contact/thank-you/`. The message is
+saved **before** sending: if SMTP fails, it stays in the admin (menu **Messages**, `email_error`
+filled, `emailed_at` empty) and the visitor still sees the confirmation.
+SMTP comes from environment variables in `config/settings/prod.py` (`EMAIL_HOST`, `EMAIL_PORT`,
+`EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `DEFAULT_FROM_EMAIL`, which defaults to
+`EMAIL_HOST_USER`); in dev, emails are printed in the `web` container log.
+
+## SEO
+
+Every page: `<title>` (`seo_title` or title, then the site name), meta description, canonical URL,
+Open Graph (`og:title/description/url/site_name/type`, `og:image` + size + alt) and `twitter:card`,
+all built by `apps.pages.services.build_seo` (tag `{% page_seo %}`). Description: Promote-tab field, else the
+page `summary` / `intro`, else the site profile description. Share image: page `og_image`, else
+`SiteProfile.share_image` (rendition `fill-1200x630`, absolute URL on the site host). Exactly one
+`<h1>`: the page title, or the hero when the body contains one (a second hero is refused by
+`BodyPage.clean`, including inside sections). `/sitemap.xml` (live pages only) and `/robots.txt`
+(admin disallowed, sitemap linked) exist.
 
 ## Data (`apps/profile`)
 
@@ -78,6 +104,8 @@ parameters are documented at the top of each file. The stream blocks (`pages/blo
   its own images beside its text.
 - **Contrast**: `tokens.css` keeps the design's exact values. Light `--ink-faint` (#647268) and `--accent-2`
   (#9c5c1b) reach only 4.26:1 and 4.46:1 on `--surface-tint` (below the 4.5:1 AA threshold for small text).
+- **Images**: all `<img>` carry `width`, `height`, `alt` and `loading="lazy"`, except the hero portrait,
+  which is the first-screen image (lazy-loading it would delay the largest paint).
 - **Hero portrait** stays visible on narrow screens (smaller) instead of being hidden.
 - **Icons** in aside notes get `stroke: currentColor`; the source page left them without a stroke.
 - **Research thumbnails** follow the design sizes (108px default, 84px inside a timeline); the 76px "span" variant is unused because the timeline pair is not implemented.

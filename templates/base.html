@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags navigation profile_tags %}{% wagtail_site as current_site %}{% site_profile as profile %}<!DOCTYPE html>
+{% load static wagtailcore_tags navigation profile_tags seo %}{% wagtail_site as current_site %}{% site_profile as profile %}<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,13 +6,20 @@
   <meta name="color-scheme" content="light dark">
   <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {% firstof profile.display_name current_site.site_name "bkpolok" %}</title>
   {% block meta %}
-  {% if page.search_description %}<meta name="description" content="{{ page.search_description }}">{% endif %}
-  {% if page.full_url %}<link rel="canonical" href="{{ page.full_url }}">
-  <meta property="og:url" content="{{ page.full_url }}">{% endif %}
+  {% page_seo as seo %}
+  {% if seo.description %}<meta name="description" content="{{ seo.description }}">{% endif %}
+  {% if noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+  {% if seo.canonical %}<link rel="canonical" href="{{ seo.canonical }}">
+  <meta property="og:url" content="{{ seo.canonical }}">{% endif %}
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{% firstof profile.display_name current_site.site_name "bkpolok" %}">
   <meta property="og:title" content="{% firstof page.seo_title page.title "bkpolok" %}">
-  {% if page.search_description %}<meta property="og:description" content="{{ page.search_description }}">{% endif %}
+  {% if seo.description %}<meta property="og:description" content="{{ seo.description }}">{% endif %}
+  {% if seo.image %}<meta property="og:image" content="{{ seo.image.url }}">
+  <meta property="og:image:width" content="{{ seo.image.width }}">
+  <meta property="og:image:height" content="{{ seo.image.height }}">
+  <meta property="og:image:alt" content="{{ seo.image.alt }}">{% endif %}
+  <meta name="twitter:card" content="{% if seo.image %}summary_large_image{% else %}summary{% endif %}">
   {% endblock %}
   <link rel="preload" href="{% static 'fonts/source-sans-3-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{% static 'fonts/fraunces-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
@@ -42,6 +49,7 @@
   <link rel="stylesheet" href="{% static 'css/components/media_list.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/accordion.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/cta.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/contact_form.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/footer.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block extra_css %}{% endblock %}

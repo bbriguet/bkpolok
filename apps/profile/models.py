@@ -50,7 +50,15 @@ class SiteProfile(BaseSiteSetting):
     meta_description = models.TextField(
         max_length=300,
         blank=True,
-        help_text="Short description of the person, used in structured data.",
+        help_text="Short description of the person: structured data and default meta description.",
+    )
+    share_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Default image when a page is shared (Open Graph); 1200×630 works best.",
     )
 
     panels = [
@@ -64,7 +72,12 @@ class SiteProfile(BaseSiteSetting):
             heading="Name",
         ),
         MultiFieldPanel(
-            [FieldPanel("job_title"), FieldPanel("employer"), FieldPanel("meta_description")],
+            [
+                FieldPanel("job_title"),
+                FieldPanel("employer"),
+                FieldPanel("meta_description"),
+                FieldPanel("share_image"),
+            ],
             heading="Position",
         ),
         MultiFieldPanel(

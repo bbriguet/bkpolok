@@ -1,5 +1,8 @@
+from urllib.parse import urljoin
+
 from django.apps import apps as django_apps
 from django.db import connection
+from django.utils.text import Truncator
 from wagtail.models import Page, Site
 
 
@@ -60,6 +63,53 @@ def offer_items(pages, request) -> list[dict]:
         {"title": page.title, "href": page.get_url(request) or "", "summary": page.summary}
         for page in pages
     ]
+
+
+def iter_blocks(stream):
+    """Blocs d'un StreamField, y compris ceux du contenu des sections."""
+    for child in stream:
+        yield child
+        if child.block_type == "section":
+            yield from iter_blocks(child.value["content"])
+
+
+def count_heroes(stream) -> int:
+    """Nombre de bandeaux d'accueil : chacun porte le <h1> de la page, il n'en faut qu'un."""
+    return sum(1 for child in iter_blocks(stream) if child.block_type == "hero")
+
+
+def build_seo(page, request, profile) -> dict:
+    """Métadonnées de <head> d'une page : description, image de partage, canonique, noindex.
+
+    La description suit : champ « description » de l'onglet Promote, puis le résumé/l'intro de la
+    page, puis la description du profil du site. L'image de partage suit : image de la page,
+    puis celle du profil.
+    """
+    if page is None:
+        return {}
+    description = (
+        page.search_description
+        or getattr(page, "summary", "")
+        or getattr(page, "intro", "")
+        or profile.meta_description
+    )
+    image = getattr(page, "og_image", None) or profile.share_image
+    share_image = None
+    site = page.get_site()
+    if image is not None and site is not None:
+        # Même hôte que l'URL canonique (celui du site Wagtail), pas celui de la requête.
+        rendition = image.get_rendition("fill-1200x630")
+        share_image = {
+            "url": urljoin(site.root_url, rendition.url),
+            "width": rendition.width,
+            "height": rendition.height,
+            "alt": image.default_alt_text,
+        }
+    return {
+        "description": Truncator(" ".join(description.split())).chars(300),
+        "image": share_image,
+        "canonical": page.get_full_url(request),
+    }
 
 
 def get_contact_details(page, request) -> dict:
