@@ -1,0 +1,12 @@
+<ol class="pub-list">
+  {% for entry in publications %}
+  <li class="pub" id="{{ entry.anchor }}">
+    <span class="pub-num">{{ entry.number }}</span>
+    <div>
+      <div class="pub-title">{{ entry.publication.title }}</div>
+      <div class="pub-meta">{{ entry.publication.authors }} · <em>{{ entry.publication.journal }}</em>, {{ entry.publication.year|stringformat:"d" }}{% if entry.pubmed_url %} · <a href="{{ entry.pubmed_url }}" target="_blank" rel="noopener">PMID {{ entry.publication.pmid }}</a>{% endif %}</div>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% if pubmed_url %}<div class="pub-source"><a href="{{ pubmed_url }}" target="_blank" rel="noopener">Full record on PubMed →</a></div>{% endif %}

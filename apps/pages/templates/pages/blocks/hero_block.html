@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<header class="hero">
+  <div>
+    {% if value.eyebrow %}<p class="eyebrow">{{ value.eyebrow }}</p>{% endif %}
+    <h1>{% if profile.first_name or profile.last_name %}{{ profile.first_name }}&nbsp;<em>{{ profile.last_name }}</em>{% else %}{{ page.title }}{% endif %}</h1>
+    <p class="hero-role">{{ value.role }}</p>
+    {% if value.badge_text %}<p class="status-badge"><span class="status-dot"></span>{{ value.badge_text }}</p>{% endif %}
+    <p class="hero-thesis">{{ value.thesis }}</p>
+    {% if value.buttons %}
+    <div class="hero-cta">
+      {% for button in value.buttons %}{% include_block button %}{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% if value.image %}
+  <div class="iris">
+    {% include "pages/includes/iris_ring.html" %}
+    {% image value.image fill-408x408 %}
+  </div>
+  {% endif %}
+</header>

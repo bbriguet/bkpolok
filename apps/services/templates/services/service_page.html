@@ -3,13 +3,13 @@
 
 {% block content %}
 <article class="page">
-  <header class="page__header">
+  <header class="page-header">
     <h1>{{ page.title }}</h1>
-    {% if page.summary %}<p class="lead">{{ page.summary }}</p>{% endif %}
+    {% if page.summary %}<p class="lede">{{ page.summary }}</p>{% endif %}
   </header>
   {% include_block page.body %}
-  <footer class="page__footer">
-    <p><a href="{% pageurl page.get_parent %}">← Tous les services</a></p>
+  <footer class="page-footer">
+    <p><a href="{% pageurl page.get_parent %}">← All services</a></p>
   </footer>
 </article>
 {% endblock %}

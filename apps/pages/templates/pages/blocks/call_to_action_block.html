@@ -2,5 +2,5 @@
 <aside class="cta">
   <h2 class="cta__title">{{ value.title }}</h2>
   {% if value.text %}<p>{{ value.text }}</p>{% endif %}
-  <a class="button" href="{% if value.page %}{% pageurl value.page %}{% else %}{{ value.url }}{% endif %}">{{ value.button_label }}</a>
+  <a class="btn btn-{{ value.variant }}" href="{% if value.page %}{% pageurl value.page %}{% else %}{{ value.url }}{% endif %}">{{ value.button_label }}</a>
 </aside>

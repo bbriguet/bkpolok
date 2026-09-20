@@ -1,0 +1,12 @@
+{% load wagtailcore_tags ui %}
+<div class="aside-note offer-note">
+  <p class="offer-lead">{% icon "flag" %}{{ value.lead }}</p>
+  <dl class="offer-list">
+    {% for offer in offers %}
+    <div class="offer-item">
+      <dt><a href="{% pageurl offer %}">{{ offer.title }}</a></dt>
+      <dd>{{ offer.summary }}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+</div>

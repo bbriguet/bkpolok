@@ -1,0 +1,7 @@
+{% load wagtailimages_tags %}
+<figure class="research-thumb">
+  {% image image.image fill-216x216 alt=image.alt_text %}
+  {% if image.caption or image.link_url %}
+  <figcaption>{{ image.caption }}{% if image.link_url %} <a href="{{ image.link_url }}"{% if image.external %} target="_blank" rel="noopener"{% endif %}>{{ image.link_label }} →</a>{% endif %}</figcaption>
+  {% endif %}
+</figure>

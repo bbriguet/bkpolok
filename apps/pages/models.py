@@ -4,10 +4,11 @@ from wagtail.fields import StreamField
 from wagtail.models import Page
 
 from .blocks import BodyStreamBlock
+from .services import get_contact_details
 
 
 class BodyPage(Page):
-    """Base commune : une page Wagtail dont le contenu est un StreamField."""
+    """Common base: a Wagtail page whose content is a StreamField."""
 
     body = StreamField(BodyStreamBlock(), blank=True, use_json_field=True)
 
@@ -27,8 +28,8 @@ class HomePage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page d’accueil"
-        verbose_name_plural = "Pages d’accueil"
+        verbose_name = "Home page"
+        verbose_name_plural = "Home pages"
 
 
 class StandardPage(BodyPage):
@@ -36,8 +37,8 @@ class StandardPage(BodyPage):
     subpage_types = ["pages.StandardPage"]
 
     class Meta:
-        verbose_name = "Page standard"
-        verbose_name_plural = "Pages standard"
+        verbose_name = "Standard page"
+        verbose_name_plural = "Standard pages"
 
 
 class ContactPage(BodyPage):
@@ -45,9 +46,13 @@ class ContactPage(BodyPage):
     parent_page_types = ["pages.HomePage"]
     subpage_types = []
 
-    email = models.EmailField("Adresse e-mail", blank=True)
-    phone = models.CharField("Téléphone", max_length=30, blank=True)
-    address = models.TextField("Adresse postale", blank=True)
+    email = models.EmailField(
+        "Email address",
+        blank=True,
+        help_text="Overrides the email address of the site profile on this page.",
+    )
+    phone = models.CharField("Phone", max_length=30, blank=True)
+    address = models.TextField("Postal address", blank=True)
 
     content_panels = [
         *Page.content_panels,
@@ -58,5 +63,10 @@ class ContactPage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page de contact"
-        verbose_name_plural = "Pages de contact"
+        verbose_name = "Contact page"
+        verbose_name_plural = "Contact pages"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["contact"] = get_contact_details(self, request)
+        return context

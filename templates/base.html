@@ -1,41 +1,57 @@
-{% load static wagtailcore_tags navigation %}{% wagtail_site as current_site %}<!DOCTYPE html>
-<html lang="fr-CH">
+{% load static wagtailcore_tags navigation profile_tags %}{% wagtail_site as current_site %}{% site_profile as profile %}<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {{ current_site.site_name|default:"bkpolok" }}</title>
+  <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {% firstof profile.display_name current_site.site_name "bkpolok" %}</title>
   {% if page.search_description %}<meta name="description" content="{{ page.search_description }}">{% endif %}
   {% if page.full_url %}<link rel="canonical" href="{{ page.full_url }}">{% endif %}
+  <link rel="preload" href="{% static 'fonts/source-sans-3-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/fraunces-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <header class="site-header">
-    <div class="container site-header__inner">
-      <a class="site-header__brand" href="/">{{ current_site.site_name|default:"bkpolok" }}</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="wrap site-nav__inner">
+      <a class="nav-name" href="/">{% firstof profile.short_name current_site.site_name "bkpolok" %}</a>
       {% main_menu as menu_items %}
       {% if menu_items %}
-      <nav aria-label="Navigation principale">
-        <ul class="nav">
-          {% for item in menu_items %}
-          <li><a href="{% pageurl item %}"{% if item.pk == page.pk %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
-          {% endfor %}
-        </ul>
-      </nav>
+      <ul class="nav-links">
+        {% for item in menu_items %}
+        <li><a href="{% pageurl item %}"{% if item.pk == page.pk %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+        {% endfor %}
+      </ul>
       {% endif %}
     </div>
-  </header>
+  </nav>
 
-  <main id="contenu" class="container">
+  <main id="content" class="wrap">
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© {% now "Y" %} {{ current_site.site_name|default:"bkpolok" }}</p>
+  <footer class="site-footer wrap">
+    {% if profile.email or profile.linkedin_url or profile.footer_heading %}
+    <div class="footer-grid">
+      <div>
+        <p class="eyebrow">Contact</p>
+        {% if profile.footer_heading %}<h2>{{ profile.footer_heading }}</h2>{% endif %}
+        {% if profile.email %}<a class="contact-email" href="mailto:{{ profile.email }}">{{ profile.email }}</a><br>{% endif %}
+        {% if profile.linkedin_url %}<a class="contact-email" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener">{{ profile.linkedin_url|display_url }}</a>{% endif %}
+      </div>
+      {% language_codes as codes %}
+      {% if codes %}
+      <div class="lang-row">
+        {% for code in codes %}<span class="lang-pill">{{ code }}</span>{% endfor %}
+      </div>
+      {% endif %}
     </div>
+    {% endif %}
+    <p class="copyright">© {% now "Y" %} {% firstof profile.legal_name current_site.site_name "bkpolok" %}.</p>
   </footer>
 </body>
 </html>

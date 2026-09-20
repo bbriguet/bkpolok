@@ -1,0 +1,8 @@
+<div class="org">{{ entry.org_line }}</div>
+{% if entry.experience.organisation_description %}<div class="org-desc">{{ entry.experience.organisation_description }}</div>{% endif %}
+{% if entry.experience.summary %}<p>{{ entry.experience.summary }}</p>{% endif %}
+{% if entry.achievements %}
+<ul class="tl-achievements">
+  {% for text in entry.achievements %}<li>{{ text }}</li>{% endfor %}
+</ul>
+{% endif %}

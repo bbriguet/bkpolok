@@ -20,8 +20,8 @@ class ServiceIndexPage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page d’index des services"
-        verbose_name_plural = "Pages d’index des services"
+        verbose_name = "Services index page"
+        verbose_name_plural = "Services index pages"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
@@ -31,10 +31,10 @@ class ServiceIndexPage(BodyPage):
 
 class ServicePage(BodyPage):
     summary = models.CharField(
-        "Résumé",
-        max_length=250,
+        "Summary",
+        max_length=600,
         blank=True,
-        help_text="Affiché dans la liste des services et dans les résultats de recherche.",
+        help_text="Shown in the list of services and in search results.",
     )
 
     parent_page_types = ["services.ServiceIndexPage"]
@@ -47,5 +47,5 @@ class ServicePage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page de service"
-        verbose_name_plural = "Pages de service"
+        verbose_name = "Service page"
+        verbose_name_plural = "Service pages"

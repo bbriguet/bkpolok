@@ -3,23 +3,23 @@
 
 {% block content %}
 <article class="page">
-  <header class="page__header">
+  <header class="page-header">
     <h1>{{ page.title }}</h1>
-    {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
+    {% if page.intro %}<p class="lede">{{ page.intro }}</p>{% endif %}
   </header>
   {% include_block page.body %}
 
   {% if services %}
-  <section aria-labelledby="services-titre">
-    <h2 id="services-titre">Nos services</h2>
-    <ul class="card-list">
+  <section class="section" aria-labelledby="services-heading">
+    <h2 id="services-heading">Services</h2>
+    <div class="service-grid">
       {% for service in services %}
-      <li class="card">
-        <h3 class="card__title"><a href="{% pageurl service %}">{{ service.title }}</a></h3>
+      <div class="service">
+        <h3><a href="{% pageurl service %}">{{ service.title }}</a></h3>
         {% if service.summary %}<p>{{ service.summary }}</p>{% endif %}
-      </li>
+      </div>
       {% endfor %}
-    </ul>
+    </div>
   </section>
   {% endif %}
 </article>

@@ -1,0 +1,4 @@
+{% load wagtailcore_tags %}
+<section class="section{% if value.background == 'tint' %} tint{% endif %}"{% if value.anchor %} id="{{ value.anchor }}"{% endif %}>
+  {% include_block value.content %}
+</section>

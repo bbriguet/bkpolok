@@ -1,0 +1,12 @@
+<div class="section-head section-head--sub">
+  {% if value.eyebrow %}<p class="eyebrow">{{ value.eyebrow }}</p>{% endif %}
+  <h3>{{ value.heading }}</h3>
+</div>
+<div class="edu-grid">
+  {% for item in education %}
+  <div class="edu-card">
+    <div class="deg">{{ item.degree }}</div>
+    <div class="inst">{{ item.institution }}</div>
+  </div>
+  {% endfor %}
+</div>

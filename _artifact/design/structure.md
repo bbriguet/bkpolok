@@ -21,7 +21,7 @@ One page only: **home** (`/`). Navigation is anchor-based (smooth scroll, `scrol
 | 7 | Personal ("Off the clock") | `<section id="personal">` | `--bg` | Personal → `#personal` |
 | 8 | Contact / footer | `<footer id="contact">` | `--bg`, top hairline | Contact → `#contact` |
 
-Backgrounds alternate `--bg` / `--surface-tint` for sections 4 and 6 (tint sections bleed to the viewport edges: `margin: 0 -20px`).
+Backgrounds alternate `--bg` / `--surface-tint` for sections 4 and 6. Tinted sections extend past the text column by the page gutter (`margin: 0 -20px` inside the 840px wrap), so on screens wider than ~880px they are a centred band, not full-bleed.
 Note: the anchor is `#services` but the visible label is "Expertise".
 
 ## Heading hierarchy

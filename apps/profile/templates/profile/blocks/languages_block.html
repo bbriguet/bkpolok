@@ -1,0 +1,6 @@
+{% if languages %}
+<div class="lang-row">
+  {% for language in languages %}<span class="lang-pill" lang="{{ language.code }}">{{ language.native_name }}</span>{% endfor %}
+</div>
+<p class="lang-caption">{{ caption }}</p>
+{% endif %}

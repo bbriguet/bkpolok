@@ -1,4 +1,4 @@
-<figure class="quote">
-  <blockquote><p>{{ value.text }}</p></blockquote>
-  {% if value.author %}<figcaption>— {{ value.author }}</figcaption>{% endif %}
-</figure>
+<blockquote class="pull-quote">
+  <p>“{{ value.text }}”</p>
+  {% if value.author %}<cite>— {{ value.author }}</cite>{% endif %}
+</blockquote>

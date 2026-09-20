@@ -3,18 +3,19 @@
 
 {% block content %}
 <article class="page">
-  <header class="page__header">
+  <header class="page-header">
     <h1>{{ page.title }}</h1>
   </header>
   {% include_block page.body %}
 
-  {% if page.email or page.phone or page.address %}
-  <section class="contact" aria-labelledby="contact-titre">
-    <h2 id="contact-titre">Coordonnées</h2>
+  {% if contact.email or contact.phone or contact.address or contact.linkedin_url %}
+  <section class="section" aria-labelledby="contact-details">
+    <h2 id="contact-details">Contact details</h2>
     <address>
-      {% if page.address %}<p>{{ page.address|linebreaksbr }}</p>{% endif %}
-      {% if page.phone %}<p>Téléphone : <a href="tel:{{ page.phone|cut:' ' }}">{{ page.phone }}</a></p>{% endif %}
-      {% if page.email %}<p>E-mail : <a href="mailto:{{ page.email }}">{{ page.email }}</a></p>{% endif %}
+      {% if contact.address %}<p>{{ contact.address|linebreaksbr }}</p>{% endif %}
+      {% if contact.phone %}<p>Phone: <a href="tel:{{ contact.phone|cut:' ' }}">{{ contact.phone }}</a></p>{% endif %}
+      {% if contact.email %}<p>Email: <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>{% endif %}
+      {% if contact.linkedin_url %}<p>LinkedIn: <a href="{{ contact.linkedin_url }}" target="_blank" rel="noopener">{{ contact.linkedin_url }}</a></p>{% endif %}
     </address>
   </section>
   {% endif %}

@@ -1,5 +1,5 @@
 {% load wagtailcore_tags %}
-<section class="faq">
+<div class="faq">
   {% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
   {% for item in value.items %}
   <details class="faq__item">
@@ -7,4 +7,4 @@
     {{ item.answer|richtext }}
   </details>
   {% endfor %}
-</section>
+</div>
