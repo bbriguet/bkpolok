@@ -28,8 +28,8 @@ class HomePage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Home page"
-        verbose_name_plural = "Home pages"
+        verbose_name = "page d’accueil"
+        verbose_name_plural = "pages d’accueil"
 
 
 class StandardPage(BodyPage):
@@ -37,8 +37,8 @@ class StandardPage(BodyPage):
     subpage_types = ["pages.StandardPage"]
 
     class Meta:
-        verbose_name = "Standard page"
-        verbose_name_plural = "Standard pages"
+        verbose_name = "page standard"
+        verbose_name_plural = "pages standard"
 
 
 class ContactPage(BodyPage):
@@ -63,8 +63,8 @@ class ContactPage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Contact page"
-        verbose_name_plural = "Contact pages"
+        verbose_name = "page de contact"
+        verbose_name_plural = "pages de contact"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)

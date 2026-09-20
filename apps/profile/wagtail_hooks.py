@@ -47,7 +47,7 @@ class ProfileViewSetGroup(SnippetViewSetGroup):
         MediaAppearanceViewSet,
         LanguageViewSet,
     )
-    menu_label = "Profile"
+    menu_label = "Profil"
     menu_icon = "user"
     menu_order = 200
 

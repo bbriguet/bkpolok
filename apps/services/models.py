@@ -20,8 +20,8 @@ class ServiceIndexPage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Services index page"
-        verbose_name_plural = "Services index pages"
+        verbose_name = "page d’index des services"
+        verbose_name_plural = "pages d’index des services"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
@@ -47,5 +47,5 @@ class ServicePage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Service page"
-        verbose_name_plural = "Service pages"
+        verbose_name = "page de service"
+        verbose_name_plural = "pages de service"

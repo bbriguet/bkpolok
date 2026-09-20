@@ -80,8 +80,12 @@ class SiteProfile(BaseSiteSetting):
     ]
 
     class Meta:
-        verbose_name = "Site profile"
-        verbose_name_plural = "Site profiles"
+        ordering = ["site_id"]
+        verbose_name = "profil du site"
+        verbose_name_plural = "profils du site"
+
+    def __str__(self):
+        return self.display_name or f"Profil du site {self.site_id}"
 
     @property
     def display_name(self) -> str:
@@ -115,6 +119,8 @@ class Language(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+        verbose_name = "langue"
+        verbose_name_plural = "langues"
 
     def __str__(self):
         return self.english_name
@@ -174,6 +180,8 @@ class Experience(ClusterableModel):
 
     class Meta:
         ordering = ["-start_date", "-id"]
+        verbose_name = "expérience"
+        verbose_name_plural = "expériences"
 
     def __str__(self):
         return f"{self.title} — {self.organisation}"
@@ -189,6 +197,13 @@ class ExperienceAchievement(Orderable):
     text = models.CharField(max_length=300)
 
     panels = [FieldPanel("text")]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "réalisation"
+        verbose_name_plural = "réalisations"
+
+    def __str__(self):
+        return self.text
 
 
 class Publication(models.Model):
@@ -221,6 +236,8 @@ class Publication(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+        verbose_name = "publication"
+        verbose_name_plural = "publications"
         constraints = [
             models.UniqueConstraint(
                 fields=["pmid"],
@@ -265,6 +282,13 @@ class ExperienceImage(Orderable):
         FieldPanel("link_url"),
     ]
 
+    class Meta(Orderable.Meta):
+        verbose_name = "image d’expérience"
+        verbose_name_plural = "images d’expérience"
+
+    def __str__(self):
+        return self.caption or self.alt_text
+
 
 class Education(models.Model):
     degree = models.CharField(max_length=150)
@@ -281,7 +305,8 @@ class Education(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
-        verbose_name_plural = "education"
+        verbose_name = "formation"
+        verbose_name_plural = "formations"
 
     def __str__(self):
         return f"{self.degree} — {self.institution}"
@@ -313,7 +338,8 @@ class MediaAppearance(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
-        verbose_name = "media appearance"
+        verbose_name = "apparition médiatique"
+        verbose_name_plural = "apparitions médiatiques"
 
     def __str__(self):
         return f"{self.outlet} — {self.title}"
