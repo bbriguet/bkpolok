@@ -114,8 +114,33 @@ parameters are documented at the top of each file. The stream blocks (`pages/blo
 - **Footer heading** ("Let's talk…") is a site-profile field, since the footer appears on every page.
 - **Anchors** in figure captions point to `<publications page>#pub-<id>` (set in the site profile).
 
-## Not done yet (waiting for validation)
+## Initial content (`charger_contenu_initial`)
 
-No content is imported: no profile, no experience, publication, media, language or education
-records, and every page body is empty. Claims flagged in the review (career figures, product names,
-quote attribution, images) are to be validated before import.
+`python manage.py charger_contenu_initial` loads `_artifact/design/content.yaml` (`--file` for another
+one). Logic in `apps/pages/initial_content.py`.
+
+- **Where each section goes**: home = hero + pull quote; About = about section (paragraphs + languages);
+  Expertise = heading, 6 service cards, offer block (the three offers are the `ServicePage` children, their
+  `summary` is the offer text); Experience = timeline (industry, research) + education; Publications =
+  publication list + television and press lists; Personal = off-the-clock cards + aside notes. The YAML
+  `contact` section *is* the footer: it feeds the site profile (email, LinkedIn, footer heading) and the
+  languages, so the Contact page body stays empty. Each section is a `Section` block (anchor from the YAML
+  `id`; tinted background for Expertise and Publications, as in the design).
+- **Structured data**: `SiteProfile`, `Language` (levels parsed from `languages_caption`), `Education`,
+  `Experience` (+ achievements; period parsed from « DEC 2022 — PRESENT », start = 1st of the month, end =
+  last day, checked by round trip), `Publication`, `MediaAppearance`.
+- **Idempotent**: objects are found by natural key (PMID, code, category + title + start date, …); a
+  filled value is never overwritten (the difference is reported), `--update` overwrites. A page body is
+  written only when empty or identical. Pages stay drafts (a revision is saved, nothing is published).
+- **TODO**: any value containing `TODO` is imported as is and listed with its YAML path and destination.
+  A TODO in a year or a date cannot be stored verbatim: the import stops and rolls back. TODO in YAML
+  comments are listed too (not importable).
+- **Not imported** (reported at the end of each run): every image (no file in `_artifact/assets`) and the
+  card / note icons (the YAML has none). Add them in the admin.
+- Reported differences: the site name (`Site.site_name` is `bkpolok`, the YAML title is `Bożena Polok`), the
+  grouped language caption, `alumniOf` (computed from education names).
+
+## Not done yet
+
+Images and icons (above). Claims flagged in the review (career figures, product names, quote attribution,
+PMIDs) were imported as written in the YAML and are still to be validated. Pages are drafts.
