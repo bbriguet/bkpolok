@@ -8,7 +8,7 @@ Gestion des dépendances : uv. Lint/format : ruff. Tests : pytest + pytest-djang
 - Toute modification de modèle => migration commitée dans le même commit.
 - Pas de logique métier dans les templates ni dans les vues : services dans `apps/<app>/services.py`.
 - Contenu éditorial = pages Wagtail. Données structurées (produits, tendances) = modèles Django classiques.
-- Textes du site en français (fr-CH). Formats de dates et prix suisses (CHF).
+- Textes du site en anglais (en). Formats de dates et prix suisses (CHF).
 - Secrets uniquement via variables d'environnement, jamais en dur, jamais commités.
 
 ## Commandes
