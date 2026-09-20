@@ -1,10 +1,1 @@
-{% load ui %}
-<div class="{% if value.variant == 'off_duty' %}off-duty-grid{% else %}service-grid{% endif %}">
-  {% for card in value.cards %}
-  <div class="{% if value.variant == 'off_duty' %}off-card{% if card.wide %} wide{% endif %}{% else %}service{% endif %}">
-    {% icon card.icon %}
-    <h3>{{ card.title }}</h3>
-    <p>{{ card.text }}</p>
-  </div>
-  {% endfor %}
-</div>
+{% include "includes/card_grid.html" with variant=value.variant cards=value.cards only %}

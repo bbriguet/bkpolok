@@ -1,0 +1,4 @@
+{# Bande de page. content : HTML déjà rendu · anchor : id optionnel · background : default ou tint (fond teinté) #}
+<section class="section{% if background == 'tint' %} tint{% endif %}"{% if anchor %} id="{{ anchor }}"{% endif %}>
+  {{ content }}
+</section>

@@ -1,0 +1,43 @@
+.aside-note {
+  margin-top: var(--space-28);
+  padding: var(--space-18) var(--space-20);
+  border-radius: var(--radius-card);
+  background: var(--accent-soft);
+  font-size: var(--fs-md);
+  color: var(--ink);
+  max-width: var(--measure-aside);
+}
+
+.aside-note .icon {
+  width: var(--size-icon-inline);
+  height: var(--size-icon-inline);
+  vertical-align: -3px;
+  margin-right: var(--space-6);
+  color: var(--accent);
+}
+
+/* Bloc d'éditeur : une note seule, ou deux côte à côte (.aside-row). */
+.aside-notes {
+  margin-top: var(--space-28);
+}
+
+.aside-notes .aside-note {
+  margin-top: 0;
+}
+
+.aside-row {
+  display: flex;
+  gap: var(--space-16);
+  align-items: stretch;
+}
+
+.aside-row .aside-note {
+  flex: 1;
+  max-width: none;
+}
+
+@media (max-width: 700px) {
+  .aside-row {
+    flex-direction: column;
+  }
+}

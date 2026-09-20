@@ -1,0 +1,48 @@
+.hero {
+  padding: var(--hero-pad);
+  display: grid;
+  grid-template-columns: 1.3fr auto;
+  gap: var(--space-40);
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+}
+
+.hero h1 em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.hero .eyebrow {
+  margin-bottom: var(--space-14);
+}
+
+.hero-role {
+  margin: var(--space-14) 0 0;
+  font-size: var(--fs-xl);
+  color: var(--ink-muted);
+  font-weight: var(--fw-medium);
+  max-width: var(--measure-role);
+}
+
+.hero-thesis {
+  margin: var(--space-22) 0 0;
+  font-size: var(--fs-body-lg);
+  max-width: var(--measure-thesis);
+}
+
+.hero-cta {
+  margin-top: var(--space-28);
+  display: flex;
+  gap: var(--space-14);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}

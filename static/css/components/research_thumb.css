@@ -1,0 +1,62 @@
+/* Vignette ronde avec légende. Taille par défaut 108px ; 84px dans une chronologie (.tl-photos). */
+.research-photos {
+  display: flex;
+  gap: var(--space-14);
+  flex-shrink: 0;
+}
+
+.research-thumb {
+  margin: 0;
+  text-align: center;
+}
+
+.research-thumb img {
+  width: var(--size-thumb);
+  height: var(--size-thumb);
+  border-radius: var(--radius-round);
+  object-fit: cover;
+  border: var(--bw-photo) solid var(--accent);
+  box-shadow: var(--ring-thumb);
+  display: block;
+}
+
+.research-thumb figcaption {
+  margin-top: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--ink-faint);
+  letter-spacing: var(--ls-caption);
+}
+
+.research-thumb figcaption a {
+  color: var(--accent-2);
+  text-decoration: none;
+  margin-left: 3px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.research-thumb figcaption a:hover {
+  text-decoration: underline;
+}
+
+.research-thumb figcaption a:active {
+  color: var(--accent);
+}
+
+.tl-photos {
+  flex-direction: column;
+  margin-top: var(--space-4);
+}
+
+.tl-photos .research-thumb img {
+  width: var(--size-thumb-solo);
+  height: var(--size-thumb-solo);
+  border-width: var(--bw-photo-sm);
+  box-shadow: var(--ring-thumb-sm);
+}
+
+.tl-photos .research-thumb figcaption {
+  margin-top: var(--space-6);
+  font-size: var(--fs-3xs);
+  max-width: var(--tl-caption-max);
+}

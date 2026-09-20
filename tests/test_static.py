@@ -6,7 +6,15 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 STATIC = ROOT / "static"
 DESIGN_TOKENS = ROOT / "_artifact" / "design" / "tokens.css"
-SITE_STYLESHEETS = ("css/base.css", "css/site.css")
+COMPONENT_STYLESHEETS = tuple(
+    f"css/components/{path.name}" for path in sorted((STATIC / "css" / "components").glob("*.css"))
+)
+SITE_STYLESHEETS = (
+    "css/base.css",
+    "css/site.css",
+    "css/demo.css",  # page temporaire /_composants
+    *COMPONENT_STYLESHEETS,
+)
 
 
 def _read(name: str) -> str:

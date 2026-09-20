@@ -1,14 +1,3 @@
 {% load wagtailimages_tags %}
-<div class="section-head{% if value.image %} personal-head{% endif %}">
-  <div>
-    {% if value.eyebrow %}<p class="eyebrow">{{ value.eyebrow }}</p>{% endif %}
-    <{{ value.level }}>{{ value.text }}</{{ value.level }}>
-    {% if value.lede %}<p class="lede">{{ value.lede }}</p>{% endif %}
-    {% if value.pills %}
-    <div class="pill-row">
-      {% for pill in value.pills %}<span class="pill">{{ pill }}</span>{% endfor %}
-    </div>
-    {% endif %}
-  </div>
-  {% if value.image %}{% image value.image fill-588x588 class="personal-photo" %}{% endif %}
-</div>
+{% if value.image %}{% image value.image fill-588x588 as photo %}{% endif %}
+{% include "includes/section_head.html" with eyebrow=value.eyebrow title=value.text level=value.level lede=value.lede pills=value.pills image=photo image_alt=photo.alt only %}

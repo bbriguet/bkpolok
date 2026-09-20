@@ -1,0 +1,30 @@
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-20);
+  margin-top: var(--space-8);
+}
+
+.edu-card {
+  border: var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: var(--space-18) var(--space-20);
+  background: var(--surface);
+}
+
+.edu-card .deg {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md-plus);
+}
+
+.edu-card .inst {
+  color: var(--ink-muted);
+  font-size: var(--fs-md-minus);
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 600px) {
+  .edu-grid {
+    grid-template-columns: 1fr;
+  }
+}

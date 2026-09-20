@@ -1,0 +1,6 @@
+{# Appel à l'action. title · text · label · href · variant (primary ou ghost) · external #}
+<aside class="cta">
+  <h2 class="cta__title">{{ title }}</h2>
+  {% if text %}<p>{{ text }}</p>{% endif %}
+  {% include "includes/button.html" with label=label href=href variant=variant external=external only %}
+</aside>

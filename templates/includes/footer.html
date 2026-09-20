@@ -1,0 +1,18 @@
+{% comment %}
+  Pied de page / contact.
+  heading · email · linkedin_url, linkedin_label · codes (codes de langue) · holder (titulaire du copyright)
+{% endcomment %}
+<footer class="site-footer wrap">
+  {% if email or linkedin_url or heading %}
+  <div class="footer-grid">
+    <div>
+      {% include "includes/eyebrow.html" with text="Contact" only %}
+      {% if heading %}<h2>{{ heading }}</h2>{% endif %}
+      {% if email %}<a class="contact-email" href="mailto:{{ email }}">{{ email }}</a><br>{% endif %}
+      {% if linkedin_url %}<a class="contact-email" href="{{ linkedin_url }}" target="_blank" rel="noopener">{{ linkedin_label|default:linkedin_url }}</a>{% endif %}
+    </div>
+    {% if codes %}{% include "includes/pill_row.html" with labels=codes variant="lang" only %}{% endif %}
+  </div>
+  {% endif %}
+  <p class="copyright">© {% now "Y" %} {{ holder }}.</p>
+</footer>

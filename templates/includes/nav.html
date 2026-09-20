@@ -1,0 +1,17 @@
+{% comment %}
+  Navigation collante.
+  brand : nom affiché à gauche · brand_url : lien du nom (défaut « / »)
+  items : liste de {label, href, current, disabled} ; un élément désactivé n'a pas de lien.
+{% endcomment %}
+<header class="site-nav">
+  <nav class="wrap site-nav__inner" aria-label="Main navigation">
+    <a class="nav-name" href="{{ brand_url|default:'/' }}">{{ brand }}</a>
+    {% if items %}
+    <ul class="nav-links">
+      {% for item in items %}
+      <li>{% if item.disabled %}<a role="link" aria-disabled="true">{{ item.label }}</a>{% else %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </nav>
+</header>

@@ -1,0 +1,88 @@
+/* Grilles de cartes à filets : les cellules laissent voir le fond --line par un interstice de 1px. */
+.service-grid,
+.off-duty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: var(--border-hairline);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.service {
+  background: var(--surface);
+  padding: var(--space-26) var(--space-22);
+  min-height: var(--card-min-height);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.service .icon {
+  width: var(--size-icon);
+  height: var(--size-icon);
+  color: var(--accent);
+}
+
+.service h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-lg);
+}
+
+.service p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--fs-ui);
+  line-height: var(--lh-card);
+}
+
+.off-card {
+  background: var(--surface);
+  padding: var(--space-28) var(--space-24);
+}
+
+.off-card.wide {
+  grid-column: span 2;
+}
+
+.off-card .icon {
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+  color: var(--accent-2);
+  margin-bottom: var(--space-14);
+}
+
+.off-card h3 {
+  font-size: var(--fs-2xl);
+}
+
+.off-card p {
+  color: var(--ink-muted);
+  font-size: var(--fs-md);
+  margin: var(--space-10) 0 0;
+}
+
+@media (max-width: 760px) {
+  .service-grid,
+  .off-duty-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .off-duty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .off-card.wide {
+    grid-column: span 1;
+  }
+}

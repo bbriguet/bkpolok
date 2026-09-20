@@ -1,0 +1,4 @@
+{# Une note seule, ou deux côte à côte. notes : liste de {icon, text}. #}
+<div class="aside-notes{% if notes|length > 1 %} aside-row{% endif %}" data-reveal>
+  {% for note in notes %}{% include "includes/aside_note.html" with text=note.text icon_name=note.icon only %}{% endfor %}
+</div>

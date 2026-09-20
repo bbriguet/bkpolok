@@ -1,4 +1,1 @@
-<blockquote class="pull-quote">
-  <p>“{{ value.text }}”</p>
-  {% if value.author %}<cite>— {{ value.author }}</cite>{% endif %}
-</blockquote>
+{% include "includes/pull_quote.html" with text=value.text author=value.author only %}

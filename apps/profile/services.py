@@ -113,6 +113,11 @@ class TimelineImage:
     link_url: str
     external: bool
 
+    @property
+    def thumb(self):
+        """Rendition carrée de la vignette (url, width, height), prête pour les includes."""
+        return self.image.get_rendition("fill-216x216")
+
 
 @dataclass(frozen=True)
 class TimelineEntry:

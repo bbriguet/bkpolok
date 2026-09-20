@@ -67,7 +67,7 @@ def test_all_page_types_render_every_block(client, home, full_body):
         assert response.status_code == 200, page
         assert "<h2>Un titre</h2>" in html
         assert 'alt="Une image"' in html
-        assert '<blockquote class="pull-quote">' in html
+        assert '<blockquote class="pull-quote" data-reveal>' in html
         assert 'class="btn btn-primary"' in html
         assert "<details" in html
 

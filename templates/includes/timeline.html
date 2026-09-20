@@ -1,0 +1,27 @@
+{% comment %}
+  Chronologie groupée sous une étiquette.
+  label · entries : liste de {period, experience.title, org_line, experience.organisation_description,
+  experience.summary, achievements, images} ; images : liste de {thumb, alt_text, caption, link_url,
+  link_label, external} (thumb : rendition avec url, width, height)
+{% endcomment %}
+{% if entries %}
+<p class="group-label">{{ label }}</p>
+<div class="timeline">
+  {% for entry in entries %}
+  <div class="tl-item" data-reveal>
+    <div class="tl-date">{{ entry.period }}</div>
+    <h3>{{ entry.experience.title }}</h3>
+    {% if entry.images %}
+    <div class="tl-item-body">
+      <div class="tl-item-text">{% include "includes/timeline_text.html" with entry=entry only %}</div>
+      <div class="research-photos tl-photos">
+        {% for photo in entry.images %}{% include "includes/research_thumb.html" with image=photo.thumb alt=photo.alt_text caption=photo.caption link_url=photo.link_url link_label=photo.link_label external=photo.external only %}{% endfor %}
+      </div>
+    </div>
+    {% else %}
+    {% include "includes/timeline_text.html" with entry=entry only %}
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

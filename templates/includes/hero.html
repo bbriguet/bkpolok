@@ -1,0 +1,22 @@
+{% comment %}
+  Bandeau d'accueil.
+  eyebrow · first_name + last_name (h1, nom de famille en italique) ou title en repli
+  role · badge · thesis
+  buttons : liste de {label, href, variant, external}
+  portrait, portrait_alt : rendition (url, width, height) affichée dans l'anneau
+{% endcomment %}
+<header class="hero">
+  <div>
+    {% if eyebrow %}{% include "includes/eyebrow.html" with text=eyebrow only %}{% endif %}
+    <h1>{% if first_name or last_name %}{{ first_name }}&nbsp;<em>{{ last_name }}</em>{% else %}{{ title }}{% endif %}</h1>
+    <p class="hero-role">{{ role }}</p>
+    {% if badge %}{% include "includes/status_badge.html" with text=badge only %}{% endif %}
+    <p class="hero-thesis">{{ thesis }}</p>
+    {% if buttons %}
+    <div class="hero-cta">
+      {% for button in buttons %}{% include "includes/button.html" with label=button.label href=button.href variant=button.variant external=button.external only %}{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% if portrait %}{% include "includes/iris.html" with portrait=portrait alt=portrait_alt only %}{% endif %}
+</header>

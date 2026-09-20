@@ -21,6 +21,47 @@ def get_main_menu(site: Site | None) -> list[Page]:
     return list(site.root_page.get_children().live().in_menu().specific())
 
 
+def get_nav_items(site: Site | None, current_page: Page | None, request) -> list[dict]:
+    """Éléments de `includes/nav.html` : {label, href, current} pour chaque page du menu."""
+    return [
+        {
+            "label": page.title,
+            "href": page.get_url(request) or "",
+            "current": current_page is not None and page.pk == current_page.pk,
+        }
+        for page in get_main_menu(site)
+    ]
+
+
+def resolve_link(page: Page | None, url: str, request) -> tuple[str, bool]:
+    """(href, externe) d'un lien « page interne OU URL externe » (voir `_require_page_or_url`).
+
+    Une page sans URL publique (brouillon, hors site) donne « # » : le lien reste un lien.
+    """
+    if page is not None:
+        return page.get_url(request) or "#", False
+    return url or "", bool(url)
+
+
+def button_props(value, request, label_key: str = "label") -> dict:
+    """Paramètres de `includes/button.html` pour un bloc bouton ou appel à l'action."""
+    href, external = resolve_link(value.get("page"), value.get("url"), request)
+    return {
+        "label": value[label_key],
+        "href": href,
+        "variant": value["variant"],
+        "external": external,
+    }
+
+
+def offer_items(pages, request) -> list[dict]:
+    """Éléments de `includes/offer_note.html` pour des pages de service."""
+    return [
+        {"title": page.title, "href": page.get_url(request) or "", "summary": page.summary}
+        for page in pages
+    ]
+
+
 def get_contact_details(page, request) -> dict:
     """Coordonnées affichées sur la page de contact : celles de la page, sinon celles du profil."""
     from apps.profile.services import get_site_profile

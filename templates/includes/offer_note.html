@@ -1,0 +1,13 @@
+{# Encadré d'offres. lead : phrase d'introduction · offers : liste de {title, href, summary}. #}
+{% load ui %}
+<div class="aside-note offer-note" data-reveal>
+  <p class="offer-lead">{% icon "flag" %}{{ lead }}</p>
+  <dl class="offer-list">
+    {% for offer in offers %}
+    <div class="offer-item">
+      <dt><a href="{{ offer.href }}">{{ offer.title }}</a></dt>
+      <dd>{{ offer.summary }}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+</div>

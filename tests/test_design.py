@@ -170,7 +170,7 @@ def test_quote_block_renders_as_pull_quote(client, home):
 
     html = get_html(client, make_page(home, [quote]))
 
-    assert '<blockquote class="pull-quote">' in html
+    assert '<blockquote class="pull-quote" data-reveal>' in html
     assert "“Know the person.”" in html
     assert "<cite>— Someone</cite>" in html
 

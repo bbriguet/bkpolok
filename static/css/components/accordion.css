@@ -1,0 +1,80 @@
+/* Accordéon : <details>/<summary> natifs (clavier, lecteurs d'écran et « find in page » gratuits).
+   L'ouverture est animée là où ::details-content est disponible ; ailleurs elle est instantanée. */
+.accordion {
+  margin: var(--space-36) 0;
+  max-width: var(--measure-about);
+  interpolate-size: allow-keywords;
+}
+
+.accordion__title {
+  margin-bottom: var(--space-12);
+}
+
+.accordion__item {
+  border-bottom: var(--border-hairline);
+}
+
+.accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: var(--space-14) 0;
+  cursor: pointer;
+  list-style: none;
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.accordion__summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion__summary .icon {
+  width: var(--size-icon-inline);
+  height: var(--size-icon-inline);
+  color: var(--accent);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.accordion__summary:hover {
+  color: var(--accent);
+}
+
+.accordion__summary:active {
+  background: var(--accent-soft);
+}
+
+.accordion__item[open] .accordion__summary .icon {
+  transform: rotate(180deg);
+}
+
+.accordion__panel {
+  padding-bottom: var(--space-14);
+  color: var(--ink-muted);
+}
+
+.accordion__panel > :first-child {
+  margin-top: 0;
+}
+
+.accordion__panel > :last-child {
+  margin-bottom: 0;
+}
+
+@supports selector(::details-content) {
+  .accordion__item::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--dur-base) var(--ease-out),
+      content-visibility var(--dur-base) allow-discrete;
+  }
+
+  .accordion__item[open]::details-content {
+    block-size: auto;
+  }
+}

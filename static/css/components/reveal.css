@@ -1,0 +1,24 @@
+/* Apparition au défilement. static/js/reveal.js ajoute .reveal-ready à <html> (seulement si
+   IntersectionObserver existe et que le mouvement n'est pas réduit), puis .is-visible sur chaque
+   [data-reveal] qui entre dans l'écran. Sans JS, tout reste visible.
+   Décalage entre frères : style="--reveal-i: N" (plafonné à 5). */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(min(var(--reveal-i), 5) * var(--reveal-stagger));
+}
+
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media print {
+  .reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,130 @@
+/* Chronologie : rail vertical, un point par entrée, regroupée sous une étiquette mono. */
+.timeline {
+  position: relative;
+  padding-left: var(--space-28);
+  border-left: var(--border-strong);
+}
+
+.tl-item {
+  position: relative;
+  padding-bottom: var(--space-32);
+}
+
+.tl-item:last-child {
+  padding-bottom: 0;
+}
+
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: var(--tl-rail-offset);
+  top: var(--space-4);
+  width: var(--size-dot-timeline);
+  height: var(--size-dot-timeline);
+  border-radius: var(--radius-round);
+  background: var(--accent);
+  box-shadow: var(--ring-dot);
+}
+
+.tl-date {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--accent-2);
+  font-weight: var(--fw-medium);
+}
+
+.tl-item h3 {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-xl);
+  margin-top: var(--space-4);
+}
+
+.tl-item .org {
+  color: var(--ink-muted);
+  font-size: var(--fs-ui);
+  margin-top: var(--space-2);
+}
+
+.tl-item .org-desc {
+  color: var(--ink-faint);
+  font-size: var(--fs-sm);
+  font-style: italic;
+  margin-top: var(--space-2);
+  max-width: var(--measure-desc);
+}
+
+.tl-item p {
+  color: var(--ink-muted);
+  font-size: var(--fs-md);
+  margin: var(--space-8) 0 0;
+  max-width: var(--measure-text);
+}
+
+.tl-achievements {
+  list-style: none;
+  margin: var(--space-10) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--measure-text);
+}
+
+.tl-achievements li {
+  font-size: var(--fs-md-minus);
+  color: var(--ink-muted);
+  padding-left: var(--bullet-indent);
+  position: relative;
+}
+
+.tl-achievements li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--space-8);
+  width: var(--size-dot-bullet);
+  height: var(--size-dot-bullet);
+  border-radius: var(--radius-round);
+  background: var(--accent-2);
+}
+
+.group-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 var(--space-18) calc(-1 * var(--space-28));
+  padding-left: var(--space-28);
+}
+
+/* Wagtail enveloppe chaque bloc dans <div class="block-…"> : les blocs ne sont pas frères. */
+.block-timeline + .block-timeline .group-label {
+  margin-top: var(--space-36);
+}
+
+/* Entrée avec photos : texte à gauche, vignettes à droite (au-dessus du texte sous 560px). */
+.tl-item-body {
+  display: flex;
+  gap: var(--space-26);
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.tl-item-text {
+  flex: 1;
+  min-width: var(--tl-text-min);
+}
+
+.tl-item-text .org {
+  margin-top: 0;
+}
+
+@media (max-width: 560px) {
+  .tl-photos {
+    order: -1;
+    flex-direction: row;
+  }
+}

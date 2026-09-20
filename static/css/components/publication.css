@@ -1,0 +1,70 @@
+/* Liste numérotée de publications, filet entre les lignes, lien PubMed. */
+.pub-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pub {
+  display: grid;
+  grid-template-columns: var(--pub-num-col) 1fr;
+  gap: var(--space-14);
+  padding: var(--space-18) 0;
+  border-top: var(--border-hairline);
+}
+
+.pub:first-child {
+  border-top: none;
+}
+
+.pub-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--ink-faint);
+  padding-top: var(--space-2);
+}
+
+.pub-title {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md-plus);
+  line-height: var(--lh-snug);
+}
+
+.pub-meta {
+  color: var(--ink-muted);
+  font-size: var(--fs-sm-plus);
+  margin-top: var(--space-5);
+  line-height: var(--lh-meta);
+}
+
+.pub-meta a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.pub-meta a:hover {
+  text-decoration: underline;
+}
+
+.pub-meta a:active {
+  color: var(--accent-2);
+}
+
+.pub-source {
+  margin-top: var(--space-14);
+}
+
+.pub-source a {
+  font-size: var(--fs-md-minus);
+  color: var(--ink-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.pub-source a:hover {
+  color: var(--accent);
+}
+
+.pub-source a:active {
+  color: var(--accent-2);
+}

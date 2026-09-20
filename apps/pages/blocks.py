@@ -14,6 +14,7 @@ from apps.profile.blocks import (
 from apps.services.services import list_live_services
 
 from .icons import icon_choices
+from .services import button_props, offer_items
 
 TEMPLATE_DIR = "pages/blocks"
 
@@ -63,6 +64,11 @@ class ButtonBlock(blocks.StructBlock):
         _require_page_or_url(result)
         return result
 
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context)
+        context["button"] = button_props(value, context.get("request"))
+        return context
+
     class Meta:
         icon = "link"
         label = "Button"
@@ -83,6 +89,7 @@ class HeroBlock(blocks.StructBlock):
         context = super().get_context(value, parent_context)
         request = context.get("request")
         context["profile"] = profile_services.get_site_profile(request) if request else None
+        context["buttons"] = [button_props(button, request) for button in value["buttons"]]
         return context
 
     class Meta:
@@ -113,6 +120,11 @@ class CallToActionBlock(blocks.StructBlock):
         result = super().clean(value)
         _require_page_or_url(result)
         return result
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context)
+        context["button"] = button_props(value, context.get("request"), label_key="button_label")
+        return context
 
     class Meta:
         icon = "link"
@@ -174,7 +186,8 @@ class ServiceOfferBlock(blocks.StructBlock):
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context)
         index_page = value["index_page"]
-        context["offers"] = list_live_services(index_page.specific) if index_page else []
+        pages = list_live_services(index_page.specific) if index_page else []
+        context["offers"] = offer_items(pages, context.get("request"))
         return context
 
     class Meta:
@@ -241,6 +254,12 @@ class SectionBlock(blocks.StructBlock):
         default="default",
     )
     content = ContentStreamBlock(label="Content")
+
+    def get_context(self, value, parent_context=None):
+        context = super().get_context(value, parent_context)
+        # `includes/section.html` reçoit le contenu déjà rendu (include_block ne sait pas « as »).
+        context["content"] = value["content"].render_as_block(context=context)
+        return context
 
     class Meta:
         icon = "form"

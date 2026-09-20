@@ -1,0 +1,4 @@
+{# Rangée de pastilles. labels : liste de textes · variant : pill (défaut) ou lang. #}
+<div class="{% if variant == 'lang' %}lang-row{% else %}pill-row{% endif %}">
+  {% for label in labels %}{% include "includes/pill.html" with label=label variant=variant only %}{% endfor %}
+</div>

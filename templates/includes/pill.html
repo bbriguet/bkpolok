@@ -1,0 +1,2 @@
+{# Une pastille. label · variant : pill (défaut) ou lang · lang : code de langue (attribut lang). #}
+<span class="{% if variant == 'lang' %}lang-pill{% else %}pill{% endif %}"{% if lang %} lang="{{ lang }}"{% endif %}>{{ label }}</span>

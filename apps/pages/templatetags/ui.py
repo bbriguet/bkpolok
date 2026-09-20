@@ -1,21 +1,21 @@
-from django import template
-from django.utils.html import format_html
-from django.utils.safestring import mark_safe
+import re
 
-from apps.pages.icons import ICONS
+from django import template
+from django.template.loader import get_template
+
+from apps.pages.icons import TEMPLATE_PATH
 
 register = template.Library()
+
+ICON_NAME = re.compile(r"[a-z0-9-]+")
 
 
 @register.simple_tag
 def icon(name):
-    """SVG de ligne du jeu d'icônes ; chaîne vide si le nom est inconnu."""
-    entry = ICONS.get(name)
-    if entry is None:
+    """SVG de ligne `templates/includes/icons/<name>.svg` ; chaîne vide si l'icône n'existe pas."""
+    if not name or not ICON_NAME.fullmatch(name):
         return ""
-    return format_html(
-        '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" '
-        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
-        "{}</svg>",
-        mark_safe(entry[1]),
-    )
+    try:
+        return get_template(TEMPLATE_PATH.format(name=name)).render()
+    except template.TemplateDoesNotExist:
+        return ""

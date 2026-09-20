@@ -1,11 +1,2 @@
-{% load wagtailcore_tags %}
-<div class="section-head section-head--sub">
-  {% if value.eyebrow %}<p class="eyebrow">{{ value.eyebrow }}</p>{% endif %}
-  <h3>{{ value.heading }}</h3>
-</div>
-<ul class="media-list">
-  {% for item in items %}
-  <li><span class="media-date mono">{% if item.date %}{{ item.date|date }}{% else %}—{% endif %}</span> {{ item.outlet }} — {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">"{{ item.title }}"</a>{% else %}"{{ item.title }}"{% endif %}</li>
-  {% endfor %}
-</ul>
-{% if value.note %}<div class="media-note">{{ value.note|richtext }}</div>{% endif %}
+{% include "includes/section_head.html" with eyebrow=value.eyebrow title=value.heading level="h3" sub=True only %}
+{% include "includes/media_list.html" with items=items note=value.note only %}

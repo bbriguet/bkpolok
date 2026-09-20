@@ -1,0 +1,29 @@
+/* Photo ronde « personnelle » : bordure ambre, ombre, légère inclinaison. */
+.personal-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-32);
+  align-items: center;
+}
+
+.personal-photo {
+  width: var(--size-personal);
+  height: var(--size-personal);
+  border-radius: var(--radius-round);
+  object-fit: cover;
+  border: var(--bw-personal) solid var(--accent-2);
+  box-shadow: var(--shadow);
+  transform: rotate(-3deg);
+  justify-self: end;
+}
+
+@media (max-width: 640px) {
+  .personal-head {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-photo {
+    justify-self: start;
+    transform: rotate(-2deg);
+  }
+}

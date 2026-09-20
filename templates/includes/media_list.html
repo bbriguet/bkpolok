@@ -1,0 +1,8 @@
+{# Liste de médias. items : liste de {date, outlet, title, url} · note : texte riche (optionnel). #}
+{% load wagtailcore_tags %}
+<ul class="media-list">
+  {% for item in items %}
+  <li><span class="media-date mono">{% if item.date %}{{ item.date|date }}{% else %}—{% endif %}</span> {{ item.outlet }} — {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">"{{ item.title }}"</a>{% else %}"{{ item.title }}"{% endif %}</li>
+  {% endfor %}
+</ul>
+{% if note %}<div class="media-note">{{ note|richtext }}</div>{% endif %}

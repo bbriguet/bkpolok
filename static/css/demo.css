@@ -1,0 +1,108 @@
+/* Mise en page de la page de démonstration /_composants (temporaire, DEBUG uniquement).
+   Ne consomme que les variables de tokens.css. */
+.demo-toolbar {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--space-24) 0 var(--space-8);
+}
+
+.demo-toc {
+  columns: 3 12rem;
+  column-gap: var(--space-24);
+  list-style: none;
+  margin: var(--space-16) 0 0;
+  padding: 0;
+  font-size: var(--fs-ui);
+}
+
+.demo-block {
+  padding: var(--space-40) 0;
+  border-top: var(--border-hairline);
+}
+
+.demo-block > h2 {
+  font: var(--fw-medium) var(--fs-sm) var(--font-mono);
+  color: var(--ink-faint);
+  margin-bottom: var(--space-4);
+}
+
+.demo-hint {
+  margin: 0 0 var(--space-20);
+  font-size: var(--fs-sm);
+  color: var(--ink-faint);
+}
+
+.demo-label {
+  margin: var(--space-24) 0 var(--space-10);
+  font: var(--fs-2xs) var(--font-mono);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-14);
+  align-items: center;
+}
+
+/* La navigation et le pied de page réels sont déjà sur la page : ici ce sont des exemples. */
+.demo-frame {
+  border: var(--border-hairline);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.demo-frame .site-nav {
+  position: static;
+}
+
+.demo-frame .site-footer {
+  padding-inline: var(--space-20);
+}
+
+.demo-frame .site-nav__inner {
+  padding-inline: var(--space-20);
+}
+
+.demo-frame .hero {
+  padding-inline: var(--space-20);
+}
+
+.demo-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: var(--space-16);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.demo-icons li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-14) var(--space-8);
+  border: var(--border-hairline);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  font: var(--fs-2xs) var(--font-mono);
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.demo-icons .icon {
+  width: var(--size-icon-lg);
+  height: var(--size-icon-lg);
+  color: var(--accent);
+}
+
+.demo-frame .section,
+.demo-frame .section.tint {
+  margin: 0;
+  padding-inline: var(--space-20);
+}

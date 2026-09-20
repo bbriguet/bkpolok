@@ -1,0 +1,30 @@
+/* Tête de section : eyebrow + titre (+ chapeau, pastilles, photo ronde). */
+.section-head {
+  margin-bottom: var(--space-36);
+}
+
+.section-head h2 {
+  font-size: var(--fs-h2);
+  margin-top: var(--space-8);
+}
+
+.section-head h3 {
+  font-size: var(--fs-4xl);
+  margin-top: var(--space-8);
+}
+
+.section-head--sub {
+  margin-top: var(--space-48);
+  margin-bottom: var(--space-24);
+}
+
+.section-head--sub h3 {
+  font-size: var(--fs-3xl);
+}
+
+.lede {
+  color: var(--ink-muted);
+  max-width: var(--measure-lede);
+  margin: var(--space-12) 0 0;
+  font-size: var(--fs-lg);
+}

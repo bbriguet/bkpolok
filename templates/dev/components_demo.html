@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static ui %}
+
+{% block title %}Components{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/demo.css' %}">{% endblock %}
+
+{% block content %}
+{# Page temporaire (DEBUG uniquement) : voir apps/pages/demo.py pour la retirer. #}
+<article>
+  <header class="page-header">
+    <p class="eyebrow">Development only</p>
+    <h1>Components</h1>
+    <p class="lede">Every component of <code>_artifact/design/components.md</code>, one under the other. Hover, press and Tab through the interactive ones; toggle the theme to check dark mode. Scroll-reveal items animate as they enter the viewport.</p>
+  </header>
+
+  <div class="demo-toolbar">
+    <button class="btn btn-ghost" type="button" data-theme-toggle>Toggle light / dark</button>
+  </div>
+  <ul class="demo-toc">
+    <li><a href="#nav">1 · Navigation</a></li>
+    <li><a href="#eyebrow">2 · Eyebrow</a></li>
+    <li><a href="#section-head">3 · Section head</a></li>
+    <li><a href="#section">4 · Section</a></li>
+    <li><a href="#buttons">5 · Button</a></li>
+    <li><a href="#badge">6 · Status badge</a></li>
+    <li><a href="#pills">7 · Pills</a></li>
+    <li><a href="#hero">8 · Hero + iris</a></li>
+    <li><a href="#quote">9 · Pull quote</a></li>
+    <li><a href="#cards">10 · Card grids</a></li>
+    <li><a href="#asides">11 · Aside notes</a></li>
+    <li><a href="#timeline">12 · Timeline</a></li>
+    <li><a href="#thumbs">13 · Research thumbnail</a></li>
+    <li><a href="#personal">14 · Personal photo</a></li>
+    <li><a href="#education">15 · Education</a></li>
+    <li><a href="#publications">16 · Publications</a></li>
+    <li><a href="#media">17 · Media list</a></li>
+    <li><a href="#footer">18 · Footer</a></li>
+    <li><a href="#icons">19 · Icons</a></li>
+    <li><a href="#cta">+ Call to action</a></li>
+    <li><a href="#faq">+ Accordion</a></li>
+  </ul>
+
+  <div class="demo-block" id="nav">
+    <h2>1 · Navigation</h2>
+    <p class="demo-hint">Links: normal, hover, press, current page, disabled (“Personal”). Sticky on real pages.</p>
+    <div class="demo-frame">{% include "includes/nav.html" with brand="J. Doe" items=nav_items only %}</div>
+  </div>
+
+  <div class="demo-block" id="eyebrow">
+    <h2>2 · Eyebrow</h2>
+    {% include "includes/eyebrow.html" with text="Eyebrow label" only %}
+  </div>
+
+  <div class="demo-block" id="section-head">
+    <h2>3 · Section head</h2>
+    <p class="demo-label">With lede and pills</p>
+    {% include "includes/section_head.html" with eyebrow="Expertise" title="Where I add the most value" lede="A lede paragraph that sets up the section in a sentence or two." pills=pills only %}
+    <p class="demo-label">Sub-section (h3)</p>
+    {% include "includes/section_head.html" with eyebrow="Education" title="Research training" level="h3" sub=True only %}
+    <p class="demo-label">With round photo</p>
+    {% include "includes/section_head.html" with eyebrow="Personal" title="Off the clock" lede="The head becomes a two-column grid." image=photo image_alt="Placeholder portrait" only %}
+  </div>
+
+  <div class="demo-block" id="section">
+    <h2>4 · Section (default / tint)</h2>
+    <div class="demo-frame">
+      {% include "includes/section.html" with anchor="" background="default" content="<p>Default section: transparent background.</p>" only %}
+      {% include "includes/section.html" with anchor="" background="tint" content="<p>Tinted section: surface-tint background.</p>" only %}
+    </div>
+  </div>
+
+  <div class="demo-block" id="buttons">
+    <h2>5 · Button</h2>
+    <p class="demo-hint">States: normal, hover, keyboard focus (Tab), pressed, disabled.</p>
+    <p class="demo-label">Links</p>
+    <div class="demo-row">
+      {% include "includes/button.html" with label="Primary" href="#buttons" only %}
+      {% include "includes/button.html" with label="Ghost" href="#buttons" variant="ghost" only %}
+      {% include "includes/button.html" with label="External ↗" href="https://example.org" variant="ghost" external=True only %}
+    </div>
+    <p class="demo-label">Disabled links</p>
+    <div class="demo-row">
+      {% include "includes/button.html" with label="Primary" href="#buttons" disabled=True only %}
+      {% include "includes/button.html" with label="Ghost" href="#buttons" variant="ghost" disabled=True only %}
+    </div>
+    <p class="demo-label">Real &lt;button&gt; elements</p>
+    <div class="demo-row">
+      {% include "includes/button.html" with label="Primary" only %}
+      {% include "includes/button.html" with label="Ghost" variant="ghost" only %}
+      {% include "includes/button.html" with label="Primary disabled" disabled=True only %}
+      {% include "includes/button.html" with label="Ghost disabled" variant="ghost" disabled=True only %}
+    </div>
+  </div>
+
+  <div class="demo-block" id="badge">
+    <h2>6 · Status badge</h2>
+    {% include "includes/status_badge.html" with text="Currently at Example Corp · open to new ideas" only %}
+  </div>
+
+  <div class="demo-block" id="pills">
+    <h2>7 · Pills</h2>
+    <p class="demo-label">Pill row (areas)</p>
+    {% include "includes/pill_row.html" with labels=pills only %}
+    <p class="demo-label">Language pills with caption</p>
+    <div class="lang-row">
+      {% for language in languages %}{% include "includes/pill.html" with label=language.native_name lang=language.code variant="lang" only %}{% endfor %}
+    </div>
+    <p class="lang-caption">Polish (mother tongue) · French &amp; English (full professional)</p>
+    <p class="demo-label">Language codes (footer)</p>
+    {% include "includes/pill_row.html" with labels=language_codes variant="lang" only %}
+  </div>
+
+  <div class="demo-block" id="hero">
+    <h2>8 · Hero + iris portrait</h2>
+    <p class="demo-hint">Resize the window below 640px: one column, smaller portrait.</p>
+    <div class="demo-frame">
+      {% include "includes/hero.html" with eyebrow="Leadership — Multiple areas" first_name="Jane" last_name="Doe" role="A one-line description of the role and scope." badge="Currently at Example Corp" thesis="A two-line introduction that states the thesis of the page in plain words." buttons=hero_buttons portrait=photo portrait_alt="Placeholder portrait" only %}
+    </div>
+  </div>
+
+  <div class="demo-block" id="quote">
+    <h2>9 · Pull quote</h2>
+    {% include "includes/pull_quote.html" with text="A short quotation that carries a sentence of weight." author="Someone Wise" only %}
+  </div>
+
+  <div class="demo-block" id="cards">
+    <h2>10 · Hairline card grids</h2>
+    <p class="demo-label">Service cards</p>
+    {% include "includes/card_grid.html" with variant="service" cards=cards only %}
+    <p class="demo-label">Off-duty cards (last one wide)</p>
+    {% include "includes/card_grid.html" with variant="off_duty" cards=off_cards only %}
+  </div>
+
+  <div class="demo-block" id="asides">
+    <h2>11 · Aside notes</h2>
+    <p class="demo-label">Single</p>
+    {% include "includes/aside_notes.html" with notes=notes|slice:":1" only %}
+    <p class="demo-label">Two side by side</p>
+    {% include "includes/aside_notes.html" with notes=notes only %}
+    <p class="demo-label">Offer note</p>
+    <div id="offers">{% include "includes/offer_note.html" with lead="Also available on a freelance basis, for example:" offers=offers only %}</div>
+  </div>
+
+  <div class="demo-block" id="timeline">
+    <h2>12 · Timeline</h2>
+    <p class="demo-label">Basic and with achievements</p>
+    {% include "includes/timeline.html" with label="Industry — 2015 to present" entries=timeline_industry only %}
+    <p class="demo-label">With photos</p>
+    {% include "includes/timeline.html" with label="Research — 2000 to 2010" entries=timeline_research only %}
+  </div>
+
+  <div class="demo-block" id="thumbs">
+    <h2>13 · Research thumbnail</h2>
+    <p class="demo-hint">Default size 108px; 84px inside a timeline (above). Caption link: normal, hover, press.</p>
+    <div class="research-photos">
+      {% for thumb in thumbs %}{% include "includes/research_thumb.html" with image=thumb.thumb alt=thumb.alt_text caption=thumb.caption link_url=thumb.link_url link_label=thumb.link_label external=thumb.external only %}{% endfor %}
+    </div>
+  </div>
+
+  <div class="demo-block" id="personal">
+    <h2>14 · Personal photo</h2>
+    {% include "includes/personal_photo.html" with image=photo alt="Placeholder portrait" only %}
+  </div>
+
+  <div class="demo-block" id="education">
+    <h2>15 · Education cards</h2>
+    {% include "includes/education.html" with items=education only %}
+  </div>
+
+  <div class="demo-block" id="publications">
+    <h2>16 · Publication rows</h2>
+    {% include "includes/publication.html" with publications=publications pubmed_url="https://example.org/pubmed" only %}
+  </div>
+
+  <div class="demo-block" id="media">
+    <h2>17 · Media list</h2>
+    {% include "includes/section_head.html" with eyebrow="Media" title="Television" level="h3" sub=True only %}
+    {% include "includes/media_list.html" with items=media note=media_note only %}
+  </div>
+
+  <div class="demo-block" id="footer">
+    <h2>18 · Footer / contact</h2>
+    <div class="demo-frame">
+      {% include "includes/footer.html" with heading="Let's talk." email="jane@example.org" linkedin_url="https://www.linkedin.com/in/example" linkedin_label="linkedin.com/in/example" codes=language_codes holder="Jane Doe" only %}
+    </div>
+  </div>
+
+  <div class="demo-block" id="icons">
+    <h2>19 · Line icons</h2>
+    <ul class="demo-icons">
+      {% for name, label in icons %}<li>{% icon name %}<span>{{ name }}</span></li>{% endfor %}
+    </ul>
+  </div>
+
+  <div class="demo-block" id="cta">
+    <h2>+ Call to action</h2>
+    {% include "includes/cta.html" with title="A call to action" text="One sentence that explains the next step." label="Get in touch" href="#cta" only %}
+  </div>
+
+  <div class="demo-block" id="faq">
+    <h2>+ Accordion (details / summary)</h2>
+    <p class="demo-hint">Enter / Space toggles; only one stays open (grouped); first opens by default.</p>
+    {% include "includes/accordion.html" with title="Frequently asked questions" items=faq group="demo-faq" open_first=True only %}
+  </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelector("[data-theme-toggle]").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.dataset.theme
+      ? root.dataset.theme === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+  });
+</script>
+{% endblock %}

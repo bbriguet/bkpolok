@@ -1,0 +1,7 @@
+{# Vignette ronde. image : rendition (url, width, height) · alt · caption · link_url, link_label, external #}
+<figure class="research-thumb">
+  <img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ alt }}">
+  {% if caption or link_url %}
+  <figcaption>{{ caption }}{% if link_url %} <a href="{{ link_url }}"{% if external %} target="_blank" rel="noopener"{% endif %}>{{ link_label }} →</a>{% endif %}</figcaption>
+  {% endif %}
+</figure>

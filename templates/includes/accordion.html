@@ -1,0 +1,15 @@
+{% comment %}
+  Accordéon <details>/<summary>.
+  title (optionnel) · items : liste de {question, answer} (answer : texte riche)
+  group : si renseigné, une seule question reste ouverte à la fois · open_first : première ouverte
+{% endcomment %}
+{% load ui wagtailcore_tags %}
+<div class="accordion">
+  {% if title %}<h2 class="accordion__title">{{ title }}</h2>{% endif %}
+  {% for item in items %}
+  <details class="accordion__item"{% if group %} name="{{ group }}"{% endif %}{% if open_first and forloop.first %} open{% endif %}>
+    <summary class="accordion__summary"><span>{{ item.question }}</span>{% icon "chevron" %}</summary>
+    <div class="accordion__panel">{{ item.answer|richtext }}</div>
+  </details>
+  {% endfor %}
+</div>

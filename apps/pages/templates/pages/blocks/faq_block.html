@@ -1,10 +1,1 @@
-{% load wagtailcore_tags %}
-<div class="faq">
-  {% if value.title %}<h2>{{ value.title }}</h2>{% endif %}
-  {% for item in value.items %}
-  <details class="faq__item">
-    <summary>{{ item.question }}</summary>
-    {{ item.answer|richtext }}
-  </details>
-  {% endfor %}
-</div>
+{% include "includes/accordion.html" with title=value.title items=value.items only %}

@@ -1,6 +1,1 @@
-{% load ui %}
-<div class="aside-notes{% if value.notes|length > 1 %} aside-row{% endif %}">
-  {% for note in value.notes %}
-  <div class="aside-note">{% icon note.icon %}{{ note.text }}</div>
-  {% endfor %}
-</div>
+{% include "includes/aside_notes.html" with notes=value.notes only %}

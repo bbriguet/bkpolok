@@ -39,10 +39,32 @@ Icons come from the fixed set in `apps/pages/icons.py` (`{% icon "name" %}`).
 
 ## Front end
 
-`static/css/tokens.css` (design tokens, light/dark) → `fonts.css` (self-hosted Fraunces, Source Sans 3,
-IBM Plex Mono, latin + latin-ext, OFL licences in `static/fonts/LICENSES.txt`) → `site.css` (uses only
-tokens; a test enforces it). Wagtail wraps each stream block in `<div class="block-<type>">`; the CSS
-relies on that.
+`static/css/tokens.css` (design tokens, light/dark, plus motion tokens that reduce to 0 under
+`prefers-reduced-motion`) → `fonts.css` (self-hosted Fraunces, Source Sans 3, IBM Plex Mono, latin +
+latin-ext, OFL licences in `static/fonts/LICENSES.txt`) → `base.css` → `components/<name>.css` (one file per
+component, listed in `base.html`) → `site.css` (page layout only: page header, rich text, figure). Every
+stylesheet uses only tokens; tests enforce it (no colours, no durations in the CSS). Wagtail wraps each
+stream block in `<div class="block-<type>">`; the CSS relies on that.
+
+**Components** are `templates/includes/<name>.html`, called with `{% include … with … only %}`; the
+parameters are documented at the top of each file. The stream blocks (`pages/blocks/*.html`,
+`profile/blocks/*.html`) are thin wrappers that build the parameters (links via
+`apps/pages/services.py`) and include the component. Images reach the includes as renditions
+(`url`, `width`, `height`) plus an explicit `alt`, so no include depends on the database.
+
+- **Icons**: inline SVG files in `templates/includes/icons/<name>.svg`, rendered by `{% icon "name" %}`
+  (no JS). `apps/pages/icons.py` lists the ones editors can pick; `chevron` is UI-only.
+- **Interaction states**: buttons (normal, hover, keyboard focus from `base.css`, pressed, disabled via
+  `disabled` or `aria-disabled="true"`), nav / footer / caption / publication / media links, accordion
+  summary.
+- **Motion**: CSS transitions, one `@keyframes` (status dot), `<details>` open animation via
+  `::details-content` where supported, and scroll reveal (`data-reveal` + `static/js/reveal.js`,
+  IntersectionObserver). Without JS, without IntersectionObserver or with reduced motion, everything
+  stays visible and static.
+- **Accordion**: native `<details>/<summary>` (`includes/accordion.html`, used by the FAQ block).
+- **Demo page**: `/_composants` shows every component (DEBUG only; 404 otherwise). Temporary: delete
+  `apps/pages/demo.py`, `components_demo` in `views.py` and `config/urls.py`, `templates/dev/`,
+  `static/css/demo.css` and `static/demo/` once validated.
 
 ## Language and formats
 
@@ -58,6 +80,8 @@ relies on that.
   (#9c5c1b) reach only 4.26:1 and 4.46:1 on `--surface-tint` (below the 4.5:1 AA threshold for small text).
 - **Hero portrait** stays visible on narrow screens (smaller) instead of being hidden.
 - **Icons** in aside notes get `stroke: currentColor`; the source page left them without a stroke.
+- **Research thumbnails** follow the design sizes (108px default, 84px inside a timeline); the 76px "span" variant is unused because the timeline pair is not implemented.
+- **Accordion** and the interaction states / scroll reveal are additions: the source page has no FAQ and no hover states beyond a few colours.
 - **Language caption** groups consecutive levels: "French, English & German (full professional)".
 - **Footer heading** ("Let's talk…") is a site-profile field, since the footer appears on every page.
 - **Anchors** in figure captions point to `<publications page>#pub-<id>` (set in the site profile).
