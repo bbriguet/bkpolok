@@ -1,0 +1,146 @@
+/* Fondations du site : reset, typographie de base, conteneur, grille, états de focus.
+   Ne consomme que les variables de tokens.css.
+   Ordre de chargement : tokens.css, fonts.css, base.css, site.css. */
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--scroll-offset);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0 var(--gutter);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* ---------- Typographie ---------- */
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-semibold);
+  text-wrap: balance;
+  margin: 0;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+}
+
+h2 {
+  font-size: var(--fs-h2);
+}
+
+h3 {
+  font-size: var(--fs-xl);
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ---------- Conteneur ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap-max);
+  margin-inline: auto;
+}
+
+/* ---------- Grille ----------
+   <div class="grid grid--3"> : 3 colonnes, 2 sous 760px, 1 sous 520px (voir tokens.css). */
+.grid {
+  display: grid;
+  gap: var(--gutter);
+  grid-template-columns: repeat(var(--grid-cols, 1), minmax(0, 1fr));
+}
+
+.grid--2 {
+  --grid-cols: 2;
+}
+
+.grid--3 {
+  --grid-cols: 3;
+}
+
+@media (max-width: 760px) {
+  .grid--3 {
+    --grid-cols: 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .grid--2,
+  .grid--3 {
+    --grid-cols: 1;
+  }
+}
+
+/* ---------- Focus visible ---------- */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible,
+.btn:focus-visible {
+  outline: var(--space-2) solid var(--accent);
+  outline-offset: var(--space-2);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-16);
+  top: calc(-1 * var(--space-64));
+  z-index: var(--z-nav);
+  padding: var(--space-8) var(--space-16);
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: var(--radius-btn);
+}
+
+.skip-link:focus {
+  top: var(--space-8);
+}

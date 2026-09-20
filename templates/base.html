@@ -3,21 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {% firstof profile.display_name current_site.site_name "bkpolok" %}</title>
+  {% block meta %}
   {% if page.search_description %}<meta name="description" content="{{ page.search_description }}">{% endif %}
-  {% if page.full_url %}<link rel="canonical" href="{{ page.full_url }}">{% endif %}
+  {% if page.full_url %}<link rel="canonical" href="{{ page.full_url }}">
+  <meta property="og:url" content="{{ page.full_url }}">{% endif %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{% firstof profile.display_name current_site.site_name "bkpolok" %}">
+  <meta property="og:title" content="{% firstof page.seo_title page.title "bkpolok" %}">
+  {% if page.search_description %}<meta property="og:description" content="{{ page.search_description }}">{% endif %}
+  {% endblock %}
   <link rel="preload" href="{% static 'fonts/source-sans-3-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{% static 'fonts/fraunces-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
   <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  {% block extra_head %}{% endblock %}
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
   <a class="skip-link" href="#content">Skip to content</a>
 
-  <nav class="site-nav" aria-label="Main navigation">
-    <div class="wrap site-nav__inner">
+  <header class="site-nav">
+    <nav class="wrap site-nav__inner" aria-label="Main navigation">
       <a class="nav-name" href="/">{% firstof profile.short_name current_site.site_name "bkpolok" %}</a>
       {% main_menu as menu_items %}
       {% if menu_items %}
@@ -27,8 +36,8 @@
         {% endfor %}
       </ul>
       {% endif %}
-    </div>
-  </nav>
+    </nav>
+  </header>
 
   <main id="content" class="wrap">
     {% block content %}{% endblock %}
@@ -53,5 +62,7 @@
     {% endif %}
     <p class="copyright">© {% now "Y" %} {% firstof profile.legal_name current_site.site_name "bkpolok" %}.</p>
   </footer>
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

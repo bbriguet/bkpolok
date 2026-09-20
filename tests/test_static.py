@@ -1,7 +1,12 @@
 import re
 from pathlib import Path
 
-STATIC = Path(__file__).resolve().parent.parent / "static"
+import pytest
+
+ROOT = Path(__file__).resolve().parent.parent
+STATIC = ROOT / "static"
+DESIGN_TOKENS = ROOT / "_artifact" / "design" / "tokens.css"
+SITE_STYLESHEETS = ("css/base.css", "css/site.css")
 
 
 def _read(name: str) -> str:
@@ -12,15 +17,34 @@ def _strip_comments(css: str) -> str:
     return re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 
 
-def test_every_variable_used_by_site_css_is_defined_in_tokens():
+@pytest.mark.parametrize("name", SITE_STYLESHEETS)
+def test_every_variable_used_is_defined_in_tokens_or_locally(name):
+    css = _strip_comments(_read(name))
     defined = set(re.findall(r"(--[a-z0-9-]+)\s*:", _read("css/tokens.css")))
-    used = set(re.findall(r"var\((--[a-z0-9-]+)", _strip_comments(_read("css/site.css"))))
+    defined |= set(re.findall(r"(--[a-z0-9-]+)\s*:", css))
+    used = set(re.findall(r"var\((--[a-z0-9-]+)", css))
 
     assert used - defined == set()
 
 
-def test_site_css_has_no_hard_coded_colors():
-    assert re.findall(r"#[0-9a-fA-F]{3,8}\b", _strip_comments(_read("css/site.css"))) == []
+@pytest.mark.parametrize("name", SITE_STYLESHEETS)
+def test_stylesheets_have_no_hard_coded_colors(name):
+    assert re.findall(r"#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(", _strip_comments(_read(name))) == []
+
+
+def test_tokens_keep_every_value_of_the_design():
+    def declarations(css: str) -> dict[str, list[str]]:
+        found: dict[str, list[str]] = {}
+        for name, value in re.findall(r"(--[a-z0-9-]+)\s*:\s*([^;]+);", _strip_comments(css)):
+            found.setdefault(name, []).append(" ".join(value.split()))
+        return found
+
+    design = declarations(DESIGN_TOKENS.read_text(encoding="utf-8"))
+    ours = declarations(_read("css/tokens.css"))
+
+    assert {
+        name: (design[name], ours.get(name)) for name in design if design[name] != ours.get(name)
+    } == {}
 
 
 def test_fonts_are_self_hosted():
@@ -38,7 +62,22 @@ def test_fonts_cover_polish_characters():
     assert "latin-ext" in _read("css/fonts.css")
 
 
-def test_text_colors_reach_wcag_aa_on_the_tinted_background():
+# Valeurs exactes du design : ces deux couleurs n'atteignent pas 4,5:1 sur --surface-tint.
+# strict=True : le test échoue si quelqu'un les modifie (voir docs/site-architecture.md).
+BELOW_AA_ON_TINT = {
+    "ink-faint": pytest.mark.xfail(strict=True, reason="design value #647268: 4.26:1"),
+    "accent-2": pytest.mark.xfail(strict=True, reason="design value #9c5c1b: 4.46:1"),
+}
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        pytest.param(n, marks=BELOW_AA_ON_TINT.get(n, ()))
+        for n in ("ink", "ink-muted", "ink-faint", "accent", "accent-2")
+    ],
+)
+def test_text_colors_reach_wcag_aa_on_the_tinted_background(name):
     def luminance(hex_color: str) -> float:
         channels = [int(hex_color[i : i + 2], 16) / 255 for i in (1, 3, 5)]
         lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
@@ -49,7 +88,6 @@ def test_text_colors_reach_wcag_aa_on_the_tinted_background():
         return (hi + 0.05) / (lo + 0.05)
 
     light = _strip_comments(_read("css/tokens.css")).split("@media")[0]
-    color = lambda name: re.search(rf"--{name}:\s*(#[0-9a-f]{{6}})", light).group(1)  # noqa: E731
+    color = lambda n: re.search(rf"--{n}:\s*(#[0-9a-f]{{6}})", light).group(1)  # noqa: E731
 
-    for name in ("ink", "ink-muted", "ink-faint", "accent", "accent-2"):
-        assert contrast(color(name), color("surface-tint")) >= 4.5, name
+    assert contrast(color(name), color("surface-tint")) >= 4.5

@@ -24,10 +24,10 @@
   --surface-tint: #f1ebdd;    /* tinted sections, badges, photo rings */
   --ink: #1b2b29;             /* primary text, headings */
   --ink-muted: #5b6d69;       /* secondary text, nav links */
-  --ink-faint: #5f6d63;       /* tertiary text, captions, numbers (design: #647268, darkened to reach 4.5:1 on --surface-tint) */
+  --ink-faint: #647268;       /* tertiary text, captions, numbers */
   --accent: #0e6e63;          /* teal: links, primary button, dots, focus ring */
   --accent-soft: #dcede9;     /* aside note background, text selection */
-  --accent-2: #975a1a;        /* amber: eyebrows, dates, secondary dots/icons (design: #9c5c1b, darkened to reach 4.5:1 on --surface-tint) */
+  --accent-2: #9c5c1b;        /* amber: eyebrows, dates, secondary dots/icons */
   --accent-2-soft: #f5e3ce;   /* declared by the source, not used by any rule */
   --line: #e2d8c6;            /* hairlines, card borders */
   --line-strong: #cbbfa6;     /* pill / ghost button borders, timeline rail */

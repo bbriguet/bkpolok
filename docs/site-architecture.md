@@ -54,8 +54,8 @@ relies on that.
 
 - **Timeline pairs** (`tl-pair`, two entries sharing a photo column) are not implemented: an entry shows
   its own images beside its text.
-- **Contrast**: light `--ink-faint` (#647268 → #5f6d63) and `--accent-2` (#9c5c1b → #975a1a) darkened to
-  reach 4.5:1 on `--surface-tint`.
+- **Contrast**: `tokens.css` keeps the design's exact values. Light `--ink-faint` (#647268) and `--accent-2`
+  (#9c5c1b) reach only 4.26:1 and 4.46:1 on `--surface-tint` (below the 4.5:1 AA threshold for small text).
 - **Hero portrait** stays visible on narrow screens (smaller) instead of being hidden.
 - **Icons** in aside notes get `stroke: currentColor`; the source page left them without a stroke.
 - **Language caption** groups consecutive levels: "French, English & German (full professional)".

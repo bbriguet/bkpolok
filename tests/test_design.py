@@ -34,7 +34,8 @@ def test_base_layout_uses_local_assets_and_english(client, home, profile):
     assert '<html lang="en">' in html
     assert "Skip to content" in html
     assert 'aria-label="Main navigation"' in html
-    assert "css/tokens.css" in html and "css/fonts.css" in html and "css/site.css" in html
+    for sheet in ("tokens", "fonts", "base", "site"):
+        assert f"css/{sheet}.css" in html
     assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
     assert 'rel="preload"' in html
     assert "<title>Home – Jane Doe</title>" in html

@@ -1,99 +1,15 @@
-/* Feuille de style du site. Toute valeur de design passe par une variable de tokens.css.
-   Ordre de chargement : tokens.css, fonts.css, site.css. Composants décrits dans
+/* Composants du site. Toute valeur de design passe par une variable de tokens.css.
+   Ordre de chargement : tokens.css, fonts.css, base.css, site.css. Reset, typographie,
+   conteneur, grille et focus sont dans base.css. Composants décrits dans
    _artifact/design/components.md. */
 
-/* ---------- Base ---------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: var(--scroll-offset);
-}
-
-body {
-  margin: 0;
-  padding: 0 var(--gutter);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  -webkit-font-smoothing: antialiased;
-}
-
-main {
-  flex: 1;
-}
-
-.wrap {
-  width: 100%;
-  max-width: var(--wrap-max);
-  margin-inline: auto;
-}
-
-h1,
-h2,
-h3 {
-  font-family: var(--font-serif);
-  font-weight: var(--fw-semibold);
-  text-wrap: balance;
-  margin: 0;
-  color: var(--ink);
-}
-
-a {
-  color: var(--accent);
-}
-
-a:focus-visible,
-button:focus-visible,
-.btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-::selection {
-  background: var(--accent-soft);
-  color: var(--ink);
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-address {
-  font-style: normal;
-}
-
+/* ---------- Utilitaires ---------- */
 .mono {
   font-family: var(--font-mono);
 }
 
 .icon {
   stroke: currentColor;
-}
-
-.skip-link {
-  position: absolute;
-  left: var(--space-16);
-  top: calc(-1 * var(--space-64));
-  z-index: var(--z-nav);
-  padding: var(--space-8) var(--space-16);
-  background: var(--accent);
-  color: var(--on-accent);
-  border-radius: var(--radius-btn);
-}
-
-.skip-link:focus {
-  top: var(--space-8);
 }
 
 .eyebrow {
@@ -406,7 +322,7 @@ address {
   content: "";
   display: block;
   width: var(--quote-rule);
-  height: 2px;
+  height: var(--space-2);
   background: var(--accent);
   margin: 0 auto var(--space-24);
 }
