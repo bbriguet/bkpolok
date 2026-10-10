@@ -15,9 +15,10 @@ client after the services start.
   AAAA records unless IPv6 is configured.
 - Allow inbound TCP ports 80 and 443 in the Hostinger and VPS firewalls.
 - Push changes to `design/import-artifact` to trigger the image workflow.
-- After the first successful workflow, GHCR creates the package as private by default. Make it
-  public at <https://github.com/users/bbriguet/packages/container/bkpolok/settings> before
-  deploying. GitHub does not let a public package become private again.
+- The published image is public and can be checked at
+  <https://github.com/users/bbriguet/packages/container/package/bkpolok>. If its visibility is
+  changed later, restore **Public** in package settings before deploying. GitHub does not let a
+  public package become private again.
 - Copy `.env.production.example` to `.env` on the VPS, or enter those values in Hostinger's
   environment-variable settings. Replace all examples with your domain and generated secrets;
   `SITE_DOMAIN` must be the bare domain (for example, `example.ch`), without `https://` or `www`.
@@ -50,9 +51,9 @@ docker compose -f compose.production.yml pull
 docker compose -f compose.production.yml up -d
 ```
 
-The app image is `ghcr.io/bbriguet/bkpolok:latest`. PostgreSQL and Caddy are pulled from public
-registries. PostgreSQL is not published on a host port; Caddy exposes ports 80 and 443 and obtains
-HTTPS certificates automatically.
+The app image is `ghcr.io/bbriguet/bkpolok:latest`. It is publicly pullable without registry
+credentials. PostgreSQL and Caddy are pulled from public registries. PostgreSQL is not published
+on a host port; Caddy exposes ports 80 and 443 and obtains HTTPS certificates automatically.
 
 ## After launch
 
