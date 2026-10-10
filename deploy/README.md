@@ -15,10 +15,12 @@ client after the services start.
   AAAA records unless IPv6 is configured.
 - Allow inbound TCP ports 80 and 443 in the Hostinger and VPS firewalls.
 - Push changes to `design/import-artifact` to trigger the image workflow.
-- After the first successful workflow, make the GHCR package public at
-  <https://github.com/users/bbriguet/packages/container/bkpolok/settings>.
+- After the first successful workflow, GHCR creates the package as private by default. Make it
+  public at <https://github.com/users/bbriguet/packages/container/bkpolok/settings> before
+  deploying. GitHub does not let a public package become private again.
 - Copy `.env.production.example` to `.env` on the VPS, or enter those values in Hostinger's
-  environment-variable settings. Replace all examples with your domain and generated secrets.
+  environment-variable settings. Replace all examples with your domain and generated secrets;
+  `SITE_DOMAIN` must be the bare domain (for example, `example.ch`), without `https://` or `www`.
 
 Generate the secret values on the VPS:
 
