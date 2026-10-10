@@ -24,5 +24,10 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 COPY . .
 ENV DJANGO_SETTINGS_MODULE=config.settings.prod
+RUN SECRET_KEY=build-only-placeholder-key-not-used-at-runtime-0123456789-abcdefghijklmnopqrstuvwxyz \
+    ALLOWED_HOSTS=localhost \
+    WAGTAILADMIN_BASE_URL=http://localhost \
+    DATABASE_URL=sqlite:////tmp/collectstatic.db \
+    python manage.py collectstatic --noinput
 EXPOSE 8000
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]

@@ -1,87 +1,90 @@
 # Hostinger VPS deployment
 
-This deployment uses Docker Compose, PostgreSQL, Gunicorn, and Caddy. It is for a Hostinger VPS
-with Docker support, not shared hosting. The repository's current `design/import-artifact` branch
-is 10 commits ahead of `main`; the commands below deliberately clone that branch. Deploy `main`
-instead after merging the site changes there.
+This deployment uses public Docker images from GHCR, Docker Hub, and the official Caddy image.
+The application image is built by GitHub Actions; Hostinger only pulls and runs it. It is intended
+for a Hostinger VPS with Docker Compose, not shared hosting.
 
-## VPS prerequisites
+The production Compose file has no local `build`, custom `command`, or in-container healthcheck.
+The app's default image command starts Gunicorn. Static files are collected while GitHub Actions
+builds the image. Migrations and initial content are separate commands to run from Hostinger's
+client after the services start.
 
-- A Hostinger VPS with Docker Engine and the Docker Compose plugin installed.
-- A domain whose A records (apex and `www`) point to the VPS IPv4 address. Remove stale AAAA
-  records unless IPv6 is configured on the VPS.
-- Inbound TCP ports 80 and 443 allowed by both the Hostinger firewall and the VPS firewall.
+## Before deployment
 
-## First deployment
+- Configure the apex domain and `www` A records to point to the VPS IPv4 address. Remove stale
+  AAAA records unless IPv6 is configured.
+- Allow inbound TCP ports 80 and 443 in the Hostinger and VPS firewalls.
+- Push changes to `design/import-artifact` to trigger the image workflow.
+- After the first successful workflow, make the GHCR package public at
+  <https://github.com/users/bbriguet/packages/container/bkpolok/settings>.
+- Copy `.env.production.example` to `.env` on the VPS, or enter those values in Hostinger's
+  environment-variable settings. Replace all examples with your domain and generated secrets.
 
-SSH into the VPS, then run:
-
-```sh
-git clone --branch design/import-artifact --single-branch \
-  https://github.com/bbriguet/bkpolok.git
-cd bkpolok
-cp .env.production.example .env
-```
-
-Edit `.env`: replace `example.ch` with your domain in every relevant setting. Generate values on
-the VPS and paste them into `.env`:
+Generate the secret values on the VPS:
 
 ```sh
 python3 -c 'import secrets; print(secrets.token_urlsafe(64))'
 openssl rand -hex 32
-chmod 600 .env
 ```
 
-Use the first output for `SECRET_KEY`, the second for `POSTGRES_PASSWORD`. Keep the database
-password hex-only so it is safe in the `DATABASE_URL`. Configure SMTP values if the contact form
-should send email. Do not put secrets in GitHub or commit `.env`.
+Use the first value as `SECRET_KEY` and the second as `POSTGRES_PASSWORD`. Keep the database
+password hex-only because Compose interpolates it into `DATABASE_URL`. Configure SMTP values if
+the contact form should send email. Never commit the populated `.env`.
 
-After DNS resolves to the VPS, start the site:
+## Start the stack
+
+From the cloned repository's deployment branch, run in the Hostinger client:
 
 ```sh
-docker compose -f compose.production.yml up -d --build
-docker compose -f compose.production.yml ps
-docker compose -f compose.production.yml logs -f caddy web
+git clone --branch design/import-artifact --single-branch https://github.com/bbriguet/bkpolok.git
+cd bkpolok
+cp .env.production.example .env
 ```
 
-Caddy obtains and renews HTTPS certificates automatically. The app runs migrations and collects
-static files when it starts. PostgreSQL is only reachable on the private Compose network; Caddy
-is the only service exposing ports.
+After configuring `.env` and confirming DNS resolves to the VPS:
 
-Create the production Wagtail administrator:
+```sh
+docker compose -f compose.production.yml pull
+docker compose -f compose.production.yml up -d
+```
+
+The app image is `ghcr.io/bbriguet/bkpolok:latest`. PostgreSQL and Caddy are pulled from public
+registries. PostgreSQL is not published on a host port; Caddy exposes ports 80 and 443 and obtains
+HTTPS certificates automatically.
+
+## After launch
+
+In Hostinger's command client, apply the database migrations:
+
+```sh
+docker compose -f compose.production.yml exec web python manage.py migrate --noinput
+```
+
+Create the Wagtail administrator:
 
 ```sh
 docker compose -f compose.production.yml exec web python manage.py createsuperuser
 ```
 
-If this is a new, empty site, load the prepared editorial content and publish the pages in Wagtail:
+For a new, empty site only, import the prepared pages and editorial content:
 
 ```sh
 docker compose -f compose.production.yml exec web python manage.py charger_contenu_initial
 ```
 
-Confirm the site and `/admin/` work over HTTPS before enabling HSTS by changing
-`SECURE_HSTS_SECONDS=0` to `SECURE_HSTS_SECONDS=2592000` in `.env`, then recreate the web service:
+Then sign in at `https://YOUR_DOMAIN/admin/`, review and publish the draft pages, and verify the
+contact form and email settings. Once HTTPS works, change `SECURE_HSTS_SECONDS=0` to
+`SECURE_HSTS_SECONDS=2592000` in `.env` and restart the web service.
+
+## Updates and backups
+
+Push a new commit to `design/import-artifact`; GitHub Actions rebuilds the `latest` image. Then run
+in the Hostinger client:
 
 ```sh
-docker compose -f compose.production.yml up -d --force-recreate web
+docker compose -f compose.production.yml pull
+docker compose -f compose.production.yml up -d
 ```
 
-## Deploy updates
-
-```sh
-git pull --ff-only
-docker compose -f compose.production.yml up -d --build
-```
-
-## Operations
-
-```sh
-docker compose -f compose.production.yml logs -f web caddy
-docker compose -f compose.production.yml exec -T db sh -c \
-  'pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB"' > bkpolok-$(date +%F).sql
-```
-
-Back up the PostgreSQL dump and the `media_data` volume off the VPS regularly. Named volumes
-survive container rebuilds, but do not protect data if the VPS or its disk is lost. Do not run
-`docker compose down -v` on production.
+Back up PostgreSQL and the `media_data` volume off the VPS. Named volumes survive image updates,
+but not VPS or disk loss. Do not remove production volumes when recreating the stack.
