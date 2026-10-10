@@ -14,7 +14,7 @@ client after the services start.
 - Configure the apex domain and `www` A records to point to the VPS IPv4 address. Remove stale
   AAAA records unless IPv6 is configured.
 - Allow inbound TCP ports 80 and 443 in the Hostinger and VPS firewalls.
-- Push changes to `design/import-artifact` to trigger the image workflow.
+- Push changes to `main` to trigger the image workflow.
 - The published image is public and can be checked at
   <https://github.com/users/bbriguet/packages/container/package/bkpolok>. If its visibility is
   changed later, restore **Public** in package settings before deploying. GitHub does not let a
@@ -39,7 +39,7 @@ the contact form should send email. Never commit the populated `.env`.
 From the cloned repository's deployment branch, run in the Hostinger client:
 
 ```sh
-git clone --branch design/import-artifact --single-branch https://github.com/bbriguet/bkpolok.git
+git clone --branch main --single-branch https://github.com/bbriguet/bkpolok.git
 cd bkpolok
 cp .env.production.example .env
 ```
@@ -81,7 +81,7 @@ contact form and email settings. Once HTTPS works, change `SECURE_HSTS_SECONDS=0
 
 ## Updates and backups
 
-Push a new commit to `design/import-artifact`; GitHub Actions rebuilds the `latest` image. Then run
+Push a new commit to `main`; GitHub Actions rebuilds the `latest` image. Then run
 in the Hostinger client:
 
 ```sh

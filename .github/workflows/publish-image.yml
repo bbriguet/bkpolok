@@ -3,7 +3,7 @@ name: Publish public Docker image
 on:
   push:
     branches:
-      - design/import-artifact
+      - main
   workflow_dispatch:
 
 permissions:
