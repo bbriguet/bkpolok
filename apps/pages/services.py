@@ -1,4 +1,4 @@
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 from django.apps import apps as django_apps
 from django.db import connection
@@ -209,3 +209,27 @@ def create_site_pages(home: Page) -> list[Page]:
         for child_title, child_slug in children:
             ensure(parent, child_title, child_slug, "services.ServicePage", in_menu=False)
     return created
+
+
+def configure_site(site: Site, base_url: str, site_name: str) -> None:
+    """Aligne le site Wagtail sur son URL publique (sitemap, liens canoniques, og:url)."""
+    parts = urlsplit(base_url)
+    if not parts.hostname:
+        raise ValueError(f"URL sans nom d'hôte : {base_url!r}")
+    site.hostname = parts.hostname
+    site.port = parts.port or (443 if parts.scheme == "https" else 80)
+    site.site_name = site_name
+    site.save()
+
+
+def publish_drafts(home: Page) -> list[Page]:
+    """Publie la dernière révision de chaque page non publiée sous l'accueil.
+
+    Idempotent : les pages déjà en ligne ne sont pas touchées. Retourne les pages publiées.
+    """
+    published: list[Page] = []
+    for page in home.get_descendants().not_live().specific():
+        revision = page.get_latest_revision() or page.save_revision()
+        revision.publish()
+        published.append(page)
+    return published

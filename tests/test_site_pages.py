@@ -1,9 +1,11 @@
+from io import StringIO
+
 import pytest
 from django.core.management import call_command
 from wagtail.models import Page
 
 from apps.pages.models import ContactPage, StandardPage
-from apps.pages.services import SITE_TREE, create_site_pages
+from apps.pages.services import SITE_TREE, configure_site, create_site_pages, publish_drafts
 from apps.services.models import ServiceIndexPage, ServicePage
 
 pytestmark = pytest.mark.django_db
@@ -101,3 +103,37 @@ def test_site_tree_covers_every_nav_link_of_the_design():
         "personal",
         "contact",
     ]
+
+
+def test_configure_site_uses_the_public_url(site):
+    configure_site(site, "https://example.ch", "example")
+
+    site.refresh_from_db()
+    assert (site.hostname, site.port, site.site_name) == ("example.ch", 443, "example")
+    assert site.root_url == "https://example.ch"
+
+
+def test_configure_site_rejects_an_url_without_hostname(site):
+    with pytest.raises(ValueError):
+        configure_site(site, "example.ch", "example")
+
+
+def test_publish_drafts_publishes_every_draft_once(client, home):
+    create_site_pages(home)
+
+    assert len(publish_drafts(home)) == 11
+    assert publish_drafts(home) == []
+    assert client.get("/services/coaching/").status_code == 200
+    assert 'href="/about/"' in client.get("/").content.decode()
+
+
+def test_publier_site_command(home, site):
+    create_site_pages(home)
+    out = StringIO()
+
+    call_command("publier_site", base_url="https://example.ch", stdout=out)
+
+    site.refresh_from_db()
+    assert site.hostname == "example.ch"
+    assert not Page.objects.descendant_of(home).not_live().exists()
+    assert "Pages publiées : 11" in out.getvalue()
