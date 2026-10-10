@@ -10,7 +10,11 @@ def test_home_page_returns_200(client):
     response = client.get("/")
 
     assert response.status_code == 200
-    assert '<html lang="fr-CH">' in response.content.decode()
+    assert '<html lang="en">' in response.content.decode()
+
+
+def test_home_page_is_titled_in_english(home):
+    assert home.title == "Home"
 
 
 def test_default_site_points_to_home_page():

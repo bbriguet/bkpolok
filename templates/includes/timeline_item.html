@@ -1,0 +1,19 @@
+{% comment %}
+  Une entrée de chronologie (utilisée par timeline.html). entry · images : vignettes à côté du
+  texte (vide dans une paire, dont la colonne d'images est commune).
+  La période se lit « Dec 2022 to present » : le tiret est masqué aux lecteurs d'écran.
+{% endcomment %}
+<div class="tl-item" data-reveal>
+  <div class="tl-date tabular">{{ entry.period_start }}{% if entry.period_end %} <span aria-hidden="true">—</span><span class="visually-hidden">to</span> {{ entry.period_end }}{% endif %}</div>
+  <h4>{{ entry.experience.title }}</h4>
+  {% if images %}
+  <div class="tl-item-body">
+    <div class="tl-item-text">{% include "includes/timeline_text.html" with entry=entry only %}</div>
+    <div class="research-photos tl-photos-solo">
+      {% for photo in images %}{% include "includes/research_thumb.html" with image=photo.thumb alt=photo.alt_text caption=photo.caption link_url=photo.link_url link_label=photo.link_label external=photo.external only %}{% endfor %}
+    </div>
+  </div>
+  {% else %}
+  {% include "includes/timeline_text.html" with entry=entry only %}
+  {% endif %}
+</div>

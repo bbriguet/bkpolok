@@ -1,11 +1,13 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags profile_tags %}
+
+{% block meta %}{{ block.super }}{% person_jsonld %}{% endblock %}
 
 {% block content %}
 <article class="page page--home">
-  <header class="page__header">
-    <h1>{{ page.title }}</h1>
-  </header>
+  {% if not page.has_hero %}
+  <header class="page-header"><h1>{{ page.title }}</h1></header>
+  {% endif %}
   {% include_block page.body %}
 </article>
 {% endblock %}

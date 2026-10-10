@@ -1,0 +1,33 @@
+{% comment %}
+  Pied de page / contact (ancre #contact).
+  heading · lede · email · linkedin_url, linkedin_label · languages_line (« Working in … »)
+  accessibility : déclaration d'accessibilité (texte riche, optionnelle)
+  legal_links : liste de {label, href} · holder (titulaire du copyright) · notice (phrase après le ©)
+{% endcomment %}
+{% load wagtailcore_tags %}
+<footer class="site-footer wrap" id="contact"{% if heading %} aria-labelledby="contact-heading"{% endif %}>
+  {% if email or linkedin_url or heading %}
+  <div class="footer-grid">
+    <div>
+      {% include "includes/eyebrow.html" with text="Contact" only %}
+      {% if heading %}<h2 id="contact-heading">{{ heading }}</h2>{% endif %}
+      {% if lede %}<p class="contact-lede">{{ lede }}</p>{% endif %}
+      {% if email %}<a class="contact-email" href="mailto:{{ email }}"><span class="visually-hidden">Email: </span>{{ email }}</a><br>{% endif %}
+      {% if linkedin_url %}<a class="contact-email" href="{{ linkedin_url }}" target="_blank" rel="noopener"><span class="visually-hidden">LinkedIn profile: </span>{{ linkedin_label|default:linkedin_url }}<span class="visually-hidden"> (opens in a new tab)</span></a>{% endif %}
+    </div>
+    {% if languages_line %}<p class="footer-langs">{{ languages_line }}</p>{% endif %}
+  </div>
+  {% endif %}
+  {% if accessibility %}
+  <div class="a11y-statement">
+    <h3>Accessibility</h3>
+    {{ accessibility|richtext }}
+  </div>
+  {% endif %}
+  {% if legal_links %}
+  <nav class="legal-links" aria-label="Legal">
+    {% for link in legal_links %}<a href="{{ link.href }}">{{ link.label }}</a>{% endfor %}
+  </nav>
+  {% endif %}
+  <p class="copyright">© {% now "Y" %} {{ holder }}.{% if notice %} {{ notice }}{% endif %}</p>
+</footer>

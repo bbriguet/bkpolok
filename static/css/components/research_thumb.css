@@ -1,0 +1,96 @@
+/* Vignette ronde avec légende. Taille par défaut 108px ; 84px seule à côté d'une entrée de
+   chronologie (.tl-photos-solo) ; 76px en colonne partagée par une paire (.tl-photos-span).
+   Le lien de la légende reste souligné : sa couleur seule ne le distingue pas du texte voisin. */
+.research-photos {
+  display: flex;
+  gap: var(--space-16);
+  flex-shrink: 0;
+}
+
+.research-thumb {
+  margin: 0;
+  text-align: center;
+}
+
+.research-thumb img {
+  width: var(--size-thumb);
+  height: var(--size-thumb);
+  border-radius: var(--radius-round);
+  object-fit: cover;
+  border: var(--bw-photo) solid var(--accent);
+  box-shadow: var(--ring-thumb);
+  display: block;
+}
+
+.research-thumb figcaption {
+  margin-top: var(--space-9);
+  font-size: var(--fs-sm);
+  color: var(--ink-faint);
+  line-height: var(--lh-meta);
+}
+
+.research-thumb figcaption a {
+  color: var(--accent-2);
+  margin-left: var(--caption-link-gap);
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.research-thumb figcaption a:active {
+  color: var(--accent);
+}
+
+.tl-photos-solo {
+  margin-top: var(--space-4);
+}
+
+.tl-photos-solo .research-thumb img {
+  width: var(--size-thumb-solo);
+  height: var(--size-thumb-solo);
+  border-width: var(--bw-photo-sm);
+  box-shadow: var(--ring-thumb-sm);
+}
+
+.tl-photos-solo .research-thumb figcaption {
+  margin-top: var(--space-6);
+  max-width: var(--tl-caption-max);
+}
+
+.tl-photos-span {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-14);
+  padding: var(--space-4) 0 var(--space-32);
+}
+
+.tl-photos-span .research-thumb img {
+  width: var(--size-thumb-span);
+  height: var(--size-thumb-span);
+  border-width: var(--bw-photo-sm);
+  box-shadow: var(--ring-thumb-sm);
+}
+
+.tl-photos-span .research-thumb figcaption {
+  margin-top: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .tl-photos-span {
+    grid-column: 1;
+    grid-row: auto;
+    order: -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0 0 var(--space-16);
+  }
+
+  .research-thumb figcaption a {
+    white-space: normal;
+  }
+}

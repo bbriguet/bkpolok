@@ -19,9 +19,13 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 INSTALLED_APPS = [
     "apps.pages",
     "apps.services",
+    "apps.profile",
+    "apps.contact",
     "apps.veille",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
+    "wagtail.contrib.routable_page",
+    "wagtail.contrib.settings",
     "wagtail.contrib.sitemaps",
     "wagtail.embeds",
     "wagtail.sites",
@@ -68,6 +72,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "wagtail.contrib.settings.context_processors.settings",
             ],
         },
     },
@@ -83,11 +88,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Internationalisation : site en français (Suisse), fuseau horaire suisse.
-LANGUAGE_CODE = "fr-ch"
+# Internationalisation : textes du site en anglais, formats suisses (config/formats/en/formats.py),
+# fuseau horaire suisse.
+LANGUAGE_CODE = "en"
 TIME_ZONE = "Europe/Zurich"
 USE_I18N = True
 USE_TZ = True
+FORMAT_MODULE_PATH = ["config.formats"]
 
 # Champs URL sans schéma : https par défaut (comportement de Django 6.0).
 FORMS_URLFIELD_ASSUME_HTTPS = True

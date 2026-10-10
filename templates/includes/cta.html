@@ -1,0 +1,8 @@
+{# Bandeau d'appel à l'action. title (phrase, pas un titre) · text (optionnel) · label · href · variant (primary ou ghost) · external #}
+<div class="cta-band">
+  <div>
+    <p class="cta-band__title">{{ title }}</p>
+    {% if text %}<p class="cta-band__text">{{ text }}</p>{% endif %}
+  </div>
+  {% include "includes/button.html" with label=label href=href variant=variant external=external only %}
+</div>

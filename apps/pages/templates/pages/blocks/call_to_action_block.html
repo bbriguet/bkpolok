@@ -1,6 +1,1 @@
-{% load wagtailcore_tags %}
-<aside class="cta">
-  <h2 class="cta__title">{{ value.title }}</h2>
-  {% if value.text %}<p>{{ value.text }}</p>{% endif %}
-  <a class="button" href="{% if value.page %}{% pageurl value.page %}{% else %}{{ value.url }}{% endif %}">{{ value.button_label }}</a>
-</aside>
+{% include "includes/cta.html" with title=value.title text=value.text label=button.label href=button.href variant=button.variant external=button.external only %}

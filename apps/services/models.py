@@ -3,6 +3,7 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.models import Page
 
 from apps.pages.models import BodyPage
+from apps.pages.services import has_block
 
 from .services import list_live_services
 
@@ -20,21 +21,22 @@ class ServiceIndexPage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page d’index des services"
-        verbose_name_plural = "Pages d’index des services"
+        verbose_name = "page d’index des services"
+        verbose_name_plural = "pages d’index des services"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context["services"] = list_live_services(self)
+        # Le corps les présente déjà (bloc « Service offers ») : pas de seconde liste.
+        context["services"] = [] if has_block(self.body, "offers") else list_live_services(self)
         return context
 
 
 class ServicePage(BodyPage):
     summary = models.CharField(
-        "Résumé",
-        max_length=250,
+        "Summary",
+        max_length=600,
         blank=True,
-        help_text="Affiché dans la liste des services et dans les résultats de recherche.",
+        help_text="Shown in the list of services and in search results.",
     )
 
     parent_page_types = ["services.ServiceIndexPage"]
@@ -47,5 +49,5 @@ class ServicePage(BodyPage):
     ]
 
     class Meta:
-        verbose_name = "Page de service"
-        verbose_name_plural = "Pages de service"
+        verbose_name = "page de service"
+        verbose_name_plural = "pages de service"

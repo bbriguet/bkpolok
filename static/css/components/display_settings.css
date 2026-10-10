@@ -1,0 +1,130 @@
+/* Barre « Display settings » : un bouton qui déplie la taille du texte, le contraste élevé et le
+   mode sombre (static/js/preferences.js). Pleine largeur teintée, alignée à droite. */
+.a11y-bar {
+  background: var(--surface-tint);
+  border-bottom: var(--border-hairline);
+  margin: 0 calc(-1 * var(--gutter));
+  padding: var(--space-4) var(--gutter);
+}
+
+.a11y-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8) var(--space-18);
+}
+
+.a11y-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--tap-min);
+  padding: var(--space-6) var(--space-10);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  background: transparent;
+  border: var(--bw-hairline) solid transparent;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.a11y-toggle .icon {
+  width: var(--size-icon-inline);
+  height: var(--size-icon-inline);
+}
+
+.a11y-toggle:hover {
+  color: var(--accent);
+  border-color: var(--line-strong);
+}
+
+.a11y-toggle[aria-expanded="true"] {
+  border-color: var(--line-strong);
+  background: var(--surface);
+}
+
+/* Sans JS, le bouton ne servirait à rien : preferences.js retire `hidden` de la barre. */
+.a11y-bar[hidden],
+.a11y-panel[hidden] {
+  display: none;
+}
+
+.a11y-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-8) var(--space-18);
+  width: 100%;
+  padding: var(--space-6) 0 var(--space-4);
+}
+
+.a11y-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.a11y-label {
+  margin-right: var(--space-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.a11y-btn {
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: var(--space-6) var(--space-12);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--bw-medium) solid var(--line-strong);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.a11y-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.a11y-btn[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.a11y-btn:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .a11y-btn {
+    border: var(--bw-hairline) solid CanvasText;
+  }
+
+  .a11y-btn[aria-pressed="true"] {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+}
+
+@media print {
+  .a11y-bar {
+    display: none !important;
+  }
+}

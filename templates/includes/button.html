@@ -1,0 +1,11 @@
+{% comment %}
+  Bouton.
+  label · variant : primary (défaut) ou ghost
+  href : lien (<a>) ; sans href, un <button type="{{ type }}"> (défaut « button »)
+  external : ouvre dans un nouvel onglet (flèche ↗ décorative, annoncé aux lecteurs d'écran)
+  disabled : désactivé (aria-disabled sur un lien)
+{% endcomment %}
+{% firstof variant "primary" as kind %}
+{% if href and not disabled %}<a class="btn btn-{{ kind }}" href="{{ href }}"{% if external %} target="_blank" rel="noopener"{% endif %}>{{ label }}{% if external %} <span aria-hidden="true">↗</span><span class="visually-hidden">(opens in a new tab)</span>{% endif %}</a>
+{% elif href %}<a class="btn btn-{{ kind }}" role="link" aria-disabled="true">{{ label }}</a>
+{% else %}<button class="btn btn-{{ kind }}" type="{{ type|default:'button' }}"{% if disabled %} disabled{% endif %}>{{ label }}</button>{% endif %}

@@ -1,0 +1,32 @@
+{% comment %}
+  Publications.
+  publications : liste de {number, anchor, pubmed_url, publication.title/authors/journal/year/pmid/note}
+  featured : cartes mises en avant (★ au lieu du numéro, note sous la référence)
+  more_publications, more_label, more_start : suite de la liste, repliée sous « voir plus »
+  pubmed_url : lien « Full record on PubMed » (optionnel)
+{% endcomment %}
+{% if featured %}
+{% for entry in publications %}
+<div class="pub pub-featured" id="{{ entry.anchor }}">
+  <span class="pub-num" aria-hidden="true">★</span>
+  <div>{% include "includes/publication_reference.html" with entry=entry only %}{% if entry.publication.note %}<p class="pub-note">{{ entry.publication.note }}</p>{% endif %}</div>
+</div>
+{% endfor %}
+{% else %}
+<ol class="pub-list">
+  {% for entry in publications %}
+  <li class="pub" id="{{ entry.anchor }}"><span class="pub-num tabular" aria-hidden="true">{{ entry.number }}</span><div>{% include "includes/publication_reference.html" with entry=entry only %}</div></li>
+  {% endfor %}
+</ol>
+{% if more_publications %}
+<details class="more">
+  <summary>{{ more_label }}</summary>
+  <ol class="pub-list" start="{{ more_start }}">
+    {% for entry in more_publications %}
+    <li class="pub" id="{{ entry.anchor }}"><span class="pub-num tabular" aria-hidden="true">{{ entry.number }}</span><div>{% include "includes/publication_reference.html" with entry=entry only %}</div></li>
+    {% endfor %}
+  </ol>
+</details>
+{% endif %}
+{% endif %}
+{% if pubmed_url %}<div class="pub-source"><a href="{{ pubmed_url }}" target="_blank" rel="noopener">Full record on PubMed <span aria-hidden="true">→</span><span class="visually-hidden">(opens in a new tab)</span></a></div>{% endif %}

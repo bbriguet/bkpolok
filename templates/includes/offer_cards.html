@@ -1,0 +1,17 @@
+{% comment %}
+  Cartes d'offre (trois colonnes, filet teal en haut).
+  lead : phrase d'introduction (optionnelle) · offers : liste de {title, href, summary}
+  title_level : niveau des titres de carte (h3 par défaut)
+{% endcomment %}
+{% firstof title_level "h3" as tag %}
+{% if lead %}<p class="offer-lead">{{ lead }}</p>{% endif %}
+{% if offers %}
+<div class="offer-grid">
+  {% for offer in offers %}
+  <div class="offer-card" data-reveal style="--reveal-i: {{ forloop.counter0 }}">
+    <{{ tag }}>{% if offer.href %}<a href="{{ offer.href }}">{{ offer.title }}</a>{% else %}{{ offer.title }}{% endif %}</{{ tag }}>
+    {% if offer.summary %}<p>{{ offer.summary }}</p>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

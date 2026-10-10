@@ -1,0 +1,51 @@
+.pull-quote {
+  padding: var(--space-12) 0 var(--space-56);
+  max-width: var(--quote-max);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pull-quote::before {
+  content: "";
+  display: block;
+  width: var(--quote-rule);
+  height: var(--space-2);
+  background: var(--accent);
+  margin: 0 auto var(--space-24);
+}
+
+.pull-quote p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-quote);
+  line-height: var(--lh-quote);
+  color: var(--ink);
+  margin: 0;
+}
+
+.pull-quote cite {
+  display: block;
+  margin-top: var(--space-16);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-date);
+  color: var(--accent-2);
+  font-style: normal;
+}
+
+/* Commentaire sous la citation : texte courant, ni italique ni serif. */
+.pull-quote .quote-note {
+  margin-top: var(--space-14);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+:root[data-contrast="high"] .pull-quote p {
+  font-style: normal;
+}

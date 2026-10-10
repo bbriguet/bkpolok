@@ -1,41 +1,82 @@
-{% load static wagtailcore_tags navigation %}{% wagtail_site as current_site %}<!DOCTYPE html>
-<html lang="fr-CH">
+{% load static wagtailcore_tags navigation profile_tags seo %}{% wagtail_site as current_site %}{% site_profile as profile %}<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {{ current_site.site_name|default:"bkpolok" }}</title>
-  {% if page.search_description %}<meta name="description" content="{{ page.search_description }}">{% endif %}
-  {% if page.full_url %}<link rel="canonical" href="{{ page.full_url }}">{% endif %}
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{% firstof page.seo_title page.title "bkpolok" %}{% endblock %} – {% firstof profile.display_name current_site.site_name "bkpolok" %}</title>
+  {% block meta %}
+  {% page_seo as seo %}
+  {% if seo.description %}<meta name="description" content="{{ seo.description }}">{% endif %}
+  {% if noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+  {% if seo.canonical %}<link rel="canonical" href="{{ seo.canonical }}">
+  <meta property="og:url" content="{{ seo.canonical }}">{% endif %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{% firstof profile.display_name current_site.site_name "bkpolok" %}">
+  <meta property="og:title" content="{% firstof page.seo_title page.title "bkpolok" %}">
+  {% if seo.description %}<meta property="og:description" content="{{ seo.description }}">{% endif %}
+  {% if seo.image %}<meta property="og:image" content="{{ seo.image.url }}">
+  <meta property="og:image:width" content="{{ seo.image.width }}">
+  <meta property="og:image:height" content="{{ seo.image.height }}">
+  <meta property="og:image:alt" content="{{ seo.image.alt }}">{% endif %}
+  <meta name="twitter:card" content="{% if seo.image %}summary_large_image{% else %}summary{% endif %}">
+  {% endblock %}
+  <link rel="preload" href="{% static 'fonts/source-sans-3-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/fraunces-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/icon.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/eyebrow.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/reveal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/display_settings.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/section.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/section_head.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/button.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/status_badge.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/pill.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/tag_line.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/hero.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/iris.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/figure_pair.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/pull_quote.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/card_grid.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/aside_note.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/offer_cards.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/timeline.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/research_thumb.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/personal_photo.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/gallery.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/education.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/publication.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/media_list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/disclosure.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/accordion.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/cta.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/contact_form.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/footer.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  {% block extra_head %}{% endblock %}
+  {% block extra_css %}{% endblock %}
+  <script src="{% static 'js/preferences.js' %}"></script>
+  <script src="{% static 'js/reveal.js' %}"></script>
+  <script src="{% static 'js/site.js' %}" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-  <header class="site-header">
-    <div class="container site-header__inner">
-      <a class="site-header__brand" href="/">{{ current_site.site_name|default:"bkpolok" }}</a>
-      {% main_menu as menu_items %}
-      {% if menu_items %}
-      <nav aria-label="Navigation principale">
-        <ul class="nav">
-          {% for item in menu_items %}
-          <li><a href="{% pageurl item %}"{% if item.pk == page.pk %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
-          {% endfor %}
-        </ul>
-      </nav>
-      {% endif %}
-    </div>
-  </header>
+  {% include "includes/display_settings.html" only %}
 
-  <main id="contenu" class="container">
+  {% nav_items as menu_items %}
+  {% include "includes/nav.html" with brand=profile.short_name|default:current_site.site_name|default:"bkpolok" items=menu_items only %}
+
+  <main id="main" class="wrap" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>© {% now "Y" %} {{ current_site.site_name|default:"bkpolok" }}</p>
-    </div>
-  </footer>
+  {% site_footer as footer %}
+  {% include "includes/footer.html" with heading=footer.heading lede=footer.lede email=footer.email linkedin_url=footer.linkedin_url linkedin_label=footer.linkedin_label languages_line=footer.languages_line accessibility=footer.accessibility legal_links=footer.legal_links notice=footer.notice holder=profile.legal_name|default:current_site.site_name|default:"bkpolok" only %}
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

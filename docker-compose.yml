@@ -21,6 +21,8 @@ services:
     env_file: .env
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"  # accès depuis l'hôte (manage.py hors Docker), local uniquement ; 5433 car 5432 est pris par un Postgres local
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s

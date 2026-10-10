@@ -1,0 +1,73 @@
+/* Formulaire de contact. États : normal, focus clavier (base.css), erreur. */
+.contact-form {
+  display: grid;
+  gap: var(--space-18);
+  max-width: var(--measure-text);
+}
+
+.form-field {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.form-field label {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-ui);
+}
+
+.form-required {
+  color: var(--accent-2);
+}
+
+.form-field :is(input, textarea) {
+  width: 100%;
+  padding: var(--space-10) var(--space-14);
+  border: var(--bw-hairline) solid var(--line-strong);
+  border-radius: var(--radius-btn);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.form-field :is(input, textarea):hover {
+  border-color: var(--accent);
+}
+
+.form-field.has-error :is(input, textarea) {
+  border-color: var(--accent-2);
+  border-width: var(--bw-medium);
+}
+
+.form-error {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  border-left: var(--bw-bold) solid var(--accent-2);
+  padding-left: var(--space-10);
+}
+
+.form-summary {
+  border: var(--bw-hairline) solid var(--accent-2);
+  border-radius: var(--radius-card);
+  padding: var(--space-12) var(--space-16);
+  background: var(--accent-2-soft);
+  color: var(--ink);
+}
+
+.form-summary p {
+  margin: 0;
+}
+
+/* Piège à robots : hors écran plutôt que display:none, que certains robots détectent. */
+.form-trap {
+  position: absolute;
+  left: var(--offscreen);
+  width: var(--bw-hairline);
+  height: var(--bw-hairline);
+  overflow: hidden;
+}
+
+.form-actions {
+  margin-top: var(--space-6);
+}

@@ -1,0 +1,49 @@
+/* Portrait rond dans un anneau SVG. Sur téléphone il reste visible, plus petit, au-dessus du nom. */
+.iris {
+  flex-shrink: 0;
+  position: relative;
+  width: var(--size-iris);
+  height: var(--size-iris);
+}
+
+.iris svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.iris img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--size-portrait);
+  height: var(--size-portrait);
+  border-radius: var(--radius-round);
+  object-fit: cover;
+  border: var(--bw-portrait) solid var(--accent);
+  box-shadow: var(--ring-portrait);
+}
+
+@media (max-width: 640px) {
+  .iris {
+    order: -1;
+    width: var(--size-iris-sm);
+    height: var(--size-iris-sm);
+    margin: 0 0 var(--space-4);
+  }
+
+  .iris img {
+    width: var(--size-portrait-sm);
+    height: var(--size-portrait-sm);
+    border-width: var(--bw-portrait-sm);
+    box-shadow: var(--ring-portrait-sm);
+  }
+}
+
+@media print {
+  .iris svg {
+    display: none !important;
+  }
+}

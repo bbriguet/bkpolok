@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import sitemap
@@ -16,6 +16,8 @@ urlpatterns = [
     path("healthz", pages_views.healthz, name="healthz"),
     path("robots.txt", pages_views.robots_txt, name="robots_txt"),
     path("sitemap.xml", sitemap),
+    # Page temporaire de validation des composants ; la vue répond 404 hors DEBUG.
+    re_path(r"^_composants/?$", pages_views.components_demo, name="components_demo"),
 ]
 
 if settings.DEBUG:

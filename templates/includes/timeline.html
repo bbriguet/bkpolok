@@ -1,0 +1,25 @@
+{% comment %}
+  Chronologie groupée sous un titre (h3 ; entrées en h4).
+  label · rows : liste de {entries, images, is_pair} ; une ligne est une entrée seule (ses images
+  à côté du texte), ou une paire (deux entrées, les images en colonne à droite des deux).
+  entry : {period_start, period_end, experience.title, org_line, experience.parallel_role,
+  experience.organisation_description, experience.summary, achievements, images}
+  image : {thumb (rendition), alt_text, caption, link_url, link_label, external}
+{% endcomment %}
+{% if rows %}
+<h3 class="group-label">{{ label }}</h3>
+<div class="timeline">
+  {% for row in rows %}
+  {% if row.is_pair %}
+  <div class="tl-pair">
+    {% for entry in row.entries %}{% include "includes/timeline_item.html" with entry=entry only %}{% endfor %}
+    <div class="research-photos tl-photos-span">
+      {% for photo in row.images %}{% include "includes/research_thumb.html" with image=photo.thumb alt=photo.alt_text caption=photo.caption link_url=photo.link_url link_label=photo.link_label external=photo.external only %}{% endfor %}
+    </div>
+  </div>
+  {% else %}
+  {% include "includes/timeline_item.html" with entry=row.entries.0 images=row.images only %}
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

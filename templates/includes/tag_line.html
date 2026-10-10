@@ -1,0 +1,2 @@
+{# Ligne d'étiquettes « A · B · C ». items : liste de textes · label : libellé lu par les lecteurs d'écran seulement. #}
+<p class="ta-line">{% if label %}<span class="visually-hidden">{{ label }}: </span>{% endif %}{{ items|join:" · " }}</p>

@@ -1,0 +1,56 @@
+/* Figure de une ou deux images 4:3 côte à côte, avec un titre et une légende (tête « About »). */
+.figure-pair {
+  margin: 0;
+}
+
+.figure-pair__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--figure-cols, 2), minmax(0, 1fr));
+  gap: var(--space-10);
+}
+
+.figure-pair__grid--single {
+  --figure-cols: 1;
+}
+
+.figure-pair__frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface-tint);
+  box-shadow: var(--shadow);
+  border: var(--border-hairline);
+}
+
+.figure-pair__frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.figure-pair figcaption {
+  margin-top: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.figure-pair__title {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+
+.figure-pair__caption {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  line-height: var(--lh-meta);
+}
+
+:root[data-contrast="high"] .figure-pair__frame {
+  border: var(--bw-medium) solid var(--line);
+}

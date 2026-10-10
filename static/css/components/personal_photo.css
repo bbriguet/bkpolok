@@ -1,0 +1,36 @@
+/* Photo « personnelle » : carré aux coins arrondis, bordure ambre, ombre. Pleine largeur (bornée)
+   sur téléphone. */
+.personal-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-32);
+  align-items: center;
+}
+
+.personal-photo {
+  width: var(--size-personal);
+  height: var(--size-personal);
+  border-radius: var(--radius-photo);
+  object-fit: cover;
+  border: var(--bw-personal) solid var(--accent-2);
+  box-shadow: var(--shadow);
+  justify-self: end;
+}
+
+@media (max-width: 640px) {
+  .personal-head {
+    grid-template-columns: 1fr;
+  }
+
+  .personal-photo {
+    justify-self: start;
+    width: 100%;
+    max-width: var(--size-personal-sm);
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+html:is([data-textsize="3"], [data-textsize="4"]) .personal-head {
+  grid-template-columns: 1fr;
+}

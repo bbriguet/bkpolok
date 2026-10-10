@@ -1,0 +1,45 @@
+/* Galerie de photos 4:3 (« Through my lens ») : 3 colonnes, 2 sous 640px, note de droits dessous.
+   Variante protégée : glisser-déposer et menu contextuel découragés (static/js/site.js). */
+.gallery {
+  margin-top: var(--space-36);
+}
+
+.gallery .subhead {
+  margin-top: 0;
+}
+
+.gallery-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-12);
+}
+
+.gallery-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-image);
+}
+
+.gallery--protected img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.gallery-note {
+  margin: var(--space-10) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

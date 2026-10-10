@@ -1,0 +1,21 @@
+{% comment %}
+  Tête de section.
+  eyebrow, title (obligatoire), level : h2 (défaut), h3, ou subhead (sous-titre léger, h3 seul)
+  lede, pills (liste de textes)
+  sub : sous-section (marge haute plus grande, titre plus petit)
+  image, image_alt : photo à droite (rendition avec url, width, height)
+  figure : figure à droite, à la place de la photo : {images (renditions + alt), title, caption}
+{% endcomment %}
+{% if level == "subhead" %}<h3 class="subhead">{{ title }}</h3>{% else %}
+{% firstof level "h2" as tag %}
+<div class="section-head{% if sub %} section-head--sub{% endif %}{% if figure.images %} about-head{% elif image %} personal-head{% endif %}">
+  <div>
+    {% if eyebrow %}{% include "includes/eyebrow.html" with text=eyebrow only %}{% endif %}
+    <{{ tag }}>{{ title }}</{{ tag }}>
+    {% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+    {% if pills %}{% include "includes/pill_row.html" with labels=pills only %}{% endif %}
+  </div>
+  {% if figure.images %}{% include "includes/figure_pair.html" with images=figure.images title=figure.title caption=figure.caption only %}
+  {% elif image %}{% include "includes/personal_photo.html" with image=image alt=image_alt only %}{% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,17 @@
+{% comment %}
+  Grille de cartes à filets.
+  variant : service (icônes teal, titres sans-serif) ou off_duty (icônes ambre, titres serif)
+  cards : liste de {icon, title, text, wide} ; wide n'a d'effet qu'en off_duty
+  heading_level : h3 (défaut) ou h4, selon le titre qui précède la grille
+{% endcomment %}
+{% load ui %}
+{% firstof heading_level "h3" as tag %}
+<div class="{% if variant == 'off_duty' %}off-duty-grid{% else %}service-grid{% endif %}">
+  {% for card in cards %}
+  <div class="{% if variant == 'off_duty' %}off-card{% if card.wide %} wide{% endif %}{% else %}service{% endif %}" data-reveal style="--reveal-i: {{ forloop.counter0 }}">
+    {% icon card.icon %}
+    <{{ tag }}>{{ card.title }}</{{ tag }}>
+    <p>{{ card.text }}</p>
+  </div>
+  {% endfor %}
+</div>

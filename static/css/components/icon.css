@@ -1,0 +1,9 @@
+/* Icônes de ligne (templates/includes/icons/*.svg) : viewBox 24×24, couleur = currentColor. */
+.icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}

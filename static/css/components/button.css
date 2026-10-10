@@ -1,0 +1,84 @@
+/* Bouton (<a> ou <button>). États : normal, survol, focus clavier (base.css), actif, désactivé.
+   Désactivé : attribut `disabled` (<button>) ou aria-disabled="true" (<a> sans href). */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--btn-pad);
+  border-radius: var(--radius-btn);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-ui);
+  line-height: inherit;
+  text-decoration: none;
+  min-height: var(--tap-min);
+  border: var(--bw-hairline) solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn-primary:hover {
+  opacity: var(--opacity-hover);
+  color: var(--on-accent);
+}
+
+.btn-primary:active {
+  opacity: 1;
+  background: var(--accent-pressed);
+  transform: translateY(var(--press-shift));
+}
+
+.btn-ghost {
+  border-width: var(--bw-medium);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-ghost:active {
+  background: var(--accent-soft);
+  transform: translateY(var(--press-shift));
+}
+
+/* Désactivé : placé en dernier et plus spécifique, pour annuler survol et état actif. */
+.btn:is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.btn-primary:is(:disabled, [aria-disabled="true"]) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn.btn-ghost:is(:disabled, [aria-disabled="true"]) {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+:root[data-contrast="high"] .btn-primary {
+  outline: var(--bw-medium) solid var(--ink);
+  outline-offset: 0;
+}
+
+@media (forced-colors: active) {
+  .btn {
+    border: var(--bw-hairline) solid CanvasText;
+  }
+}

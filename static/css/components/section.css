@@ -1,0 +1,16 @@
+/* Bande de page : transparente par défaut, ou teintée (elle déborde du texte de la gouttière). */
+.section {
+  padding: var(--section-pad) 0;
+}
+
+.section.tint {
+  background: var(--surface-tint);
+  margin: 0 calc(-1 * var(--gutter));
+  padding: var(--section-pad) var(--gutter);
+}
+
+/* En contraste élevé le fond teinté devient blanc : des filets marquent la bande. */
+:root[data-contrast="high"] .section.tint {
+  border-top: var(--bw-medium) solid var(--line);
+  border-bottom: var(--bw-medium) solid var(--line);
+}
