@@ -1,4 +1,4 @@
-/* Liste numérotée de publications, filet entre les lignes, lien PubMed. */
+/* Publications : liste numérotée à filets, ou cartes mises en avant (★) ; lien PubMed. */
 .pub-list {
   list-style: none;
   margin: 0;
@@ -18,13 +18,13 @@
 }
 
 .pub-num {
-  font-family: var(--font-mono);
   font-size: var(--fs-sm);
   color: var(--ink-faint);
   padding-top: var(--space-2);
 }
 
 .pub-title {
+  font-family: var(--font-sans);
   font-weight: var(--fw-semibold);
   font-size: var(--fs-md-plus);
   line-height: var(--lh-snug);
@@ -32,23 +32,47 @@
 
 .pub-meta {
   color: var(--ink-muted);
-  font-size: var(--fs-sm-plus);
+  font-size: var(--fs-sm);
   margin-top: var(--space-5);
   line-height: var(--lh-meta);
 }
 
 .pub-meta a {
   color: var(--accent);
-  text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-out);
-}
-
-.pub-meta a:hover {
   text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  text-decoration-thickness: var(--underline-thickness);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .pub-meta a:active {
   color: var(--accent-2);
+}
+
+.pub-meta abbr {
+  text-decoration: none;
+}
+
+/* Mise en avant : carte cernée, étoile ambre, note sous la référence. */
+.pub-featured {
+  border: var(--border-strong);
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-18);
+}
+
+.pub-featured + .pub-featured {
+  margin-top: var(--space-14);
+}
+
+.pub-featured .pub-num {
+  color: var(--accent-2);
+}
+
+.pub-note {
+  margin: var(--space-8) 0 0;
+  font-size: var(--fs-ui);
+  color: var(--ink);
 }
 
 .pub-source {
@@ -56,8 +80,11 @@
 }
 
 .pub-source a {
-  font-size: var(--fs-md-minus);
+  font-size: var(--fs-sm);
   color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  text-decoration-thickness: var(--underline-thickness);
   transition: color var(--dur-fast) var(--ease-out);
 }
 
@@ -67,4 +94,15 @@
 
 .pub-source a:active {
   color: var(--accent-2);
+}
+
+.more .pub-list {
+  margin-top: 0;
+}
+
+@media print {
+  .pub-meta a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+  }
 }

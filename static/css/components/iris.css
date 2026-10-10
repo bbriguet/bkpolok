@@ -1,4 +1,4 @@
-/* Portrait rond dans un anneau SVG. Sous 640px il rétrécit au lieu de disparaître. */
+/* Portrait rond dans un anneau SVG. Sur téléphone il reste visible, plus petit, au-dessus du nom. */
 .iris {
   flex-shrink: 0;
   position: relative;
@@ -28,12 +28,22 @@
 
 @media (max-width: 640px) {
   .iris {
+    order: -1;
     width: var(--size-iris-sm);
     height: var(--size-iris-sm);
+    margin: 0 0 var(--space-4);
   }
 
   .iris img {
     width: var(--size-portrait-sm);
     height: var(--size-portrait-sm);
+    border-width: var(--bw-portrait-sm);
+    box-shadow: var(--ring-portrait-sm);
+  }
+}
+
+@media print {
+  .iris svg {
+    display: none !important;
   }
 }

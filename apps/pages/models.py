@@ -10,7 +10,7 @@ from apps.contact.forms import ContactForm
 from apps.contact.services import submit_contact_form
 
 from .blocks import BodyStreamBlock
-from .services import count_heroes, get_contact_details
+from .services import count_heroes, get_contact_details, is_legal_page
 
 
 class BodyPage(Page):
@@ -65,6 +65,13 @@ class StandardPage(BodyPage):
     class Meta:
         verbose_name = "page standard"
         verbose_name_plural = "pages standard"
+
+    def get_context(self, request, *args, **kwargs):
+        from apps.profile.services import get_site_profile
+
+        context = super().get_context(request, *args, **kwargs)
+        context["is_legal"] = is_legal_page(self, get_site_profile(request))
+        return context
 
 
 class ContactPage(RoutablePageMixin, BodyPage):

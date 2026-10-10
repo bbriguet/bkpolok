@@ -1,3 +1,4 @@
+/* Cartes de formation, deux colonnes ; une carte seule en fin de grille prend toute la largeur. */
 .edu-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -8,23 +9,51 @@
 .edu-card {
   border: var(--border-hairline);
   border-radius: var(--radius-card);
-  padding: var(--space-18) var(--space-20);
+  padding: var(--space-20) var(--space-22);
   background: var(--surface);
+}
+
+.edu-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.edu-card .edu-date {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--accent-2);
 }
 
 .edu-card .deg {
   font-weight: var(--fw-semibold);
   font-size: var(--fs-md-plus);
+  margin-top: var(--space-4);
+}
+
+.edu-card .deg:first-child {
+  margin-top: 0;
 }
 
 .edu-card .inst {
   color: var(--ink-muted);
-  font-size: var(--fs-md-minus);
+  font-size: var(--fs-sm);
   margin-top: var(--space-4);
+}
+
+.edu-card .edu-desc {
+  color: var(--ink-muted);
+  font-size: var(--fs-sm);
+  margin: var(--space-10) 0 0;
+  line-height: var(--lh-card);
 }
 
 @media (max-width: 600px) {
   .edu-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (forced-colors: active) {
+  .edu-card {
+    border: var(--bw-hairline) solid CanvasText;
   }
 }

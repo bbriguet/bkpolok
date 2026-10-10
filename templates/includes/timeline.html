@@ -1,27 +1,25 @@
 {% comment %}
-  Chronologie groupée sous une étiquette.
-  label · entries : liste de {period, experience.title, org_line, experience.organisation_description,
-  experience.summary, achievements, images} ; images : liste de {thumb, alt_text, caption, link_url,
-  link_label, external} (thumb : rendition avec url, width, height)
+  Chronologie groupée sous un titre (h3 ; entrées en h4).
+  label · rows : liste de {entries, images, is_pair} ; une ligne est une entrée seule (ses images
+  à côté du texte), ou une paire (deux entrées, les images en colonne à droite des deux).
+  entry : {period_start, period_end, experience.title, org_line, experience.parallel_role,
+  experience.organisation_description, experience.summary, achievements, images}
+  image : {thumb (rendition), alt_text, caption, link_url, link_label, external}
 {% endcomment %}
-{% if entries %}
-<p class="group-label">{{ label }}</p>
+{% if rows %}
+<h3 class="group-label">{{ label }}</h3>
 <div class="timeline">
-  {% for entry in entries %}
-  <div class="tl-item" data-reveal>
-    <div class="tl-date">{{ entry.period }}</div>
-    <h3>{{ entry.experience.title }}</h3>
-    {% if entry.images %}
-    <div class="tl-item-body">
-      <div class="tl-item-text">{% include "includes/timeline_text.html" with entry=entry only %}</div>
-      <div class="research-photos tl-photos">
-        {% for photo in entry.images %}{% include "includes/research_thumb.html" with image=photo.thumb alt=photo.alt_text caption=photo.caption link_url=photo.link_url link_label=photo.link_label external=photo.external only %}{% endfor %}
-      </div>
+  {% for row in rows %}
+  {% if row.is_pair %}
+  <div class="tl-pair">
+    {% for entry in row.entries %}{% include "includes/timeline_item.html" with entry=entry only %}{% endfor %}
+    <div class="research-photos tl-photos-span">
+      {% for photo in row.images %}{% include "includes/research_thumb.html" with image=photo.thumb alt=photo.alt_text caption=photo.caption link_url=photo.link_url link_label=photo.link_label external=photo.external only %}{% endfor %}
     </div>
-    {% else %}
-    {% include "includes/timeline_text.html" with entry=entry only %}
-    {% endif %}
   </div>
+  {% else %}
+  {% include "includes/timeline_item.html" with entry=row.entries.0 images=row.images only %}
+  {% endif %}
   {% endfor %}
 </div>
 {% endif %}

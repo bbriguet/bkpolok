@@ -1,0 +1,7 @@
+/* Ligne d'étiquettes séparées par « · » (domaines thérapeutiques), précédée d'un libellé lu
+   seulement par les lecteurs d'écran. */
+.ta-line {
+  margin: 0 0 var(--space-18);
+  color: var(--ink-muted);
+  font-size: var(--fs-md);
+}

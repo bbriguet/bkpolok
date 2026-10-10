@@ -1,4 +1,9 @@
-Fonts served from this directory (self-hosted, unmodified from Google Fonts).
+Fonts served from this directory (self-hosted, from Google Fonts).
+The *-latin.woff2 files are unmodified. The *-latin-ext.woff2 files are subsets restricted to the Polish
+letters U+0104-0107, U+0118-0119, U+0141-0144, U+015A-015B, U+0179-017C, made with:
+  pyftsubset <google-fonts-latin-ext>.woff2 --unicodes=<range above> --flavor=woff2 --layout-features='*'
+Subsetting is a modification under the OFL: check the Reserved Font Name clauses below (Source Sans 3:
+'Source'; IBM Plex Mono: 'Plex') if these files are ever redistributed outside this site.
 Each is licensed under the SIL Open Font License 1.1; full text follows each notice.
 
 

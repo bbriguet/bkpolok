@@ -27,7 +27,10 @@ def _strip_comments(css: str) -> str:
 # ---------------------------------------------------------------- icônes
 
 
-@pytest.mark.parametrize("name", [*ICONS, "chevron"])
+UI_ICONS = {"chevron", "settings"}
+
+
+@pytest.mark.parametrize("name", [*ICONS, *sorted(UI_ICONS)])
 def test_every_icon_is_an_inline_svg_file(name):
     svg = (INCLUDES / "icons" / f"{name}.svg").read_text(encoding="utf-8")
 
@@ -39,7 +42,7 @@ def test_every_icon_is_an_inline_svg_file(name):
 def test_every_icon_file_is_offered_or_a_ui_icon():
     files = {path.stem for path in (INCLUDES / "icons").glob("*.svg")}
 
-    assert files - set(ICONS) == {"chevron"}
+    assert files - set(ICONS) == UI_ICONS
 
 
 @pytest.mark.parametrize("name", ["", None, "nope", "../base", "a/b", "CHEVRON"])
@@ -130,6 +133,9 @@ def test_button_renders_link_external_disabled_link_and_real_button():
 
     assert '<a class="btn btn-primary" href="/x">Go</a>' in link
     assert 'class="btn btn-ghost" href="https://e.org" target="_blank" rel="noopener"' in external
+    assert '<span aria-hidden="true">↗</span>' in external
+    assert '<span class="visually-hidden">(opens in a new tab)</span>' in external
+    assert "↗" not in link
     assert 'aria-disabled="true"' in disabled_link and "href=" not in disabled_link
     assert '<button class="btn btn-primary" type="submit">Send</button>' in button
     assert "<button" in disabled_button and " disabled>" in disabled_button
@@ -169,6 +175,62 @@ def test_section_head_variants():
     assert 'class="personal-photo" src="/p.png"' in photo and 'alt="A"' in photo
 
 
+def test_section_head_subhead_and_figure():
+    subhead = render("section_head", title="What I bring", level="subhead")
+    image = {"url": "/f.png", "width": 720, "height": 540, "alt": "Eye"}
+    figure = render(
+        "section_head",
+        title="T",
+        image={"url": "/p.png", "width": 5, "height": 5},
+        figure={"images": [image, image], "title": "Two ways", "caption": "Left, right."},
+    )
+
+    assert subhead.strip() == '<h3 class="subhead">What I bring</h3>'
+    assert 'class="section-head about-head"' in figure and "personal-photo" not in figure
+    assert figure.count('class="figure-pair__frame"') == 2 and 'alt="Eye"' in figure
+    assert "Two ways" in figure and "Left, right." in figure
+
+
+def test_tag_line_has_a_label_for_screen_readers_only():
+    html = render("tag_line", label="Areas", items=["A & B", "C"])
+
+    assert '<span class="visually-hidden">Areas: </span>A &amp; B · C' in html
+
+
+def test_offer_cards_link_to_the_service_pages():
+    html = render(
+        "offer_cards",
+        offers=[{"title": "One", "href": "/s/one/", "summary": "S"}, {"title": "Two", "href": ""}],
+    )
+
+    assert html.count('class="offer-card"') == 2
+    assert '<h3><a href="/s/one/">One</a></h3>' in html and "<h3>Two</h3>" in html
+    assert "offer-lead" not in html
+
+
+def test_disclosure_and_gallery():
+    more = render("disclosure", summary="Show more", content=mark_safe("<p>x</p>"))
+    image = {"url": "/g.png", "width": 960, "height": 720, "alt": "Lake"}
+    gallery = render("gallery", heading="Through my lens", images=[image], note="©", protect=True)
+    open_gallery = render("gallery", images=[image])
+
+    assert '<details class="more">' in more and "<summary>Show more</summary>" in more
+    assert '<div class="more-body"><p>x</p></div>' in more
+    assert 'class="gallery gallery--protected"' in gallery and 'draggable="false"' in gallery
+    assert 'aria-labelledby="through-my-lens-heading"' in gallery and 'loading="lazy"' in gallery
+    assert "gallery--protected" not in open_gallery and "<h3" not in open_gallery
+
+
+def test_display_settings_are_hidden_until_the_script_runs():
+    html = render("display_settings")
+
+    assert "data-display-settings hidden" in html
+    assert 'aria-expanded="false" aria-controls="a11y-panel"' in html
+    assert 'role="status" aria-live="polite"' in html
+    for hook in ('data-text-size="down"', 'data-text-size="up"', "data-theme-toggle"):
+        assert hook in html
+
+
 def test_section_uses_the_background_parameter():
     tint = render("section", background="tint", anchor="about", content=mark_safe("<p>x</p>"))
     plain = render("section", background="default", content=mark_safe("<p>x</p>"))
@@ -198,9 +260,24 @@ def test_hero_renders_name_buttons_and_portrait():
         portrait_alt="Portrait",
     )
 
-    assert "<h1>Jane&nbsp;<em>Doe</em></h1>" in html
+    assert "<h1><span>Jane&nbsp;<em>Doe</em></span></h1>" in html
     assert '<a class="btn btn-primary" href="/x">Go</a>' in html
     assert '<div class="iris">' in html and 'alt="Portrait"' in html
+
+
+def test_hero_marks_the_language_of_the_name_and_shows_the_current_position():
+    html = render(
+        "hero",
+        first_name="Jan",
+        last_name="Nowak",
+        name_lang="pl",
+        role="R",
+        thesis="T",
+        now="Today: somewhere.",
+    )
+
+    assert '<h1><span lang="pl">Jan&nbsp;<em>Nowak</em></span></h1>' in html
+    assert '<p class="hero-now">Today: somewhere.</p>' in html
 
 
 def test_hero_without_portrait_has_no_iris():
@@ -233,6 +310,8 @@ def test_card_grid_wide_only_in_off_duty_layout_and_staggers_reveal():
     assert 'class="off-card wide"' in off_duty and "off-duty-grid" in off_duty
     assert 'class="service"' in service and "wide" not in service
     assert 'style="--reveal-i: 0"' in service
+    assert "<h3>A</h3>" in service
+    assert "<h4>A</h4>" in render("card_grid", variant="service", cards=cards, heading_level="h4")
 
 
 def test_research_thumb_caption_link_opens_a_new_tab_only_when_external():
@@ -254,28 +333,55 @@ def test_research_thumb_caption_link_opens_a_new_tab_only_when_external():
         external=True,
     )
 
-    assert '<a href="/p/#x">Doe, 2014 →</a>' in internal
+    assert '<a href="/p/#x">Doe, 2014 <span aria-hidden="true">→</span></a>' in internal
     assert 'target="_blank" rel="noopener"' in external
+    assert "(opens in a new tab)" in external and "new tab" not in internal
 
 
-def test_media_list_uses_swiss_dates_and_dash_for_unknown_dates():
+def test_media_list_dates_languages_and_unknown_dates():
     html = render(
         "media_list",
         items=[
             {"date": date(2009, 1, 14), "outlet": "TV", "title": "T", "url": ""},
-            {"date": None, "outlet": "Press", "title": "P", "url": "https://e.org"},
+            {
+                "date": None,
+                "outlet": "Press",
+                "title": "P",
+                "url": "https://e.org",
+                "language": "fr",
+                "title_language": "fr",
+            },
         ],
     )
 
-    assert ">14.01.2009<" in html and 'class="media-date mono">—' in html
+    assert '<time class="media-date tabular" datetime="2009-01-14">14 Jan 2009</time>' in html
+    assert '<span class="visually-hidden">Date unknown:</span>' in html
+    assert '<span lang="fr">"P"</span>' in html
+    assert "(in French, opens in a new tab)" in html
 
 
 def test_footer_and_cta_compose_other_includes():
-    footer = render("footer", heading="Hi", email="a@b.ch", codes=["PL"], holder="Jane")
+    footer = render(
+        "footer",
+        heading="Hi",
+        lede="Say hello.",
+        email="a@b.ch",
+        languages_line="Working in Polish",
+        accessibility="<p>Accessible.</p>",
+        legal_links=[{"label": "Legal notice", "href": "/legal/"}],
+        holder="Jane",
+        notice="No reuse.",
+    )
     cta = render("cta", title="T", label="Go", href="/x", variant="ghost")
 
-    assert 'href="mailto:a@b.ch"' in footer and 'class="lang-pill"' in footer
-    assert "Jane." in footer
+    assert 'id="contact" aria-labelledby="contact-heading"' in footer
+    assert 'href="mailto:a@b.ch"' in footer and "Say hello." in footer
+    assert '<p class="footer-langs">Working in Polish</p>' in footer
+    assert "<h3>Accessibility</h3>" in footer and "Accessible." in footer
+    assert '<nav class="legal-links" aria-label="Legal">' in footer
+    assert '<a href="/legal/">Legal notice</a>' in footer
+    assert "Jane. No reuse.</p>" in footer
+    assert '<p class="cta-band__title">T</p>' in cta
     assert 'class="btn btn-ghost" href="/x"' in cta
 
 
@@ -313,9 +419,10 @@ def test_demo_page_lists_every_component_in_debug(client, settings):
         assert f'id="{anchor}"' in html, anchor
     for marker in (
         "site-nav", "section-head", "btn-ghost", "status-dot", "pill-row", "iris", "pull-quote",
-        "service-grid", "off-duty-grid", "aside-row", "offer-note", "timeline", "research-thumb",
+        "service-grid", "off-duty-grid", "aside-row", "offer-card", "timeline", "research-thumb",
         "personal-photo", "edu-card", "pub-list", "media-list", "site-footer", "demo-icons",
-        "cta", "accordion__item",
+        "cta-band", "accordion__item", "tl-pair", "pub-featured", "ta-line", "figure-pair",
+        "gallery-grid", "more-body",
     ):  # fmt: skip
         assert marker in html, marker
     assert html.count('<svg class="icon"') >= len(ICONS)

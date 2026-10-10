@@ -57,6 +57,25 @@ def button_props(value, request, label_key: str = "label") -> dict:
     }
 
 
+def image_alt(image) -> str:
+    """Texte alternatif d'une image : celui du bloc (ImageBlock), vide si elle est décorative,
+    sinon celui de l'image."""
+    if getattr(image, "decorative", False):
+        return ""
+    return getattr(image, "contextual_alt_text", None) or image.default_alt_text
+
+
+def image_props(image, spec: str) -> dict:
+    """Paramètres d'image des includes : {url, width, height, alt} d'une rendition."""
+    rendition = image.get_rendition(spec)
+    return {
+        "url": rendition.url,
+        "width": rendition.width,
+        "height": rendition.height,
+        "alt": image_alt(image),
+    }
+
+
 def offer_items(pages, request) -> list[dict]:
     """Éléments de `includes/offer_note.html` pour des pages de service."""
     return [
@@ -65,12 +84,28 @@ def offer_items(pages, request) -> list[dict]:
     ]
 
 
+CONTAINER_BLOCKS = ("section", "more")
+
+
 def iter_blocks(stream):
-    """Blocs d'un StreamField, y compris ceux du contenu des sections."""
+    """Blocs d'un StreamField, y compris ceux du contenu des sections et des « voir plus »."""
     for child in stream:
         yield child
-        if child.block_type == "section":
+        if child.block_type in CONTAINER_BLOCKS:
             yield from iter_blocks(child.value["content"])
+
+
+def has_block(stream, block_type: str) -> bool:
+    """Vrai si le StreamField contient un bloc de ce type, y compris dans une section."""
+    return any(child.block_type == block_type for child in iter_blocks(stream))
+
+
+def is_legal_page(page, profile) -> bool:
+    """Vrai pour la page « Legal notice » ou « Privacy statement » choisie dans le profil."""
+    return page.pk is not None and page.pk in (
+        profile.legal_notice_page_id,
+        profile.privacy_page_id,
+    )
 
 
 def count_heroes(stream) -> int:
@@ -125,23 +160,27 @@ def get_contact_details(page, request) -> dict:
     }
 
 
-# (titre, slug, modèle, [(titre, slug) des ServicePage enfants])
+# (titre, slug, modèle, [(titre, slug) des ServicePage enfants], dans le menu)
 SITE_TREE = [
-    ("About", "about", "pages.StandardPage", []),
+    ("About", "about", "pages.StandardPage", [], True),
     (
-        "Expertise",
-        "expertise",
+        "Services",
+        "services",
         "services.ServiceIndexPage",
         [
-            ("Medical Affairs Consulting", "medical-affairs-consulting"),
-            ("Patient Programs & Advocacy", "patient-programs-advocacy"),
+            ("Medical affairs consulting", "medical-affairs-consulting"),
+            ("Patient programs & advocacy", "patient-programs-advocacy"),
             ("Coaching", "coaching"),
         ],
+        True,
     ),
-    ("Experience", "experience", "pages.StandardPage", []),
-    ("Publications", "publications", "pages.StandardPage", []),
-    ("Personal", "personal", "pages.StandardPage", []),
-    ("Contact", "contact", "pages.ContactPage", []),
+    ("Experience", "experience", "pages.StandardPage", [], True),
+    ("Publications", "publications", "pages.StandardPage", [], True),
+    ("Personal", "personal", "pages.StandardPage", [], True),
+    ("Contact", "contact", "pages.ContactPage", [], True),
+    # Liées depuis le pied de page (profil du site), pas depuis le menu.
+    ("Legal notice (Impressum)", "legal-notice", "pages.StandardPage", [], False),
+    ("Privacy statement", "privacy", "pages.StandardPage", [], False),
 ]
 
 
@@ -149,8 +188,8 @@ def create_site_pages(home: Page) -> list[Page]:
     """Crée sous l'accueil les pages du site, en brouillon (non publiées) et vides.
 
     Idempotent : une page dont le slug existe déjà sous son parent est laissée telle quelle.
-    Retourne les pages créées. Les pages de premier niveau apparaissent dans le menu une fois
-    publiées ; les services enfants n'y apparaissent pas.
+    Retourne les pages créées. Les pages « dans le menu » y apparaissent une fois publiées ;
+    les services enfants et les pages légales n'y apparaissent pas.
     """
     created: list[Page] = []
 
@@ -165,8 +204,8 @@ def create_site_pages(home: Page) -> list[Page]:
         created.append(page)
         return page
 
-    for title, slug, model_label, children in SITE_TREE:
-        parent = ensure(home, title, slug, model_label, in_menu=True)
+    for title, slug, model_label, children, in_menu in SITE_TREE:
+        parent = ensure(home, title, slug, model_label, in_menu=in_menu)
         for child_title, child_slug in children:
             ensure(parent, child_title, child_slug, "services.ServicePage", in_menu=False)
     return created

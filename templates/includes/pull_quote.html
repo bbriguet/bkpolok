@@ -1,5 +1,6 @@
-{# Citation. text · author (optionnel). #}
+{# Citation. text · author (optionnel) · note : commentaire sous la citation (optionnel). #}
 <blockquote class="pull-quote" data-reveal>
   <p>“{{ text }}”</p>
   {% if author %}<cite>— {{ author }}</cite>{% endif %}
+  {% if note %}<p class="quote-note">{{ note }}</p>{% endif %}
 </blockquote>

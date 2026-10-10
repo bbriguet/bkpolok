@@ -1,9 +1,10 @@
-{# Corps d'une entrée de chronologie (utilisé par timeline.html). #}
+{# Corps d'une entrée de chronologie (utilisé par timeline_item.html). #}
 <div class="org">{{ entry.org_line }}</div>
+{% if entry.experience.parallel_role %}<div class="org-extra">In parallel: {{ entry.experience.parallel_role }}</div>{% endif %}
 {% if entry.experience.organisation_description %}<div class="org-desc">{{ entry.experience.organisation_description }}</div>{% endif %}
 {% if entry.experience.summary %}<p>{{ entry.experience.summary }}</p>{% endif %}
 {% if entry.achievements %}
 <ul class="tl-achievements">
-  {% for text in entry.achievements %}<li>{{ text }}</li>{% endfor %}
+  {% for achievement in entry.achievements %}{% with parts=achievement.parts %}<li>{{ parts.0 }}{% if parts.1 %}<a href="{{ achievement.link_url }}">{{ parts.1 }}</a>{{ parts.2 }}{% endif %}</li>{% endwith %}{% endfor %}
 </ul>
 {% endif %}

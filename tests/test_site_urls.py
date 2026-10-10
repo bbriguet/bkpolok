@@ -17,14 +17,16 @@ pytestmark = pytest.mark.django_db
 EXPECTED_URLS = [
     "/",
     "/about/",
-    "/expertise/",
-    "/expertise/medical-affairs-consulting/",
-    "/expertise/patient-programs-advocacy/",
-    "/expertise/coaching/",
+    "/services/",
+    "/services/medical-affairs-consulting/",
+    "/services/patient-programs-advocacy/",
+    "/services/coaching/",
     "/experience/",
     "/publications/",
     "/personal/",
     "/contact/",
+    "/legal-notice/",
+    "/privacy/",
     "/contact/thank-you/",
 ]
 
@@ -80,7 +82,7 @@ def test_every_url_answers_200_with_one_h1_and_the_seo_basics(client, published_
     assert '<meta property="og:title"' in html
     assert '<meta property="og:site_name" content="Jane Doe">' in html
     assert '<meta name="twitter:card"' in html
-    assert '<main id="content"' in html and "<nav " in html and "<footer" in html
+    assert '<main id="main"' in html and "<nav " in html and "<footer" in html
 
 
 @pytest.mark.parametrize("url", ["/robots.txt", "/sitemap.xml", "/healthz"])
@@ -167,7 +169,7 @@ def test_nav_and_footer_come_from_the_tree_not_from_the_templates(client, publis
 
     assert re.findall(r'<a href="([^"]+)"', nav) == [
         "/about/",
-        "/expertise/",
+        "/services/",
         "/experience/",
         "/publications/",
         "/contact/",
@@ -179,7 +181,7 @@ def test_nav_and_footer_come_from_the_tree_not_from_the_templates(client, publis
 
 
 def test_a_hero_replaces_the_page_title_h1_on_every_page_type(client, published_site):
-    for slug in ("about", "coaching", "expertise", "contact"):
+    for slug in ("about", "coaching", "services", "contact"):
         page = Page.objects.get(slug=slug).specific
         page.body = json.dumps([HERO])
         page.save_revision().publish()
@@ -187,7 +189,7 @@ def test_a_hero_replaces_the_page_title_h1_on_every_page_type(client, published_
         html = client.get(page.url).content.decode()
 
         assert len(re.findall(r"<h1[\s>]", html)) == 1, slug
-        assert "<h1>Jane&nbsp;<em>Doe</em></h1>" in html
+        assert "<h1><span>Jane&nbsp;<em>Doe</em></span></h1>" in html
 
 
 def test_a_hero_inside_a_section_still_gives_a_single_h1(client, home, profile):

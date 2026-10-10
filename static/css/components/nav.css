@@ -1,4 +1,5 @@
-/* Navigation : collante, translucide, floutée, filet en bas. */
+/* Navigation : collante, translucide, floutée, filet en bas. Elle redevient statique quand elle
+   prendrait trop de place (écran bas ou étroit, grande taille de texte). Cibles de 44px. */
 .site-nav {
   position: sticky;
   top: env(safe-area-inset-top, 0px);
@@ -31,10 +32,6 @@
   color: var(--accent);
 }
 
-.nav-name:active {
-  color: var(--accent-2);
-}
-
 .nav-links {
   display: flex;
   gap: var(--space-22);
@@ -44,23 +41,24 @@
   padding: 0;
 }
 
-/* Le soulignement est un dégradé dont la largeur passe de 0 à 100 % : il « s'écrit » au survol. */
 .nav-links a {
-  padding-bottom: var(--space-2);
+  display: inline-block;
+  min-height: var(--tap-min);
+  padding: var(--space-10) var(--space-4);
+  line-height: var(--space-24);
   color: var(--ink-muted);
   text-decoration: none;
   font-size: var(--fs-ui);
   font-weight: var(--fw-medium);
-  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
-  transition:
-    color var(--dur-fast) var(--ease-out),
-    background-size var(--dur-base) var(--ease-out);
+  text-underline-offset: 0.25em;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .nav-links a:hover,
+.nav-links a:focus-visible,
 .nav-links a[aria-current="page"] {
   color: var(--accent);
-  background-size: 100% 1px;
+  text-decoration: underline;
 }
 
 .nav-links a:active {
@@ -70,6 +68,22 @@
 .nav-links a[aria-disabled="true"] {
   color: var(--ink-faint);
   opacity: var(--opacity-disabled);
-  background-size: 0 1px;
+  text-decoration: none;
   cursor: not-allowed;
+}
+
+@media (max-height: 640px), (max-width: 480px) {
+  .site-nav {
+    position: static;
+  }
+}
+
+html:is([data-textsize="3"], [data-textsize="4"]) .site-nav {
+  position: static;
+}
+
+@media print {
+  .site-nav {
+    display: none !important;
+  }
 }

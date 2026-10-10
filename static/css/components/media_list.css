@@ -16,6 +16,9 @@
 }
 
 .media-list a {
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+  text-decoration-thickness: var(--underline-thickness);
   transition: color var(--dur-fast) var(--ease-out);
 }
 
@@ -28,17 +31,16 @@
 }
 
 .media-date {
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
   color: var(--accent-2);
   min-width: var(--media-date-min);
 }
 
 .media-note {
   margin-top: var(--space-16);
-  font-size: var(--fs-sm-plus);
+  font-size: var(--fs-sm);
   color: var(--ink-faint);
-  border-left: 2px solid var(--line-strong);
+  border-left: var(--bw-medium) solid var(--line-strong);
   padding-left: var(--space-12);
 }
 
@@ -48,6 +50,8 @@
 
 .media-note a {
   color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
   transition: color var(--dur-fast) var(--ease-out);
 }
 

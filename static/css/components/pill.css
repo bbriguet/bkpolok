@@ -9,7 +9,7 @@
 .lang-pill,
 .pill {
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   padding: var(--space-6) var(--space-12);
   border: var(--border-strong);
   border-radius: var(--radius-pill);
@@ -20,4 +20,11 @@
   font-size: var(--fs-sm);
   color: var(--ink-faint);
   margin: var(--space-10) 0 0;
+}
+
+@media (forced-colors: active) {
+  .lang-pill,
+  .pill {
+    border: var(--bw-hairline) solid CanvasText;
+  }
 }

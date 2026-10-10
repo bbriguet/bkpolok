@@ -10,14 +10,20 @@ DEFAULT_FILE = Path(settings.BASE_DIR) / "_artifact" / "design" / "content.yaml"
 
 class Command(BaseCommand):
     help = (
-        "Charge content.yaml : pages Wagtail (StreamField) et objets du profil. Idempotent : "
-        "ne remplace jamais une valeur déjà remplie, sauf avec --update. "
-        "Les pages restent en brouillon."
+        "Charge content.yaml : pages Wagtail (StreamField), objets du profil et images. "
+        "Idempotent : ne remplace jamais une valeur déjà remplie, sauf avec --update ; ne "
+        "supprime rien. Les pages restent en brouillon."
     )
 
     def add_arguments(self, parser):
         parser.add_argument(
             "--file", type=Path, default=DEFAULT_FILE, help="Fichier YAML à charger."
+        )
+        parser.add_argument(
+            "--assets",
+            type=Path,
+            default=None,
+            help="Dossier des images citées par le YAML (défaut : ../assets à côté du sien).",
         )
         parser.add_argument(
             "--update",
@@ -30,7 +36,7 @@ class Command(BaseCommand):
         if not path.is_file():
             raise CommandError(f"Fichier introuvable : {path}")
         try:
-            report = load_initial_content(path, update=options["update"])
+            report = load_initial_content(path, update=options["update"], assets=options["assets"])
         except ContentError as error:
             raise CommandError(f"Import annulé (rien n'a été écrit) — {error}") from error
         self.write_report(report, path)
@@ -61,7 +67,7 @@ class Command(BaseCommand):
                 out(f"  - {note}")
 
         if report.not_imported:
-            out("\nNon importé (absent du YAML ou fichier manquant)")
+            out("\nNon importé (fichier image manquant)")
             for item in report.not_imported:
                 out(f"  - {item}")
 

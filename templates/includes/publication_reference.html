@@ -1,0 +1,3 @@
+{# Titre (h4) et référence d'une publication (utilisé par publication.html). entry : {pubmed_url, publication}. #}
+<h4 class="pub-title">{{ entry.publication.title }}</h4>
+<div class="pub-meta">{{ entry.publication.authors }} · <em>{{ entry.publication.journal }}</em>, {{ entry.publication.year|stringformat:"d" }}{% if entry.pubmed_url %} · <a href="{{ entry.pubmed_url }}" target="_blank" rel="noopener"><abbr title="PubMed identifier">PMID</abbr> {{ entry.publication.pmid }}<span class="visually-hidden"> on PubMed (opens in a new tab)</span></a>{% endif %}</div>

@@ -1,13 +1,5 @@
 /* Mise en page de la page de démonstration /_composants (temporaire, DEBUG uniquement).
    Ne consomme que les variables de tokens.css. */
-.demo-toolbar {
-  display: flex;
-  gap: var(--space-16);
-  align-items: center;
-  flex-wrap: wrap;
-  padding: var(--space-24) 0 var(--space-8);
-}
-
 .demo-toc {
   columns: 3 12rem;
   column-gap: var(--space-24);
@@ -36,7 +28,7 @@
 
 .demo-label {
   margin: var(--space-24) 0 var(--space-10);
-  font: var(--fs-2xs) var(--font-mono);
+  font: var(--fs-sm) var(--font-mono);
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -90,7 +82,7 @@
   border: var(--border-hairline);
   border-radius: var(--radius-card);
   background: var(--surface);
-  font: var(--fs-2xs) var(--font-mono);
+  font: var(--fs-sm) var(--font-mono);
   color: var(--ink-muted);
   text-align: center;
 }

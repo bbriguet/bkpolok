@@ -261,7 +261,7 @@ def test_home_page_renders_profile_and_languages(client, home, profile):
     assert "J. Doe" in html  # SiteProfile.short_name (navigation)
     assert "jane@example.ch" in html
     assert "Let&#x27;s talk." in html or "Let's talk." in html
-    assert ">PL<" in html.replace(" ", "")  # Language.code dans le pied de page
+    assert "Working in Polish" in html  # Language.english_name dans le pied de page
 
 
 def test_standard_page_renders_the_languages_block(client, home):
@@ -272,7 +272,6 @@ def test_standard_page_renders_the_languages_block(client, home):
 
     html = html_of(client, page)
 
-    assert "Français" in html
     assert "French (full professional)" in html
 
 
@@ -291,7 +290,7 @@ def test_timeline_page_lists_experiences_achievements_and_images(client, home, p
     assert "Director" in html and "Acme" in html
     assert "Grew the team" in html
     assert "Figure alt" in html and "FIG. 1" in html
-    assert "DEC 2022" in html
+    assert "Dec 2022" in html
 
 
 def test_publications_page_lists_publications(client, home, profile):
@@ -323,7 +322,7 @@ def test_media_page_lists_media_appearances(client, home):
     html = html_of(client, page)
 
     assert "An article" in html and "Paper" in html
-    assert "19.05.2008" in html
+    assert "19 May 2008" in html
 
 
 def test_service_index_page_lists_its_services(client, home):

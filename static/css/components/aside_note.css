@@ -1,3 +1,4 @@
+/* Note teintée : un titre (h3) optionnel, une icône optionnelle, un texte. */
 .aside-note {
   margin-top: var(--space-28);
   padding: var(--space-18) var(--space-20);
@@ -11,9 +12,21 @@
 .aside-note .icon {
   width: var(--size-icon-inline);
   height: var(--size-icon-inline);
-  vertical-align: -3px;
+  vertical-align: var(--icon-baseline);
   margin-right: var(--space-6);
   color: var(--accent);
+}
+
+.aside-note .note-title {
+  margin: 0 0 var(--space-6);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+
+.aside-note p {
+  margin: 0;
 }
 
 /* Bloc d'éditeur : une note seule, ou deux côte à côte (.aside-row). */
@@ -39,5 +52,15 @@
 @media (max-width: 700px) {
   .aside-row {
     flex-direction: column;
+  }
+}
+
+html:is([data-textsize="3"], [data-textsize="4"]) .aside-row {
+  flex-direction: column;
+}
+
+@media (forced-colors: active) {
+  .aside-note {
+    border: var(--bw-hairline) solid CanvasText;
   }
 }

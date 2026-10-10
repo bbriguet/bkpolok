@@ -10,7 +10,8 @@
   font-size: var(--fs-ui);
   line-height: inherit;
   text-decoration: none;
-  border: 1px solid transparent;
+  min-height: var(--tap-min);
+  border: var(--bw-hairline) solid transparent;
   background: transparent;
   cursor: pointer;
   transition:
@@ -33,11 +34,12 @@
 
 .btn-primary:active {
   opacity: 1;
-  background: color-mix(in srgb, var(--accent) 80%, var(--ink));
+  background: var(--accent-pressed);
   transform: translateY(var(--press-shift));
 }
 
 .btn-ghost {
+  border-width: var(--bw-medium);
   border-color: var(--line-strong);
   color: var(--ink);
 }
@@ -68,4 +70,15 @@
   background: transparent;
   border-color: var(--line-strong);
   color: var(--ink);
+}
+
+:root[data-contrast="high"] .btn-primary {
+  outline: var(--bw-medium) solid var(--ink);
+  outline-offset: 0;
+}
+
+@media (forced-colors: active) {
+  .btn {
+    border: var(--bw-hairline) solid CanvasText;
+  }
 }

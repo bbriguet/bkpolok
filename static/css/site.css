@@ -8,17 +8,6 @@
   font-family: var(--font-mono);
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 /* ---------- Page ---------- */
 .page-header {
   padding: var(--space-56) 0 var(--space-8);
@@ -47,14 +36,21 @@
   margin: 0 0 var(--space-18);
 }
 
+.rich-text h2 {
+  font-size: var(--fs-3xl);
+  margin: var(--space-36) 0 var(--space-10);
+}
+
 .rich-text h3 {
-  font-size: var(--fs-xl);
-  margin: var(--space-28) 0 var(--space-8);
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  margin: var(--space-28) 0 var(--space-6);
 }
 
 .rich-text h4 {
   font-family: var(--font-sans);
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md);
   font-weight: var(--fw-semibold);
   margin: var(--space-22) 0 var(--space-6);
 }
@@ -67,8 +63,20 @@
   border-radius: var(--radius-card);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+/* Textes juridiques (Legal notice, Privacy statement) : mesure plus étroite, texte plus petit. */
+.page--legal .rich-text {
+  font-size: var(--fs-ui);
+  color: var(--ink-muted);
+}
+
+.page--legal .rich-text > * {
+  max-width: var(--measure-legal);
+}
+
+.page--legal .rich-text :is(h2, h3, h4) {
+  color: var(--ink);
+}
+
+.page--legal .rich-text p {
+  margin-bottom: var(--space-8);
 }

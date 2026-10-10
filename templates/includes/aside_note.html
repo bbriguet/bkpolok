@@ -1,3 +1,6 @@
-{# Note teintée. text · icon_name : nom d'une icône de includes/icons/ (optionnel). #}
+{# Note teintée. title (h3, optionnel) · text · icon_name : nom d'une icône de includes/icons/ (optionnel). #}
 {% load ui %}
-<div class="aside-note">{% icon icon_name %}{{ text }}</div>
+<div class="aside-note">
+  {% if title %}<h3 class="note-title">{{ title }}</h3>{% endif %}
+  <p>{% icon icon_name %}{{ text }}</p>
+</div>

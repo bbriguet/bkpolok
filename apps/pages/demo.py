@@ -26,18 +26,26 @@ def get_context() -> dict:
             "external": external,
         }
 
-    def entry(period, title, org, description="", summary=LOREM, achievements=(), images=()):
+    def entry(start, end, title, org, parallel_role="", summary=LOREM, achievements=()):
         return {
-            "period": period,
+            "period_start": start,
+            "period_end": end,
             "experience": {
                 "title": title,
-                "organisation_description": description,
+                "parallel_role": parallel_role,
                 "summary": summary,
             },
             "org_line": org,
-            "achievements": list(achievements),
-            "images": list(images),
+            "achievements": [
+                {"parts": (a, "", "")} if isinstance(a, str) else a for a in achievements
+            ],
         }
+
+    def row(*entries, images=()):
+        return {"entries": list(entries), "images": list(images), "is_pair": len(entries) == 2}
+
+    def image(alt):
+        return {**photo, "alt": alt}
 
     cards = [
         {"icon": name, "title": f"Card title {n}", "text": LOREM, "wide": False}
@@ -80,28 +88,52 @@ def get_context() -> dict:
             {"icon": "clock", "text": "A short aside note with a teal icon."},
             {"icon": "search", "text": "A second note sits beside the first one."},
         ],
+        "figure": {
+            "images": [image("Placeholder one"), image("Placeholder two")],
+            "title": "Figure title",
+            "caption": "A caption that explains the two images.",
+        },
+        "gallery": [image(f"Placeholder photo {n}") for n in range(1, 4)],
+        "accessibility": '<p>A short statement with <a href="#footer">a link</a>.</p>',
+        "legal_links": [
+            {"label": "Legal notice", "href": "#footer"},
+            {"label": "Privacy statement", "href": "#footer"},
+        ],
         "offers": [
             {"title": "First offer", "href": "#offers", "summary": LOREM},
             {"title": "Second offer", "href": "#offers", "summary": LOREM},
             {"title": "Third offer", "href": "#offers", "summary": LOREM},
         ],
         "timeline_industry": [
-            entry(
-                "DEC 2022 — PRESENT",
-                "Senior role title",
-                "Example Corp — Global · Focus area",
-                "One-line description of the organisation.",
-                achievements=["First achievement of the role", "Second achievement of the role"],
+            row(
+                entry(
+                    "Dec 2022",
+                    "present",
+                    "Senior role title",
+                    "Example Corp — Global · Focus area",
+                    parallel_role="Second hat",
+                    achievements=[
+                        "First achievement of the role",
+                        {
+                            "parts": ("Led to ", "Doe et al. (2022)", " on a topic"),
+                            "link_url": "#publications",
+                        },
+                    ],
+                )
             ),
-            entry("JAN 2015 — NOV 2022", "Previous role title", "Another Corp — Europe"),
+            row(
+                entry("Jan 2015", "Nov 2022", "Previous role title", "Another Corp — Europe"),
+                images=[thumb("Device", "Maker", "https://example.org", external=True)],
+            ),
         ],
         "timeline_research": [
-            entry(
-                "2003 — 2006",
-                "Research role with photos",
-                "Example Institute — Lab",
-                "One-line description of the institute.",
-                images=[thumb("FIG. 1", "Author et al., 2006", "#pub-02")],
+            row(
+                entry("Sep 2006", "Sep 2009", "Research role", "Example Institute — Lab"),
+                entry("2000", "2006", "PhD, Example Discipline", "University of Example"),
+                images=[
+                    thumb("FIG. 1", "Author et al., 2006", "#pub-02"),
+                    thumb("FIG. 5", "Author et al., 2006", "#pub-02"),
+                ],
             ),
         ],
         "thumbs": [
@@ -109,8 +141,40 @@ def get_context() -> dict:
             thumb("FIG. 2"),
         ],
         "education": [
-            {"degree": "PhD, Example Discipline", "institution": "University of Example"},
-            {"degree": "MSc, Another Discipline", "institution": "Example Institute of Technology"},
+            {
+                "degree": "MSc, Another Discipline",
+                "institution": "Example Institute of Technology",
+                "description": LOREM,
+            },
+        ],
+        "featured_publications": [
+            {
+                "number": "01",
+                "anchor": "pub-ma",
+                "pubmed_url": "https://example.org/pubmed/3",
+                "publication": {
+                    "title": "A placeholder title for a highlighted paper",
+                    "authors": "Roe R, Doe J",
+                    "journal": "Journal of Examples",
+                    "year": 2022,
+                    "pmid": "7654321",
+                    "note": "One sentence on where the paper came from.",
+                },
+            },
+        ],
+        "more_publications": [
+            {
+                "number": "03",
+                "anchor": "pub-03",
+                "pubmed_url": "",
+                "publication": {
+                    "title": "A placeholder title hidden under show more",
+                    "authors": "Doe J",
+                    "journal": "Older Journal",
+                    "year": 2001,
+                    "pmid": "",
+                },
+            },
         ],
         "publications": [
             {
@@ -166,5 +230,6 @@ def get_context() -> dict:
             },
             {"question": "A third question?", "answer": "<p>Yet another answer.</p>"},
         ],
-        "icons": [(name, label) for name, label in ICONS.items()] + [("chevron", "Chevron (UI)")],
+        "icons": [(name, label) for name, label in ICONS.items()]
+        + [("chevron", "Chevron (UI)"), ("settings", "Settings (UI)")],
     }

@@ -24,13 +24,13 @@ YEAR = Experience.DatePrecision.YEAR
 @pytest.mark.parametrize(
     ("start", "end", "precision", "expected"),
     [
-        (date(2022, 12, 1), None, MONTH, "DEC 2022 — PRESENT"),
-        (date(2010, 1, 1), date(2010, 3, 31), MONTH, "JAN — MAR 2010"),
-        (date(2006, 9, 1), date(2009, 9, 30), MONTH, "SEP 2006 — SEP 2009"),
-        (date(2010, 3, 1), date(2010, 3, 31), MONTH, "MAR 2010"),
+        (date(2022, 12, 1), None, MONTH, "Dec 2022 — present"),
+        (date(2010, 1, 1), date(2010, 3, 31), MONTH, "Jan — Mar 2010"),
+        (date(2006, 9, 1), date(2009, 9, 30), MONTH, "Sep 2006 — Sep 2009"),
+        (date(2010, 3, 1), date(2010, 3, 31), MONTH, "Mar 2010"),
         (date(2000, 1, 1), date(2006, 12, 31), YEAR, "2000 — 2006"),
         (date(2006, 1, 1), date(2006, 12, 31), YEAR, "2006"),
-        (date(2020, 1, 1), None, YEAR, "2020 — PRESENT"),
+        (date(2020, 1, 1), None, YEAR, "2020 — present"),
     ],
 )
 def test_format_period(start, end, precision, expected):
@@ -83,8 +83,10 @@ def test_timeline_is_newest_first_with_achievements_and_images(image, profile):
     entries = services.list_timeline("industry", profile)
 
     assert [e.experience.title for e in entries] == ["New", "Old"]
-    assert entries[0].period == "DEC 2022 — PRESENT"
-    assert entries[0].achievements == ["Did a thing"]
+    assert entries[0].period == "Dec 2022 — present"
+    assert (entries[0].period_start, entries[0].period_end) == ("Dec 2022", "present")
+    assert [a.text for a in entries[0].achievements] == ["Did a thing"]
+    assert entries[0].achievements[0].parts == ("Did a thing", "", "")
     assert entries[1].images[0].external is True
     assert entries[1].images[0].link_label == "Vendor"
 
@@ -207,3 +209,100 @@ def test_media_appearances_are_filtered_by_kind():
 
     assert [m.title for m in services.list_media("tv")] == ["A"]
     assert [m.title for m in services.list_media("press")] == ["B"]
+
+
+# ---------------------------------------------------------------- refonte 2026-10
+
+
+def _experience(title, start, pair=False, category="research"):
+    return Experience.objects.create(
+        category=category,
+        title=title,
+        organisation="Lab",
+        start_date=start,
+        pair_with_next=pair,
+    )
+
+
+def test_timeline_rows_pair_an_entry_with_the_next_one_when_it_has_images(image):
+    first = _experience("Postdoc", date(2006, 9, 1), pair=True)
+    _experience("PhD", date(2000, 1, 1))
+    _experience("Earlier", date(1999, 1, 1), pair=True)  # pas d'image : reste seule
+    ExperienceImage.objects.create(experience=first, image=image, alt_text="Fig", caption="F1")
+
+    rows = services.timeline_rows(services.list_timeline("research"))
+
+    assert [[e.experience.title for e in row.entries] for row in rows] == [
+        ["Postdoc", "PhD"],
+        ["Earlier"],
+    ]
+    assert rows[0].is_pair and [i.caption for i in rows[0].images] == ["F1"]
+    assert not rows[1].is_pair
+
+
+def test_achievement_link_points_to_the_publication_on_the_publications_page(home, profile):
+    paper = Publication.objects.create(title="P", authors="Munk MR", journal="J", year=2022)
+    experience = _experience("Advisor", date(2019, 6, 1), category="industry")
+    ExperienceAchievement.objects.create(
+        experience=experience, text="Led to Munk (2022) here", publication=paper,
+        link_text="Munk (2022)",
+    )  # fmt: skip
+
+    without_page = services.list_timeline("industry", profile)[0].achievements[0]
+    profile.publications_page = home
+    with_page = services.list_timeline("industry", profile)[0].achievements[0]
+
+    assert without_page.parts == ("Led to Munk (2022) here", "", "")
+    assert with_page.parts == ("Led to ", "Munk (2022)", " here")
+    assert with_page.link_url == f"/#pub-{paper.pk}"
+
+
+def test_achievement_link_text_must_be_in_the_text_and_needs_a_paper():
+    from django.core.exceptions import ValidationError
+
+    paper = Publication.objects.create(title="P", authors="A", journal="J", year=2022)
+    experience = _experience("Advisor", date(2019, 6, 1))
+    for kwargs in (
+        {"link_text": "Elsewhere", "publication": paper},
+        {"link_text": "Led"},
+        {"publication": paper},
+    ):
+        achievement = ExperienceAchievement(experience=experience, text="Led a board", **kwargs)
+        with pytest.raises(ValidationError):
+            achievement.clean()
+
+
+def test_publications_are_numbered_per_category():
+    Publication.objects.create(category="medical_affairs", title="M", authors="A", journal="J",
+                               year=2022)  # fmt: skip
+    Publication.objects.create(title="R1", authors="A", journal="J", year=2009, sort_order=1)
+    Publication.objects.create(title="R2", authors="A", journal="J", year=2010, sort_order=2)
+
+    assert [(e.publication.title, e.number) for e in services.list_publications()] == [
+        ("M", "01"),
+        ("R1", "01"),
+        ("R2", "02"),
+    ]
+    assert [e.publication.title for e in services.list_publications("research")] == ["R1", "R2"]
+
+
+def test_language_helpers():
+    for order, (code, name) in enumerate([("pl", "Polish"), ("fr", "French"), ("en", "English")]):
+        Language.objects.create(
+            code=code, native_name=name, english_name=name, level="full_professional",
+            sort_order=order,
+        )  # fmt: skip
+
+    assert services.working_languages_line() == "Working in Polish, French and English"
+    assert services.language_name("fr") == "French"
+    assert services.language_name("") == ""
+    assert services.language_name("zz") == "zz"
+
+
+def test_education_cards_skip_unlisted_degrees_but_structured_data_keeps_them(profile):
+    Education.objects.create(degree="MSc", institution="Kraków", sort_order=1)
+    Education.objects.create(degree="PhD", institution="Freiburg", listed=False, sort_order=2)
+
+    assert [e.degree for e in services.list_education()] == ["MSc"]
+    alumni = services.build_person_jsonld(profile)["alumniOf"]
+    assert [a["name"] for a in alumni] == ["Kraków", "Freiburg"]

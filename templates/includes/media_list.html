@@ -1,8 +1,12 @@
-{# Liste de médias. items : liste de {date, outlet, title, url} · note : texte riche (optionnel). #}
-{% load wagtailcore_tags %}
+{% comment %}
+  Liste de médias. items : liste de {date, outlet, title, title_language, url, language}
+  (language : langue du lien, annoncée aux lecteurs d'écran) · note : texte riche (optionnel).
+  Date au format « 19 May 2008 » ; inconnue : un tiret, lu « Date unknown ».
+{% endcomment %}
+{% load wagtailcore_tags profile_tags %}
 <ul class="media-list">
   {% for item in items %}
-  <li><span class="media-date mono">{% if item.date %}{{ item.date|date }}{% else %}—{% endif %}</span> {{ item.outlet }} — {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">"{{ item.title }}"</a>{% else %}"{{ item.title }}"{% endif %}</li>
+  <li>{% if item.date %}<time class="media-date tabular" datetime="{{ item.date|date:'Y-m-d' }}">{{ item.date|date:"j M Y" }}</time>{% else %}<span class="media-date tabular"><span aria-hidden="true">—</span><span class="visually-hidden">Date unknown:</span></span>{% endif %} {{ item.outlet }} — {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener"><span{% if item.title_language %} lang="{{ item.title_language }}"{% endif %}>"{{ item.title }}"</span><span class="visually-hidden"> ({% if item.language %}in {{ item.language|language_name }}, {% endif %}opens in a new tab)</span></a>{% else %}<span{% if item.title_language %} lang="{{ item.title_language }}"{% endif %}>"{{ item.title }}"</span>{% endif %}</li>
   {% endfor %}
 </ul>
 {% if note %}<div class="media-note">{{ note|richtext }}</div>{% endif %}

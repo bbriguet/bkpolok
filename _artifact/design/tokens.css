@@ -1,39 +1,46 @@
 /*
  * Design tokens — extracted from the shared artifact "Bożena Polok"
- * (https://claude.ai/code/artifact/f461231a-537c-4c98-a850-eff07e9cd3b9).
+ * (https://claude.ai/artifact/BLup8P24VeWbH4hJMK9yFf, version of 2026-10-10; copy in ../source/).
  *
  * Every value below is one the source page actually uses; names are ours.
  * Light theme is the default; dark theme follows prefers-color-scheme and can be
- * forced with <html data-theme="dark"> or <html data-theme="light">.
+ * forced with <html data-theme="dark"> or <html data-theme="light">. High contrast is
+ * <html data-contrast="high"> (also the default when the OS asks for more contrast).
  *
- * Fonts (Google Fonts, load once in <head>):
- *   https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,500
- *     &family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap
+ * Text sizes are in rem so that the "Display settings" text-size control, which sets the root
+ * font size, scales every text: <html data-textsize="0…4"> = 100, 112.5, 125, 150, 175 %.
+ * Spacing stays in px, as in the source.
+ *
+ * Fonts: Fraunces, Source Sans 3, IBM Plex Mono. The source names them but loads no web font
+ * (its privacy statement says no fonts come from third-party servers): self-host them.
  *
  * Breakpoints (media queries cannot read custom properties, so they are listed here):
- *   480px  off-duty grid -> 1 col
- *   520px  service grid  -> 1 col
+ *   480px  off-duty grid -> 1 col; nav stops being sticky (also at heights <= 640px)
+ *   520px  service grid -> 1 col
  *   560px  timeline solo photo moves above the text
  *   600px  education grid -> 1 col
- *   640px  hero / personal head -> 1 col, hero iris hidden, timeline pair -> 1 col
+ *   640px  hero / personal head -> 1 col, portrait above the name (smaller), timeline pair -> 1 col,
+ *          lens grid -> 2 cols
  *   700px  aside row -> column
- *   760px  service / off-duty grids -> 2 cols, offer list -> 1 col
+ *   760px  service / off-duty grids -> 2 cols, offer grid -> 1 col, about head -> 1 col
+ * Text size 2+ (125 %): about head and offer grid -> 1 col.
+ * Text size 3+ (150 %): nav static; hero, grids, personal head and aside row -> 1 col.
  */
 
 :root {
   /* ---------- Colors: light ---------- */
   --bg: #faf6ee;              /* page background */
-  --surface: #ffffff;         /* cards, grid cells */
-  --surface-tint: #f1ebdd;    /* tinted sections, badges, photo rings */
+  --surface: #ffffff;         /* cards, grid cells, settings buttons */
+  --surface-tint: #f1ebdd;    /* tinted sections, settings bar, badges, photo rings */
   --ink: #1b2b29;             /* primary text, headings */
-  --ink-muted: #5b6d69;       /* secondary text, nav links */
-  --ink-faint: #647268;       /* tertiary text, captions, numbers */
-  --accent: #0e6e63;          /* teal: links, primary button, dots, focus ring */
+  --ink-muted: #3d4b48;       /* secondary text, nav links */
+  --ink-faint: #43504d;       /* tertiary text, captions, copyright */
+  --accent: #0b544c;          /* teal: links, primary button, dots, focus ring */
   --accent-soft: #dcede9;     /* aside note background, text selection */
-  --accent-2: #9c5c1b;        /* amber: eyebrows, dates, secondary dots/icons */
+  --accent-2: #6e3e0e;        /* amber: eyebrows, dates, bullets, off-card icons */
   --accent-2-soft: #f5e3ce;   /* declared by the source, not used by any rule */
   --line: #e2d8c6;            /* hairlines, card borders */
-  --line-strong: #cbbfa6;     /* pill / ghost button borders, timeline rail */
+  --line-strong: #857a64;     /* pill / ghost button / settings button borders, timeline rail */
 
   /* Derived (source uses these compositions inline) */
   --on-accent: var(--bg);                                       /* text on .btn-primary */
@@ -41,49 +48,45 @@
   --accent-halo: color-mix(in srgb, var(--accent) 22%, transparent); /* status dot halo */
 
   /* ---------- Typography: families ---------- */
-  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;                  /* h1, h2, quote, brand, off-card h3 */
-  --font-sans: "Source Sans 3", -apple-system, "Segoe UI", sans-serif;          /* body, UI, card/timeline h3 */
-  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;          /* eyebrows, dates, pills, captions */
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;                  /* h1, h2, quote, brand, off-card h3, CTA band */
+  --font-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* body, UI, dates, card/timeline titles */
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;          /* eyebrows, pills, badge, contact links */
 
   /* ---------- Typography: weights ---------- */
   --fw-regular: 400;
-  --fw-medium: 500;    /* nav links, eyebrow, dates, hero role, quote (italic) */
-  --fw-semibold: 600;  /* headings, buttons, titles */
-  --fw-bold: 700;      /* offer-item dt only */
+  --fw-medium: 500;    /* nav links, eyebrow, hero role, quote (italic) */
+  --fw-semibold: 600;  /* headings, buttons, card titles, dates */
+  --fw-bold: 700;      /* group label, subhead, offer lead, note title, settings label, disclosure */
 
   /* ---------- Typography: sizes ---------- */
-  --fs-3xs: 10.5px;    /* small photo captions */
-  --fs-2xs: 11.5px;    /* group label, thumb caption */
-  --fs-xs: 12.5px;     /* eyebrow, pills, dates, badge, cite */
-  --fs-sm: 13px;       /* pub number, captions, org-desc, copyright */
-  --fs-sm-plus: 13.5px;/* pub meta, media note */
-  --fs-md-minus: 14px; /* achievements, edu inst, offer dd */
-  --fs-ui: 14.5px;     /* nav links, buttons, service p, org */
-  --fs-md: 15px;       /* asides, timeline p, media list, off-card p */
-  --fs-md-plus: 15.5px;/* pub title, edu degree */
-  --fs-lg: 16px;       /* lede, service h3 */
-  --fs-body: 17px;     /* body, nav brand, about text */
-  --fs-body-lg: 17.5px;/* hero thesis */
-  --fs-xl: 18px;       /* hero role, timeline h3 */
-  --fs-2xl: 19px;      /* off-card h3 */
-  --fs-3xl: 22px;      /* sub-section h3 (Television, Press) */
-  --fs-4xl: 24px;      /* sub-section h3 (Research training) */
-  --fs-5xl: 26px;      /* footer h2 */
-  --fs-h2: clamp(26px, 3.4vw, 32px);
-  --fs-quote: clamp(21px, 2.6vw, 27px);
-  --fs-h1: clamp(38px, 6vw, 58px);
+  --fs-sm: 0.9375rem;       /* 15px: eyebrow, pills, dates, captions, meta, notes, copyright (smallest text) */
+  --fs-ui: 0.9688rem;       /* 15.5px: nav links, buttons, service p, org, footer languages, legal text */
+  --fs-md: 1rem;            /* 16px: timeline p, media list, off-card p, aside note, hero "today", offer p */
+  --fs-md-plus: 1.0312rem;  /* 16.5px: publication title, education degree */
+  --fs-lg: 1.0625rem;       /* 17px: lede, card h4, group label, note title, disclosure summary */
+  --fs-thesis: 1.0938rem;   /* 17.5px: hero thesis */
+  --fs-body: 1.125rem;      /* 18px: body, about text, hero role, nav brand, timeline h4, subhead */
+  --fs-xl: 1.1875rem;       /* 19px: off-card h3 */
+  --fs-2xl: 1.25rem;        /* 20px: offer card h3, CTA band text */
+  --fs-3xl: 1.375rem;       /* 22px: sub-section h3 (Television, Press) */
+  --fs-4xl: 1.5rem;         /* 24px: sub-section h3 (First degree) */
+  --fs-5xl: 1.625rem;       /* 26px: footer h2 */
+  --fs-h2: clamp(1.7rem, 1rem + 2.4vw, 2.1rem);
+  --fs-quote: clamp(1.25rem, 1rem + 1.2vw, 1.55rem);
+  --fs-h1: clamp(2.4rem, 1.2rem + 5vw, 3.8rem);
 
   /* ---------- Typography: line-heights & tracking ---------- */
   --lh-tight: 1.04;    /* h1 */
   --lh-snug: 1.4;      /* pub title */
   --lh-quote: 1.45;
-  --lh-meta: 1.5;      /* pub meta */
-  --lh-card: 1.55;     /* service p, offer dd */
+  --lh-meta: 1.5;      /* pub meta, thumb captions */
+  --lh-card: 1.55;     /* service p, education description */
   --lh-body: 1.6;
 
   --ls-badge: 0.01em;
+  --ls-date: 0.02em;   /* dates and numbers in the body face (tabular figures) */
   --ls-caption: 0.04em;
-  --ls-label: 0.1em;   /* uppercase mono labels, cite */
+  --ls-label: 0.1em;
   --ls-eyebrow: 0.11em;
 
   /* ---------- Spacing (px scale actually used) ---------- */
@@ -92,6 +95,7 @@
   --space-5: 5px;
   --space-6: 6px;
   --space-8: 8px;
+  --space-9: 9px;
   --space-10: 10px;
   --space-12: 12px;
   --space-14: 14px;
@@ -105,6 +109,7 @@
   --space-32: 32px;
   --space-36: 36px;
   --space-40: 40px;
+  --space-44: 44px;
   --space-48: 48px;
   --space-52: 52px;
   --space-56: 56px;
@@ -113,13 +118,18 @@
 
   /* ---------- Layout ---------- */
   --wrap-max: 840px;
-  --gutter: 20px;          /* body side padding; .tint sections bleed by the same amount */
+  --gutter: 20px;          /* body side padding; .tint sections and the settings bar bleed by it */
   --section-pad: 64px;     /* vertical padding of section */
   --hero-pad: 72px 0 56px;
+  --hero-pad-top-sm: 40px; /* hero top padding on phones */
   --z-nav: 20;
+  --z-skip: 100;
   --nav-blur: 8px;
+  --scroll-offset: 140px;  /* anchors land below the sticky nav (scroll-padding / scroll-margin) */
+  --tap-min: 44px;         /* minimum touch target: nav links, buttons, settings, disclosures */
 
   /* Reading measures */
+  --measure-contact: 46ch;
   --measure-role: 38ch;
   --measure-desc: 52ch;
   --measure-thesis: 54ch;
@@ -127,10 +137,13 @@
   --measure-lede: 60ch;
   --measure-aside: 64ch;
   --measure-about: 68ch;
+  --measure-legal: 70ch;
 
   /* ---------- Radii ---------- */
   --radius-btn: 2px;
   --radius-card: 4px;
+  --radius-image: 8px;     /* lens gallery */
+  --radius-photo: 12px;    /* personal photo (rounded square) */
   --radius-pill: 999px;    /* source mixes 99px and 999px; both render as a full pill */
   --radius-round: 50%;
 
@@ -140,30 +153,55 @@
   --bw-photo-sm: 2px;
   --bw-photo: 3px;
   --bw-portrait: 5px;
-  --bw-personal: 7px;
+  --bw-portrait-sm: 4px;
+  --bw-personal: 5px;
+  --bw-offer: 4px;         /* teal top rule of an offer card */
 
   /* ---------- Shadows & rings ---------- */
   --shadow: 0 1px 2px rgba(27, 43, 41, 0.04), 0 8px 24px rgba(27, 43, 41, 0.06);
   --ring-portrait: 0 0 0 8px var(--bg);            /* hero portrait gap */
+  --ring-portrait-sm: 0 0 0 6px var(--bg);
   --ring-thumb: 0 0 0 4px var(--surface-tint);     /* research thumbnails */
   --ring-thumb-sm: 0 0 0 3px var(--surface-tint);  /* timeline thumbnails */
   --ring-dot: 0 0 0 3px var(--bg);                 /* timeline dot cut-out */
   --ring-status: 0 0 0 3px var(--accent-halo);     /* status dot halo */
+  --focus-width: 3px;                              /* focus outline width and offset */
+  --ring-focus: 0 0 0 6px var(--bg);               /* halo around the focus outline */
 
   /* ---------- Component sizes ---------- */
   --size-iris: 374px;
   --size-portrait: 204px;
-  --size-personal: 294px;
+  --size-iris-sm: 200px;    /* hero portrait on phones, above the name */
+  --size-portrait-sm: 128px;
+  --size-personal: 320px;
+  --size-personal-sm: 360px; /* max width on phones (full width, square) */
   --size-thumb: 108px;
   --size-thumb-solo: 84px;
   --size-thumb-span: 76px;
   --size-icon: 26px;        /* service icon */
   --size-icon-lg: 28px;     /* off-card icon */
-  --size-icon-inline: 18px; /* aside note icon */
+  --size-icon-inline: 18px; /* aside note / settings icon */
   --size-dot-status: 7px;
   --size-dot-timeline: 9px;
   --size-dot-bullet: 5px;
+  --size-disclosure: 26px;  /* "+" / "−" circle of a disclosure */
   --icon-stroke: 1.6;       /* SVG stroke-width, viewBox 0 0 24 24, round caps and joins */
+  --btn-pad: 11px 20px;
+  --card-min-height: 186px;
+  --quote-max: 640px;
+  --quote-rule: 32px;
+  --tl-rail-offset: -33px;  /* timeline dot: -(padding-left + half dot + border) */
+  --tl-text-min: 220px;
+  --tl-caption-max: 9rem;   /* caption under a solo timeline thumbnail */
+  --media-date-min: 7.5rem;
+  --pub-num-col: 34px;
+  --bullet-indent: 15px;
+
+  /* ---------- Text size steps (root font size, set by the "Display settings" control) ---------- */
+  --text-size-1: 112.5%;
+  --text-size-2: 125%;
+  --text-size-3: 150%;
+  --text-size-4: 175%;
 }
 
 /* ---------- Colors: dark (system preference) ---------- */
@@ -173,14 +211,14 @@
     --surface: #132320;
     --surface-tint: #182b27;
     --ink: #ece6d8;
-    --ink-muted: #a3b3ae;
-    --ink-faint: #869792;
-    --accent: #54d6c6;
+    --ink-muted: #c3cfcb;
+    --ink-faint: #b4c2bd;
+    --accent: #6fe3d4;
     --accent-soft: #193631;
-    --accent-2: #e3a75c;
+    --accent-2: #edb871;
     --accent-2-soft: #2e2419;
     --line: #243530;
-    --line-strong: #31463f;
+    --line-strong: #5e7770;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 30px rgba(0, 0, 0, 0.35);
   }
 }
@@ -191,13 +229,54 @@
   --surface: #132320;
   --surface-tint: #182b27;
   --ink: #ece6d8;
-  --ink-muted: #a3b3ae;
-  --ink-faint: #869792;
-  --accent: #54d6c6;
+  --ink-muted: #c3cfcb;
+  --ink-faint: #b4c2bd;
+  --accent: #6fe3d4;
   --accent-soft: #193631;
-  --accent-2: #e3a75c;
+  --accent-2: #edb871;
   --accent-2-soft: #2e2419;
   --line: #243530;
-  --line-strong: #31463f;
+  --line-strong: #5e7770;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Colors: high contrast (button, or OS "increase contrast") ---------- */
+:root[data-contrast="high"] {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-tint: #ffffff;
+  --ink: #000000;
+  --ink-muted: #000000;
+  --ink-faint: #1a1a1a;
+  --accent: #00463f;
+  --accent-soft: #e6f2ef;
+  --accent-2: #5a3000;
+  --accent-2-soft: #fff1de;
+  --line: #000000;
+  --line-strong: #000000;
+  --shadow: none;
+}
+
+:root[data-contrast="high"][data-theme="dark"] {
+  --bg: #000000;
+  --surface: #000000;
+  --surface-tint: #000000;
+  --ink: #ffffff;
+  --ink-muted: #ffffff;
+  --ink-faint: #f0f0f0;
+  --accent: #7ff3e3;
+  --accent-soft: #0b2622;
+  --accent-2: #ffd08a;
+  --accent-2-soft: #2a1c08;
+  --line: #ffffff;
+  --line-strong: #ffffff;
+}
+
+/* OS asks for more contrast and the visitor has not turned it off: secondary inks join --ink. */
+@media (prefers-contrast: more) {
+  :root:not([data-contrast="normal"]) {
+    --ink-muted: var(--ink);
+    --ink-faint: var(--ink);
+    --line: var(--line-strong);
+  }
 }

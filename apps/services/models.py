@@ -3,6 +3,7 @@ from wagtail.admin.panels import FieldPanel
 from wagtail.models import Page
 
 from apps.pages.models import BodyPage
+from apps.pages.services import has_block
 
 from .services import list_live_services
 
@@ -25,7 +26,8 @@ class ServiceIndexPage(BodyPage):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context["services"] = list_live_services(self)
+        # Le corps les présente déjà (bloc « Service offers ») : pas de seconde liste.
+        context["services"] = [] if has_block(self.body, "offers") else list_live_services(self)
         return context
 
 

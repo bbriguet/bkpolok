@@ -1,4 +1,6 @@
-/* Tête de section : eyebrow + titre (+ chapeau, pastilles, photo ronde). */
+/* Tête de section : eyebrow + titre (+ chapeau, pastilles), et à droite soit une photo
+   (.personal-head, voir personal_photo.css), soit une figure (.about-head, voir figure_pair.css).
+   Sous-titre léger : <h3 class="subhead">. */
 .section-head {
   margin-bottom: var(--space-36);
 }
@@ -14,7 +16,7 @@
 }
 
 .section-head--sub {
-  margin-top: var(--space-48);
+  margin-top: var(--space-52);
   margin-bottom: var(--space-24);
 }
 
@@ -27,4 +29,34 @@
   max-width: var(--measure-lede);
   margin: var(--space-12) 0 0;
   font-size: var(--fs-lg);
+}
+
+.about-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: var(--space-32);
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .about-head {
+    grid-template-columns: 1fr;
+  }
+}
+
+html:is([data-textsize="2"], [data-textsize="3"], [data-textsize="4"]) .about-head {
+  grid-template-columns: 1fr;
+}
+
+.subhead {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-body);
+  margin: var(--space-44) 0 var(--space-10);
+}
+
+/* Sous-titre qui suit directement la tête de section : collé à elle. Wagtail enveloppe chaque
+   bloc dans <div class="block-…"> : les blocs ne sont pas frères. */
+.block-heading:has(.section-head) + .block-heading .subhead {
+  margin-top: var(--space-8);
 }

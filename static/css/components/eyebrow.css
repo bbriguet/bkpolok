@@ -1,7 +1,8 @@
+/* Seul emploi de la police mono dans les titres : l'étiquette au-dessus d'un titre. */
 .eyebrow {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
   letter-spacing: var(--ls-eyebrow);
   text-transform: uppercase;

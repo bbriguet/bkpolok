@@ -1,4 +1,5 @@
-/* Chronologie : rail vertical, un point par entrée, regroupée sous une étiquette mono. */
+/* Chronologie : rail vertical, un point par entrée, regroupée sous un titre (h3, entrées en h4).
+   Dates dans la police du texte, chiffres tabulaires. */
 .timeline {
   position: relative;
   padding-left: var(--space-28);
@@ -10,7 +11,8 @@
   padding-bottom: var(--space-32);
 }
 
-.tl-item:last-child {
+.timeline > .tl-item:last-child,
+.timeline > .tl-pair:last-child > .tl-item:nth-child(2) {
   padding-bottom: 0;
 }
 
@@ -27,16 +29,15 @@
 }
 
 .tl-date {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
   color: var(--accent-2);
-  font-weight: var(--fw-medium);
 }
 
-.tl-item h3 {
+.tl-item h4 {
   font-family: var(--font-sans);
   font-weight: var(--fw-semibold);
-  font-size: var(--fs-xl);
+  font-size: var(--fs-body);
   margin-top: var(--space-4);
 }
 
@@ -46,10 +47,16 @@
   margin-top: var(--space-2);
 }
 
+.tl-item .org-extra {
+  color: var(--ink);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-ui);
+  margin-top: var(--space-2);
+}
+
 .tl-item .org-desc {
   color: var(--ink-faint);
   font-size: var(--fs-sm);
-  font-style: italic;
   margin-top: var(--space-2);
   max-width: var(--measure-desc);
 }
@@ -72,7 +79,7 @@
 }
 
 .tl-achievements li {
-  font-size: var(--fs-md-minus);
+  font-size: var(--fs-sm);
   color: var(--ink-muted);
   padding-left: var(--bullet-indent);
   position: relative;
@@ -89,14 +96,17 @@
   background: var(--accent-2);
 }
 
+.tl-achievements a {
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
 .group-label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 0 0 var(--space-18) calc(-1 * var(--space-28));
-  padding-left: var(--space-28);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  margin: 0 0 var(--space-18);
 }
 
 /* Wagtail enveloppe chaque bloc dans <div class="block-…"> : les blocs ne sont pas frères. */
@@ -123,8 +133,33 @@
 }
 
 @media (max-width: 560px) {
-  .tl-photos {
+  .tl-photos-solo {
     order: -1;
-    flex-direction: row;
+  }
+}
+
+/* Paire : deux entrées consécutives partagent une colonne de vignettes, à droite. */
+.tl-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-26);
+  align-items: stretch;
+}
+
+.tl-pair > .tl-item {
+  grid-column: 1;
+}
+
+@media (max-width: 640px) {
+  .tl-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (forced-colors: active) {
+  .tl-item::before,
+  .tl-achievements li::before {
+    forced-color-adjust: none;
+    background: CanvasText;
   }
 }

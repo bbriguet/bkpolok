@@ -1,0 +1,66 @@
+/* « Voir plus » : <details class="more"> natif entre deux filets, « + » / « − » dans un rond.
+   static/js/site.js l'ouvre quand un lien vise un élément qu'il contient, et avant l'impression. */
+.more {
+  margin-top: var(--space-28);
+  border-top: var(--border-strong);
+  border-bottom: var(--border-strong);
+}
+
+.more + .more,
+.block-more + .block-more .more {
+  margin-top: calc(-1 * var(--bw-hairline));
+}
+
+.more > summary {
+  list-style: none;
+  cursor: pointer;
+  min-height: var(--tap-min);
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  padding: var(--space-10) var(--space-2);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-lg);
+  color: var(--accent);
+}
+
+.more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.more > summary::before {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: var(--size-disclosure);
+  height: var(--size-disclosure);
+  border: var(--bw-medium) solid currentColor;
+  border-radius: var(--radius-round);
+  font-size: var(--fs-body);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.more[open] > summary::before {
+  content: "\2212";
+}
+
+.more > summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.more-body {
+  padding: var(--space-12) 0 var(--space-24);
+}
+
+.more-body > :first-child .section-head--sub,
+.more-body > :first-child .group-label {
+  margin-top: var(--space-8);
+}
+
+@media print {
+  .more > summary {
+    display: none;
+  }
+}

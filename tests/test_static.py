@@ -47,6 +47,8 @@ def test_tokens_keep_every_value_of_the_design():
             found.setdefault(name, []).append(" ".join(value.split()))
         return found
 
+    # Aucun écart : la version 2026-10 du design atteint elle-même les contrastes AA
+    # (tests/test_tokens_contrast.py).
     design = declarations(DESIGN_TOKENS.read_text(encoding="utf-8"))
     ours = declarations(_read("css/tokens.css"))
 
@@ -70,32 +72,14 @@ def test_fonts_cover_polish_characters():
     assert "latin-ext" in _read("css/fonts.css")
 
 
-# Valeurs exactes du design : ces deux couleurs n'atteignent pas 4,5:1 sur --surface-tint.
-# strict=True : le test échoue si quelqu'un les modifie (voir docs/site-architecture.md).
-BELOW_AA_ON_TINT = {
-    "ink-faint": pytest.mark.xfail(strict=True, reason="design value #647268: 4.26:1"),
-    "accent-2": pytest.mark.xfail(strict=True, reason="design value #9c5c1b: 4.46:1"),
-}
+def test_text_sizes_are_in_rem_so_the_text_size_control_scales_them():
+    sizes = re.findall(r"--fs-[a-z0-9-]+:\s*([^;]+);", _read("css/tokens.css"))
+
+    assert sizes and all("px" not in size for size in sizes)
 
 
-@pytest.mark.parametrize(
-    "name",
-    [
-        pytest.param(n, marks=BELOW_AA_ON_TINT.get(n, ()))
-        for n in ("ink", "ink-muted", "ink-faint", "accent", "accent-2")
-    ],
-)
-def test_text_colors_reach_wcag_aa_on_the_tinted_background(name):
-    def luminance(hex_color: str) -> float:
-        channels = [int(hex_color[i : i + 2], 16) / 255 for i in (1, 3, 5)]
-        lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
-        return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+@pytest.mark.parametrize("name", SITE_STYLESHEETS)
+def test_font_sizes_go_through_tokens(name):
+    css = _strip_comments(_read(name))
 
-    def contrast(a: str, b: str) -> float:
-        hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
-        return (hi + 0.05) / (lo + 0.05)
-
-    light = _strip_comments(_read("css/tokens.css")).split("@media")[0]
-    color = lambda n: re.search(rf"--{n}:\s*(#[0-9a-f]{{6}})", light).group(1)  # noqa: E731
-
-    assert contrast(color(name), color("surface-tint")) >= 4.5
+    assert re.findall(r"font-size:\s*\d+(?:\.\d+)?(?:px|rem)", css) == []

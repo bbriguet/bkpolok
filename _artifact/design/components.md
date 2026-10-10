@@ -1,457 +1,208 @@
-# Components
+# Components (version of 2026-10-10)
 
-Minimal HTML + CSS for each repeated component of the "Bożena Polok" page. All CSS uses the
-custom properties from `tokens.css`; load that file first. Class names are the source's.
+The repeated components of the "Bożena Polok" artifact: markup, variants, behaviour and
+accessibility rules. Class names are the source's (`_artifact/source/index.html`) unless the site
+renamed them (noted). Values are the tokens of `tokens.css`.
+
+The CSS of record is the site's: one stylesheet per component in `static/css/components/<name>.css`,
+one template in `templates/includes/<name>.html` (parameters documented at the top of each). Every
+component can be seen on the DEBUG-only page `/_composants`.
 
 ## Base (applies to everything)
 
-```css
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0; padding:0 var(--gutter); background:var(--bg); color:var(--ink);
-     font:var(--fw-regular) var(--fs-body)/var(--lh-body) var(--font-sans);
-     -webkit-font-smoothing:antialiased}
-.wrap{max-width:var(--wrap-max); margin:0 auto}
-h1,h2,h3{font-family:var(--font-serif); font-weight:var(--fw-semibold); text-wrap:balance; margin:0; color:var(--ink)}
-a{color:var(--accent)}
-a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
-::selection{background:var(--accent-soft); color:var(--ink)}
-section{padding:var(--section-pad) 0}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-```
+- `html` font size 100 %, raised by the text-size control (`data-textsize` 1–4 → 112.5 / 125 / 150 /
+  175 %); every text size is in `rem`, spacing stays in `px`. Smallest text: 15px (`--fs-sm`).
+- Body: Source Sans 3, 18px, line-height 1.6; headings Fraunces 600, `text-wrap: balance`;
+  `overflow-wrap: break-word` on headings, paragraphs, list items and links.
+- Focus: 3px `--accent` outline, 3px offset, plus a 6px `--bg` halo (`--ring-focus`), on every
+  interactive element.
+- Skip link: "Skip to main content", hidden above the viewport until focused; moves focus to
+  `<main id="main" tabindex="-1">`.
+- Links inside running text are underlined (offset 0.18em, 1.5px), never colour-only; in high
+  contrast every link is underlined.
+- Anchors land below the sticky nav: `scroll-padding-top` / `scroll-margin-top` 140px.
+- Screen-reader-only text: `.sr-only` in the source, `.visually-hidden` in the site.
+- `prefers-reduced-motion`: no smooth scroll, no transition or animation.
+- Print: settings bar, nav, ring and disclosure summaries hidden; disclosures opened; external
+  publication links spelled out.
+- Forced colours: buttons, pills, badges, cards and notes get a `CanvasText` border; dots and bullets
+  turn `CanvasText`; pressed settings buttons use `Highlight`.
+- **Display font roles** (new): mono only for eyebrows, pills, badge and the footer contact links;
+  dates, numbers, group labels and captions use the body face with tabular figures (`.tabular`).
 
----
+## 1. Display settings bar — `display_settings` (new)
 
-## 1. Navigation bar
+Full-bleed tinted strip above the nav, right-aligned. A disclosure button (sun icon, "Display
+settings", `aria-expanded`, `aria-controls`) opens a panel (`role="region"`) with:
+a "Text size" group (A− · A · A+, `aria-label`s "Decrease / Reset / Increase text size"; A− and A+
+disabled at the ends) and two toggles "High contrast", "Dark mode" (`aria-pressed`).
+Buttons: 44px minimum, 2px `--line-strong` border, `--surface` background; pressed = `--ink`
+background, `--bg` text. A polite live region announces each change. Choices are stored in
+`localStorage` (`bp-textsize`, `bp-theme`, `bp-contrast`).
+Site: the bar is `hidden` until the script runs (`static/js/preferences.js`, loaded in `<head>` so
+stored choices apply before the first paint).
 
-Sticky, translucent, blurred, hairline bottom. Brand left, links right, wraps on small screens.
+## 2. Navigation bar — `nav`
 
-```html
-<nav>
-  <div class="wrap">
-    <div class="nav-name">B. Polok</div>
-    <ul class="nav-links"><li><a href="#about">About</a></li>…</ul>
-  </div>
-</nav>
-```
-```css
-nav{position:sticky; top:0; z-index:var(--z-nav); background:var(--nav-bg);
-    backdrop-filter:blur(var(--nav-blur)); border-bottom:var(--border-hairline)}
-nav .wrap{display:flex; align-items:center; justify-content:space-between;
-          padding:var(--space-16) 0; gap:var(--space-16); flex-wrap:wrap}
-.nav-name{font:var(--fw-semibold) var(--fs-body) var(--font-serif); letter-spacing:var(--ls-badge)}
-.nav-links{display:flex; gap:var(--space-22); flex-wrap:wrap; list-style:none; margin:0; padding:0}
-.nav-links a{color:var(--ink-muted); text-decoration:none; font-size:var(--fs-ui); font-weight:var(--fw-medium)}
-.nav-links a:hover{color:var(--accent)}
-```
-Variants: none.
+Sticky, translucent (`--nav-bg`), blurred, hairline bottom. Brand left (Fraunces), links right.
+Links: 44px tall (padding 10px 4px), `--ink-muted`; hover/focus/current: `--accent` + underline.
+Becomes `position: static` at ≤ 480px wide, ≤ 640px high, or text size ≥ 150 %.
+Site: the brand links to `/`; the current page is marked `aria-current="page"`.
 
-## 2. Eyebrow
+## 3. Eyebrow — `eyebrow`
 
-Mono uppercase label above a heading. Amber accent.
-```html
-<p class="eyebrow">About</p>
-```
-```css
-.eyebrow{font:var(--fw-medium) var(--fs-xs) var(--font-mono); letter-spacing:var(--ls-eyebrow);
-         text-transform:uppercase; color:var(--accent-2)}
-```
-Variants: none (also used as the label above sub-section `h3`s: "Education", "Media").
+`<p class="eyebrow">` — IBM Plex Mono 500, `--fs-sm`, uppercase, tracking 0.11em, `--accent-2`.
 
-## 3. Section head
+## 4. Section head — `section_head`
 
-Eyebrow + heading (+ optional lede / pills).
-```html
-<div class="section-head">
-  <p class="eyebrow">Expertise</p>
-  <h2>Where I add the most value</h2>
-  <p class="lede">…</p>
-</div>
-```
-```css
-.section-head{margin-bottom:var(--space-36)}
-.section-head h2{font-size:var(--fs-h2); margin-top:var(--space-8)}
-.lede{color:var(--ink-muted); max-width:var(--measure-lede); margin-top:var(--space-12); font-size:var(--fs-lg)}
-```
+Eyebrow + `h2` (`--fs-h2`) + optional lede (`--fs-lg`, `--ink-muted`, 60ch) + optional pills.
 Variants:
-- **with lede / pills** (Expertise, Publications, Personal).
-- **sub-section**: `<h3>` instead of `<h2>` with inline `font-size` (24px Education, 22px Television / Press) and a larger top margin (52 / 48 / 36px).
-- **personal-head**: two-column grid with a photo (component 14).
+- **sub-section**: `h3` 1.5rem ("First degree") or 1.375rem ("Television", "Press"); site class
+  `section-head--sub`.
+- **with photo** (`.personal-head`): two columns, the photo right (see 15).
+- **with figure** (`.about-head`, new): columns 0.85fr / 1.15fr, the figure right (see 6); one column
+  under 760px and at text size ≥ 125 %.
+- **subhead** (new): a lone `h3.subhead` — sans 700, `--fs-body`, margin 44px 0 10px (8px when it
+  directly follows the section head).
 
-## 4. Section (default / tint)
+## 5. Section — `section`
 
-```html
-<section id="services" class="tint"> … </section>
-```
-```css
-section.tint{background:var(--surface-tint); margin:0 calc(-1 * var(--gutter)); padding:var(--section-pad) var(--gutter)}
-```
-Variants: default (transparent) · `.tint`.
+`padding: 64px 0`; `.tint` = `--surface-tint` band bleeding by the gutter. In high contrast the
+tint is white, so the band gets 2px top and bottom rules.
 
-## 5. Button
+## 6. Figure (image pair) — `figure_pair` (new)
 
-```html
-<a class="btn btn-primary" href="#contact">Get in touch</a>
-<a class="btn btn-ghost" href="…" target="_blank" rel="noopener">LinkedIn ↗</a>
-```
-```css
-.btn{display:inline-flex; align-items:center; gap:var(--space-8); padding:11px 20px;
-     border-radius:var(--radius-btn); font-weight:var(--fw-semibold); font-size:var(--fs-ui);
-     text-decoration:none; border:1px solid transparent}
-.btn-primary{background:var(--accent); color:var(--on-accent)}
-.btn-primary:hover{opacity:.92}
-.btn-ghost{border-color:var(--line-strong); color:var(--ink)}
-.btn-ghost:hover{border-color:var(--accent); color:var(--accent)}
-```
-Variants: `.btn-primary` · `.btn-ghost`. Container `.hero-cta{margin-top:28px; display:flex; gap:14px; flex-wrap:wrap}`.
+`figure.video-card.eye-pair` in the source. One or two 4:3 frames side by side (gap 10px; frame:
+4px radius, hairline border, `--shadow`, image `object-fit: cover`), then a caption: a bold title
+(`--fs-lg`) and a muted line (`--fs-sm`). The source's unused "video poster" styles are not carried
+over.
 
-## 6. Status badge
+## 7. Button — `button`
 
-```html
-<p class="status-badge"><span class="status-dot"></span>Currently at Santen · open to …</p>
-```
-```css
-.status-badge{display:inline-flex; align-items:center; gap:var(--space-8); margin-top:var(--space-16);
-  padding:var(--space-6) var(--space-14); border:var(--border-strong); border-radius:var(--radius-pill);
-  background:var(--surface-tint); font:var(--fs-xs) var(--font-mono); color:var(--ink-muted); letter-spacing:var(--ls-badge)}
-.status-dot{width:var(--size-dot-status); height:var(--size-dot-status); border-radius:var(--radius-round);
-  background:var(--accent); box-shadow:var(--ring-status); flex-shrink:0}
-```
+`.btn` 44px minimum, padding 11px 20px, radius 2px, 600 `--fs-ui`.
+`.btn-primary`: `--accent` background, `--bg` text, hover opacity 0.92; in high contrast a 2px
+`--ink` outline. `.btn-ghost`: **2px** `--line-strong` border, `--ink`; hover `--accent`.
+External: label + "↗" (`aria-hidden`) + sr-only "(opens in a new tab)".
 
-## 7. Pill (therapeutic areas, languages)
+## 8. Status badge — `status_badge`
 
-```html
-<div class="pill-row"><span class="pill">Ophthalmology</span>…</div>
-<div class="lang-row"><span class="lang-pill">Polski</span>…</div>
-```
-```css
-.lang-row,.pill-row{display:flex; flex-wrap:wrap; gap:var(--space-8); margin-top:var(--space-22)}
-.lang-pill,.pill{font:var(--fs-xs) var(--font-mono); padding:var(--space-6) var(--space-12);
-  border:var(--border-strong); border-radius:var(--radius-pill); color:var(--ink-muted)}
-.lang-caption{font-size:var(--fs-sm); color:var(--ink-faint); margin-top:var(--space-10)}
-```
-Variants: `.pill` (therapeutic area) · `.lang-pill` with full language name (About) · `.lang-pill` with 2-letter code (footer).
+Pill with a pulsing dot. No longer used by the hero (kept as an optional hero field).
 
-## 8. Hero + iris portrait
+## 9. Pills and caption — `pill`
 
-Two columns (text, portrait), one column ≤ 640px with the portrait hidden.
-```html
-<header class="hero">
-  <div>
-    <p class="eyebrow">…</p>
-    <h1>Bożena&nbsp;<em>Polok</em></h1>
-    <p class="hero-role">…</p> <p class="status-badge">…</p> <p class="hero-thesis">…</p>
-    <div class="hero-cta">…</div>
-  </div>
-  <div class="iris">
-    <svg width="374" height="374" viewBox="0 0 168 168" fill="none" aria-hidden="true">
-      <circle cx="84" cy="84" r="82" stroke="var(--line-strong)" stroke-width="1"/>
-      <circle cx="84" cy="84" r="64" stroke="var(--accent)" stroke-width="1.2"/>
-      <g stroke="var(--accent-2)" stroke-width="1.2">
-        <line x1="84" y1="2" x2="84" y2="18"/><line x1="84" y1="150" x2="84" y2="166"/>
-        <line x1="2" y1="84" x2="18" y2="84"/><line x1="150" y1="84" x2="166" y2="84"/>
-      </g>
-    </svg>
-    <img width="204" height="204" src="…" alt="Portrait of Bożena Polok">
-  </div>
-</header>
-```
-```css
-.hero{padding:var(--hero-pad); display:grid; grid-template-columns:1.3fr auto; gap:var(--space-40); align-items:center}
-.hero h1{font-size:var(--fs-h1); line-height:var(--lh-tight)}
-.hero h1 em{color:var(--accent); font-style:italic}
-.hero-role{margin-top:var(--space-14); font-size:var(--fs-xl); color:var(--ink-muted); font-weight:var(--fw-medium); max-width:var(--measure-role)}
-.hero-thesis{margin-top:var(--space-22); font-size:var(--fs-body-lg); max-width:var(--measure-thesis)}
-.iris{flex-shrink:0; position:relative; width:var(--size-iris); height:var(--size-iris)}
-.iris svg{position:absolute; inset:0}
-.iris img{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:var(--size-portrait); height:var(--size-portrait); border-radius:var(--radius-round); object-fit:cover;
-  border:var(--bw-portrait) solid var(--accent); box-shadow:var(--ring-portrait)}
-@media (max-width:640px){.hero{grid-template-columns:1fr} .iris{display:none}}
-```
+Mono `--fs-sm` pills with a `--line-strong` border. The language pills are gone from the design;
+the language **caption** stays (`p.lang-caption`, `--fs-sm`, `--ink-faint`).
 
-## 9. Pull quote
+## 10. Tag line — `tag_line` (new)
 
-```html
-<blockquote class="pull-quote">
-  <p>“It is far more important …”</p>
-  <cite>— Hippocrates</cite>
-</blockquote>
-```
-```css
-.pull-quote{padding:var(--space-12) 0 var(--space-56); max-width:640px; margin:0 auto; text-align:center}
-.pull-quote::before{content:""; display:block; width:32px; height:2px; background:var(--accent); margin:0 auto var(--space-24)}
-.pull-quote p{font:italic var(--fw-medium) var(--fs-quote)/var(--lh-quote) var(--font-serif); margin:0}
-.pull-quote cite{display:block; margin-top:var(--space-16); font:normal var(--fs-xs) var(--font-mono);
-  letter-spacing:var(--ls-label); text-transform:uppercase; color:var(--accent-2)}
-```
+`p.ta-line`: items joined by " · " (`--fs-md`, `--ink-muted`), preceded by an sr-only label
+("Therapeutic areas: ").
 
-## 10. Hairline card grid (`.service-grid`, `.off-duty-grid`)
+## 11. Hero + iris portrait — `hero`, `iris`
 
-Cells share 1px gaps that show the `--line` background; the container clips the radius. Same pattern, two card types.
-```html
-<div class="service-grid">
-  <div class="service">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">…</svg>
-    <h3>Medical Affairs Strategy &amp; Team Leadership</h3>
-    <p>…</p>
-  </div>
-</div>
-```
-```css
-.service-grid,.off-duty-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
-  background:var(--line); border:var(--border-hairline); border-radius:var(--radius-card); overflow:hidden}
-@media (max-width:760px){.service-grid,.off-duty-grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:520px){.service-grid{grid-template-columns:1fr}}
-@media (max-width:480px){.off-duty-grid{grid-template-columns:1fr}}
+Grid 1.3fr / auto. Eyebrow · `h1` (`<span lang="pl">Bożena <em>Polok</em></span>`, `--fs-h1`) ·
+`p.hero-role` (`--fs-body`, 500, 38ch) · `p.hero-thesis` (`--fs-thesis`, 54ch) ·
+`p.hero-now` (new, `--fs-md`, `--ink-muted`) · buttons. Portrait: 204px circle, 5px `--accent`
+border, 8px `--bg` ring, inside the 374px SVG ring.
+Phones (≤ 640px): one column, top padding 40px, the portrait **stays visible above the name**
+(ring 200px, photo 128px, 4px border, 6px ring). Text size ≥ 150 %: one column. High contrast: the
+surname is not italic.
 
-.service{background:var(--surface); padding:26px 22px; min-height:186px; display:flex; flex-direction:column; gap:var(--space-12)}
-.service svg{width:var(--size-icon); height:var(--size-icon); color:var(--accent); stroke:currentColor}
-.service h3{font:var(--fw-semibold) var(--fs-lg) var(--font-sans)}
-.service p{margin:0; color:var(--ink-muted); font-size:var(--fs-ui); line-height:var(--lh-card)}
+## 12. Pull quote — `pull_quote`
 
-.off-card{background:var(--surface); padding:var(--space-28) var(--space-24)}
-.off-card.wide{grid-column:span 2}
-@media (max-width:480px){.off-card.wide{grid-column:span 1}}
-.off-card svg{width:var(--size-icon-lg); height:var(--size-icon-lg); color:var(--accent-2); stroke:currentColor; margin-bottom:var(--space-14)}
-.off-card h3{font:var(--fw-semibold) var(--fs-2xl) var(--font-serif)}
-.off-card p{color:var(--ink-muted); font-size:var(--fs-md); margin-top:var(--space-10)}
-```
-Variants:
-- **`.service`** — teal icon, sans `h3`, 6 cards.
-- **`.off-card`** — amber icon, serif `h3`, 5 cards.
-- **`.off-card.wide`** — spans two columns (last card).
+Centred, 640px max, a 32px teal rule above. Quote: Fraunces italic 500, `--fs-quote`.
+Cite: **body face** 600 `--fs-sm`, `--accent-2`, no longer uppercase. New `p.quote-note`: body
+face, `--fs-md`, `--ink-muted`. High contrast: not italic.
 
-## 11. Aside note
+## 13. Offer cards — `offer_cards` (new; replaces the "offer note")
 
-Tinted call-out. Three uses.
-```html
-<div class="aside-note"><svg …/>Text…</div>
-```
-```css
-.aside-note{margin-top:var(--space-28); padding:var(--space-18) var(--space-20); border-radius:var(--radius-card);
-  background:var(--accent-soft); font-size:var(--fs-md); color:var(--ink); max-width:var(--measure-aside)}
-.aside-note svg{width:var(--size-icon-inline); height:var(--size-icon-inline); vertical-align:-3px; margin-right:var(--space-6); color:var(--accent)}
-.aside-note + .aside-note{margin-top:var(--space-14)}
-```
-Variants:
-- **plain** (single).
-- **`.aside-row`** — two notes side by side, stacked ≤ 700px:
-  `.aside-row{display:flex; gap:16px; margin-top:28px; align-items:stretch} .aside-row .aside-note{margin-top:0; flex:1; max-width:none}`
-- **`.offer-note`** — full width, larger padding, contains a lead line and a 3-column definition list:
-  ```html
-  <div class="aside-note offer-note">
-    <p class="offer-lead"><svg …/>Also available on a freelance or interim basis, …</p>
-    <dl class="offer-list">
-      <div class="offer-item"><dt>Medical Affairs Consulting</dt><dd>…</dd></div>
-    </dl>
-  </div>
-  ```
-  ```css
-  .offer-note{max-width:none; padding:24px 26px}
-  .offer-lead{margin:0 0 var(--space-18); font-weight:var(--fw-semibold)}
-  .offer-list{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-22); margin:0; padding:0}
-  @media (max-width:760px){.offer-list{grid-template-columns:1fr; gap:var(--space-16)}}
-  .offer-item dt{font:var(--fw-bold) var(--fs-ui) var(--font-sans); color:var(--ink); margin:0 0 var(--space-6)}
-  .offer-item dd{margin:0; font-size:var(--fs-md-minus); color:var(--ink-muted); line-height:var(--lh-card)}
-  ```
+`.offer-grid`: three columns (gap 18px), one under 760px and at text size ≥ 125 %.
+`.offer-card`: `--surface`, hairline border, **4px `--accent` top rule**, padding 24px 22px; `h3`
+`--fs-2xl`; `p` `--fs-md`, `--ink-muted`. Site: titles link to the service pages.
 
-## 12. Timeline
+## 14. Hairline card grids — `card_grid`
 
-Vertical rail with a dot per entry, grouped under a mono label. Two groups (Industry, Research).
-```html
-<p class="group-label">Industry — 2011 to present</p>
-<div class="timeline">
-  <div class="tl-item">
-    <div class="tl-date">DEC 2022 — PRESENT</div>
-    <h3>Associate Global Medical Director</h3>
-    <div class="org">Santen — …</div>
-    <div class="org-desc">…</div>
-    <p>…</p>
-    <ul class="tl-achievements"><li>…</li></ul>
-  </div>
-</div>
-```
-```css
-.timeline{position:relative; padding-left:var(--space-28); border-left:var(--border-strong)}
-.tl-item{position:relative; padding-bottom:var(--space-32)}
-.tl-item:last-child{padding-bottom:0}
-.tl-item::before{content:""; position:absolute; left:-33px; top:var(--space-4);
-  width:var(--size-dot-timeline); height:var(--size-dot-timeline); border-radius:var(--radius-round);
-  background:var(--accent); box-shadow:var(--ring-dot)}
-.tl-date{font:var(--fw-medium) var(--fs-xs) var(--font-mono); color:var(--accent-2)}
-.tl-item h3{font:var(--fw-semibold) var(--fs-xl) var(--font-sans); margin-top:var(--space-4)}
-.tl-item .org{color:var(--ink-muted); font-size:var(--fs-ui); margin-top:var(--space-2)}
-.tl-item .org-desc{color:var(--ink-faint); font-size:var(--fs-sm); font-style:italic; margin-top:var(--space-2); max-width:var(--measure-desc)}
-.tl-item p{color:var(--ink-muted); font-size:var(--fs-md); margin-top:var(--space-8); max-width:var(--measure-text)}
-.tl-achievements{list-style:none; margin:var(--space-10) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--space-6); max-width:var(--measure-text)}
-.tl-achievements li{font-size:var(--fs-md-minus); color:var(--ink-muted); padding-left:15px; position:relative}
-.tl-achievements li::before{content:""; position:absolute; left:0; top:var(--space-8);
-  width:var(--size-dot-bullet); height:var(--size-dot-bullet); border-radius:var(--radius-round); background:var(--accent-2)}
-.group-label{font:var(--fs-2xs) var(--font-mono); letter-spacing:var(--ls-label); text-transform:uppercase;
-  color:var(--ink-faint); margin:0 0 var(--space-18) -28px; padding-left:var(--space-28)}
-.group-label:not(:first-child){margin-top:var(--space-8)}
-```
-Variants:
-- **basic** — date, role, org, description, summary (Sanofi; CMU Geneva and BIDMC omit `.org-desc`).
-- **with achievements** — adds `.tl-achievements` (Santen, Allergan, UCB, IRO, PhD).
-- **with solo photo** (Olympus) — body wrapper places a thumbnail beside the text:
-  ```html
-  <div class="tl-item-body">
-    <div class="tl-item-text">…org, org-desc, p…</div>
-    <div class="research-photos tl-photos-solo"><figure class="research-thumb">…</figure></div>
-  </div>
-  ```
-  ```css
-  .tl-item-body{display:flex; gap:var(--space-26); align-items:flex-start; flex-wrap:wrap; margin-top:var(--space-2)}
-  .tl-item-text{flex:1; min-width:220px}
-  .tl-item-text .org{margin-top:0}
-  .tl-photos-solo{flex-shrink:0; margin-top:var(--space-4)}
-  .tl-photos-solo .research-thumb img{width:var(--size-thumb-solo); height:var(--size-thumb-solo); border-width:var(--bw-photo-sm); box-shadow:var(--ring-thumb-sm)}
-  .tl-photos-solo .research-thumb figcaption{font-size:var(--fs-3xs); margin-top:var(--space-6); max-width:110px}
-  @media (max-width:560px){.tl-photos-solo{order:-1}}
-  ```
-- **pair with spanning photos** (IRO + PhD) — two entries share a right-hand column of two thumbnails:
-  ```html
-  <div class="tl-pair">
-    <div class="tl-item">…</div><div class="tl-item">…</div>
-    <div class="research-photos tl-photos-span"><figure class="research-thumb">…</figure>×2</div>
-  </div>
-  ```
-  ```css
-  .tl-pair{display:grid; grid-template-columns:1fr auto; column-gap:var(--space-26); align-items:stretch}
-  .tl-pair .tl-item{grid-column:1}
-  .tl-photos-span{grid-column:2; grid-row:1 / 3; align-self:stretch; display:flex; flex-direction:column;
-    justify-content:space-between; gap:var(--space-14); padding:var(--space-4) 0 var(--space-32)}
-  .tl-photos-span .research-thumb img{width:var(--size-thumb-span); height:var(--size-thumb-span); border-width:var(--bw-photo-sm); box-shadow:var(--ring-thumb-sm)}
-  .tl-photos-span .research-thumb figcaption{font-size:var(--fs-3xs); margin-top:var(--space-6)}
-  @media (max-width:640px){
-    .tl-pair{grid-template-columns:1fr}
-    .tl-photos-span{grid-column:1; grid-row:auto; flex-direction:row; justify-content:flex-start; padding:0 0 var(--space-16); order:-1}
-  }
-  ```
+`.service-grid` / `.off-duty-grid`, 3 → 2 → 1 columns (760 / 520 or 480px), one column at text size
+≥ 150 %. `.service`: teal 26px icon, title **h4** sans 600 `--fs-lg` (under "What I bring"), text
+`--fs-ui`. `.off-card`: amber 28px icon, title h3 Fraunces `--fs-xl`, text `--fs-md`; `.wide` spans 2
+columns. High contrast: each cell gets a border.
 
-## 13. Research thumbnail (figure)
+## 15. Personal photo — `personal_photo`
 
-```html
-<figure class="research-thumb">
-  <img src="…" alt="…">
-  <figcaption>FIG. 1 <a href="#pub-02">Kotkamp et al., 2014 →</a></figcaption>
-</figure>
-```
-```css
-.research-photos{display:flex; gap:var(--space-16); flex-shrink:0}
-.research-thumb{margin:0; text-align:center}
-.research-thumb img{width:var(--size-thumb); height:var(--size-thumb); border-radius:var(--radius-round); object-fit:cover;
-  border:var(--bw-photo) solid var(--accent); box-shadow:var(--ring-thumb); display:block}
-.research-thumb figcaption{margin-top:9px; font:var(--fs-2xs) var(--font-mono); color:var(--ink-faint); letter-spacing:var(--ls-caption)}
-.research-thumb figcaption a{color:var(--accent-2); text-decoration:none; margin-left:3px}
-.research-thumb figcaption a:hover{text-decoration:underline}
-```
-Variants: default 108px · solo 84px · span 76px (see Timeline). Individual images may set `object-position` inline.
+**Rounded square** (12px radius), 320px, 5px `--accent-2` border, `--shadow`, **no rotation**.
+Phones: full width, max 360px, square.
 
-## 14. Circular photo (personal)
+## 16. Aside note — `aside_note`
 
-```html
-<img class="personal-photo" src="…" alt="Bożena Polok" width="294" height="294">
-```
-```css
-.personal-head{display:grid; grid-template-columns:1fr auto; gap:var(--space-32); align-items:center}
-.personal-photo{width:var(--size-personal); height:var(--size-personal); border-radius:var(--radius-round); object-fit:cover;
-  border:var(--bw-personal) solid var(--accent-2); box-shadow:var(--shadow); transform:rotate(-3deg); justify-self:end}
-@media (max-width:640px){.personal-head{grid-template-columns:1fr} .personal-photo{justify-self:start; transform:rotate(-2deg)}}
-```
-Note: the hero portrait uses a teal border and an SVG ring; this one uses an amber border, a shadow and a tilt.
+`--accent-soft` box, `--fs-md`. New: an optional title `h3.note-title` (sans 700 `--fs-lg`). The
+icons of the previous version are gone (still supported). Two notes sit side by side
+(`.aside-row`), stacked under 700px and at text size ≥ 150 %.
 
-## 15. Education card
+## 17. Call-to-action band — `cta` (new design)
 
-```html
-<div class="edu-grid">
-  <div class="edu-card"><div class="deg">PhD, Molecular &amp; Developmental Biology</div><div class="inst">University of Freiburg</div></div>
-</div>
-```
-```css
-.edu-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-20); margin-top:var(--space-8)}
-@media (max-width:600px){.edu-grid{grid-template-columns:1fr}}
-.edu-card{border:var(--border-hairline); border-radius:var(--radius-card); padding:var(--space-18) var(--space-20); background:var(--surface)}
-.edu-card .deg{font-weight:var(--fw-semibold); font-size:var(--fs-md-plus)}
-.edu-card .inst{color:var(--ink-muted); font-size:var(--fs-md-minus); margin-top:var(--space-4)}
-```
+`.cta-band`: a `--surface` card with a `--line-strong` border, a Fraunces 600 `--fs-2xl` sentence
+(a `<p>`, not a heading) and a primary button, wrapping on small screens. Hidden in print.
 
-## 16. Publication row
+## 18. Timeline — `timeline` (+ `timeline_item`, `timeline_text`)
 
-Numbered list, hairline between rows, PubMed link when available.
-```html
-<ol class="pub-list">
-  <li class="pub" id="pub-02">
-    <span class="pub-num">02</span>
-    <div>
-      <div class="pub-title">Pou5f1/Oct4 promotes cell survival …</div>
-      <div class="pub-meta">Kotkamp K, … et al. · <em>PLoS One</em>, 2014 · <a href="…" target="_blank" rel="noopener">PMID 24643012</a></div>
-    </div>
-  </li>
-</ol>
-<div class="pub-source"><a href="…">Full record on PubMed →</a></div>
-```
-```css
-.pub-list{list-style:none; margin:0; padding:0}
-.pub{display:grid; grid-template-columns:34px 1fr; gap:var(--space-14); padding:var(--space-18) 0; border-top:var(--border-hairline)}
-.pub:first-child{border-top:none}
-.pub-num{font:var(--fs-sm) var(--font-mono); color:var(--ink-faint); padding-top:var(--space-2)}
-.pub-title{font-weight:var(--fw-semibold); font-size:var(--fs-md-plus); line-height:var(--lh-snug)}
-.pub-meta{color:var(--ink-muted); font-size:var(--fs-sm-plus); margin-top:var(--space-5); line-height:var(--lh-meta)}
-.pub-meta a{color:var(--accent); text-decoration:none}
-.pub-meta a:hover{text-decoration:underline}
-.pub-source{margin-top:var(--space-14)}
-.pub-source a{font-size:var(--fs-md-minus); color:var(--ink-muted)}
-```
-Variants: with PMID link (9 of 10) · without link (#10, 2002 paper). The row targeted by a cross-link carries an `id`.
+Rail (`--line-strong`), a 9px teal dot per entry. `h3.group-label` (sans 700 `--fs-lg`, `--ink`) ·
+`.tl-date` (sans 600 `--fs-sm`, `--accent-2`, tabular; "Dec 2022 <span aria-hidden>—</span><sr>to</sr>
+present") · `h4` role (sans 600 `--fs-body`) · `.org` · new `.org-extra` ("In parallel: …", 600,
+`--ink`) · `.org-desc` (no longer italic; unused by the current content) · `p` · bulleted
+achievements (amber bullets; a link inside is underlined).
+Variants: **solo thumb** (`.tl-photos-solo`, 84px, moves above the text under 560px);
+**pair** (`.tl-pair`, now implemented by the site): two entries in column 1, a column of 76px
+thumbs spanning both rows in column 2; under 640px the thumbs go above, in a row.
 
-## 17. Media list + note
+## 19. Research thumbnail — `research_thumb`
 
-```html
-<ul class="media-list">
-  <li><span class="media-date mono">14.01.2009</span> TSR — <a href="…">"Visually impaired: glimmers of hope"</a></li>
-</ul>
-<p class="media-note">Video not currently available online — …</p>
-```
-```css
-.mono{font-family:var(--font-mono)}
-.media-list{list-style:none; margin:var(--space-16) 0 0; padding:0; display:flex; flex-direction:column; gap:var(--space-10)}
-.media-list li{display:flex; gap:var(--space-12); align-items:baseline; font-size:var(--fs-md); flex-wrap:wrap}
-.media-date{font:var(--fw-medium) var(--fs-xs) var(--font-mono); color:var(--accent-2); min-width:88px}
-.media-note{margin-top:var(--space-16); font-size:var(--fs-sm-plus); color:var(--ink-faint);
-  border-left:2px solid var(--line-strong); padding-left:var(--space-12)}
-.media-note a{color:var(--ink-muted)}
-```
-Variants: television list · press list. Item with link / item without link; date may be a dash "—" when unknown.
+108px circle (84 solo, 76 in a pair), teal border, `--surface-tint` ring. Caption in the body face
+`--fs-sm`; the link (amber, underlined, no wrap) ends with "→" (`aria-hidden`).
 
-## 18. Footer / contact
+## 20. Education card — `education`
 
-```html
-<footer id="contact">
-  <div class="footer-grid">
-    <div>
-      <p class="eyebrow">Contact</p>
-      <h2>Let's talk medical affairs.</h2>
-      <a class="contact-email" href="mailto:…">…</a><br>
-      <a class="contact-email" href="https://…" target="_blank" rel="noopener">…</a>
-    </div>
-    <div class="lang-row"><span class="lang-pill">PL</span>…</div>
-  </div>
-  <p class="copyright">© 2026 Bożena Karolina Polok.</p>
-</footer>
-```
-```css
-footer{padding:var(--space-56) 0 var(--space-64); border-top:var(--border-hairline)}
-.footer-grid{display:flex; justify-content:space-between; align-items:flex-end; gap:var(--space-24); flex-wrap:wrap}
-footer h2{font-size:var(--fs-5xl)}
-footer .contact-email{font:var(--fs-md) var(--font-mono); margin-top:var(--space-10); display:inline-block}
-.copyright{color:var(--ink-faint); font-size:var(--fs-sm); margin-top:var(--space-40)}
-```
+Two-column grid; the source marks a lone card `.edu-card-wide` (the site makes the last odd card
+span both columns). Degree 600 `--fs-md-plus`, institution `--fs-sm`, new `p.edu-desc` (`--fs-sm`,
+line-height 1.55).
 
-## 19. Line icons
+## 21. Publication — `publication` (+ `publication_reference`)
 
-All icons are inline SVG, `viewBox="0 0 24 24"`, `fill="none"`, `stroke-width="1.6"`, round caps and joins,
-`aria-hidden="true"`, coloured by `currentColor`. Teal in service cards and aside notes, amber in off-duty cards.
-The offer lead icon is a flag (`M4 4v16M4 4h11l-2 4 2 4H4`) inlined with `style="display:inline;"`.
+Row: 34px number column (`aria-hidden`, tabular) + `h4.pub-title` (sans 600 `--fs-md-plus`) +
+`.pub-meta` (`--fs-sm`; "<abbr title="PubMed identifier">PMID</abbr> n" link, underlined, sr-only
+"on PubMed (opens in a new tab)"). Variants: **featured** (`.pub-featured`, new): `--surface` card
+with a `--line-strong` border, amber "★" instead of the number, `p.pub-note`; **continued list**
+inside a disclosure (`<ol start="4">`). `.pub-source` link underlined.
+
+## 22. Media list — `media_list`
+
+`<time class="media-date" datetime="2008-05-19">19 May 2008</time>` (body face, `--fs-sm`, amber,
+7.5rem minimum), outlet, "quoted title" (link underlined; `lang="fr"` on French titles; sr-only
+"(in French, opens in a new tab)"). Unknown date: "—" (`aria-hidden`) + sr-only "Date unknown:".
+`.media-note`: `--fs-sm`, left rule.
+
+## 23. Show more (disclosure) — `disclosure` (new)
+
+`<details class="more">` between two `--line-strong` rules; summary 48px tall, bold `--fs-lg`,
+`--accent`, with a 26px circled "+" that becomes "−" when open; body padding 12px 0 24px.
+Opened automatically when a link targets something inside, and before printing.
+
+## 24. Photo gallery — `gallery` (new; "Through my lens")
+
+`h3.subhead`, `ul.lens-grid` (site: `.gallery-grid`) labelled by it: 3 columns, 2 under 640px,
+gap 12px, 4:3 `cover` images with an 8px radius, lazy-loaded; a copyright note (`--fs-sm`).
+Saving discouraged: no drag, no callout, context menu blocked by script.
+
+## 25. Footer / contact — `footer`
+
+`footer#contact`: eyebrow "Contact" · `h2` ("Let's talk.", `--fs-5xl`) · `p.contact-lede` (46ch) ·
+email and LinkedIn (mono `--fs-md`, sr-only prefixes "Email:", "LinkedIn profile:") ·
+`p.footer-langs` ("Working in …", replaces the language-code pills) · `.a11y-statement` (h3 +
+text with a mailto link) · `nav.legal-links` (44px links) · `p.copyright`. All footer links are
+underlined. In the source the two legal texts are disclosures (`details.more.legal`, text
+`--fs-ui`, 70ch) under the links; the site makes them pages.
+
+## 26. Line icons
+
+24×24, stroke 1.6, round caps and joins, `currentColor`: compass, document, chat, network, flask,
+globe (service cards); fish, target, ballet, camera, flame (off-duty cards); new UI icon
+"settings" (sun-like, stroke 1.8) on the Display settings button.

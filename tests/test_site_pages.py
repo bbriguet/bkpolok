@@ -13,18 +13,27 @@ def test_create_site_pages_builds_the_tree_as_drafts(home):
     created = create_site_pages(home)
 
     slugs = [p.slug for p in home.get_children()]
-    assert slugs == ["about", "expertise", "experience", "publications", "personal", "contact"]
-    assert len(created) == 9  # 6 pages + 3 offers
+    assert slugs == [
+        "about",
+        "services",
+        "experience",
+        "publications",
+        "personal",
+        "contact",
+        "legal-notice",
+        "privacy",
+    ]
+    assert len(created) == 11  # 8 pages + 3 offers
     assert all(not p.live for p in created)
 
-    expertise = home.get_children().get(slug="expertise")
-    assert isinstance(expertise.specific, ServiceIndexPage)
-    assert [p.slug for p in expertise.get_children()] == [
+    services = home.get_children().get(slug="services")
+    assert isinstance(services.specific, ServiceIndexPage)
+    assert [p.slug for p in services.get_children()] == [
         "medical-affairs-consulting",
         "patient-programs-advocacy",
         "coaching",
     ]
-    assert isinstance(expertise.get_children().first().specific, ServicePage)
+    assert isinstance(services.get_children().first().specific, ServicePage)
     assert isinstance(home.get_children().get(slug="contact").specific, ContactPage)
     assert isinstance(home.get_children().get(slug="about").specific, StandardPage)
 
@@ -35,7 +44,8 @@ def test_create_site_pages_targets_the_expected_urls(home):
     urls = {p.url_path for p in Page.objects.descendant_of(home)}
 
     assert "/home/about/" in urls
-    assert "/home/expertise/coaching/" in urls
+    assert "/home/services/coaching/" in urls
+    assert "/home/legal-notice/" in urls and "/home/privacy/" in urls
     assert "/home/contact/" in urls
 
 
@@ -43,13 +53,14 @@ def test_create_site_pages_is_idempotent(home):
     create_site_pages(home)
 
     assert create_site_pages(home) == []
-    assert Page.objects.descendant_of(home).count() == 9
+    assert Page.objects.descendant_of(home).count() == 11
 
 
-def test_top_level_pages_are_in_the_menu_but_services_are_not(home):
+def test_top_level_pages_are_in_the_menu_but_services_and_legal_pages_are_not(home):
     create_site_pages(home)
 
-    assert all(p.show_in_menus for p in home.get_children())
+    in_menu = [p.slug for p in home.get_children() if p.show_in_menus]
+    assert in_menu == ["about", "services", "experience", "publications", "personal", "contact"]
     assert not any(p.show_in_menus for p in Page.objects.filter(depth=4))
 
 
@@ -82,9 +93,9 @@ def test_management_command(home, capsys):
 
 
 def test_site_tree_covers_every_nav_link_of_the_design():
-    assert [slug for _, slug, _, _ in SITE_TREE] == [
+    assert [slug for _, slug, _, _, in_menu in SITE_TREE if in_menu] == [
         "about",
-        "expertise",
+        "services",
         "experience",
         "publications",
         "personal",

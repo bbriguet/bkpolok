@@ -1,0 +1,14 @@
+{% comment %}
+  Galerie de photos 4:3.
+  heading (h3, optionnel) · images : liste de renditions (url, width, height, alt) · note (optionnelle)
+  protect : décourage l'enregistrement (glisser-déposer, menu contextuel)
+{% endcomment %}
+<div class="gallery{% if protect %} gallery--protected{% endif %}">
+  {% if heading %}<h3 class="subhead" id="{{ heading|slugify }}-heading">{{ heading }}</h3>{% endif %}
+  <ul class="gallery-grid" role="list"{% if heading %} aria-labelledby="{{ heading|slugify }}-heading"{% endif %}>
+    {% for image in images %}
+    <li><img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt }}" loading="lazy"{% if protect %} draggable="false"{% endif %}></li>
+    {% endfor %}
+  </ul>
+  {% if note %}<p class="gallery-note">{{ note }}</p>{% endif %}
+</div>

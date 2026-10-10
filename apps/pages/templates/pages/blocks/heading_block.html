@@ -1,3 +1,1 @@
-{% load wagtailimages_tags %}
-{% if value.image %}{% image value.image fill-588x588 as photo %}{% endif %}
-{% include "includes/section_head.html" with eyebrow=value.eyebrow title=value.text level=value.level lede=value.lede pills=value.pills image=photo image_alt=photo.alt only %}
+{% include "includes/section_head.html" with eyebrow=value.eyebrow title=value.text level=value.level lede=value.lede pills=value.pills image=photo image_alt=photo.alt figure=figure only %}

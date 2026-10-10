@@ -29,44 +29,53 @@
   <link rel="stylesheet" href="{% static 'css/components/icon.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/eyebrow.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/reveal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/display_settings.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/nav.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/section.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/section_head.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/button.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/status_badge.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/pill.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/tag_line.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/hero.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/iris.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/figure_pair.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/pull_quote.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/card_grid.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/aside_note.css' %}">
-  <link rel="stylesheet" href="{% static 'css/components/offer_note.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/offer_cards.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/timeline.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/research_thumb.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/personal_photo.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/gallery.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/education.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/publication.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/media_list.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components/disclosure.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/accordion.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/cta.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/contact_form.css' %}">
   <link rel="stylesheet" href="{% static 'css/components/footer.css' %}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block extra_css %}{% endblock %}
+  <script src="{% static 'js/preferences.js' %}"></script>
   <script src="{% static 'js/reveal.js' %}"></script>
+  <script src="{% static 'js/site.js' %}" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#content">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  {% include "includes/display_settings.html" only %}
 
   {% nav_items as menu_items %}
   {% include "includes/nav.html" with brand=profile.short_name|default:current_site.site_name|default:"bkpolok" items=menu_items only %}
 
-  <main id="content" class="wrap">
+  <main id="main" class="wrap" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
 
-  {% language_codes as codes %}
-  {% include "includes/footer.html" with heading=profile.footer_heading email=profile.email linkedin_url=profile.linkedin_url linkedin_label=profile.linkedin_url|display_url codes=codes holder=profile.legal_name|default:current_site.site_name|default:"bkpolok" only %}
+  {% site_footer as footer %}
+  {% include "includes/footer.html" with heading=footer.heading lede=footer.lede email=footer.email linkedin_url=footer.linkedin_url linkedin_label=footer.linkedin_label languages_line=footer.languages_line accessibility=footer.accessibility legal_links=footer.legal_links notice=footer.notice holder=profile.legal_name|default:current_site.site_name|default:"bkpolok" only %}
 
   {% block extra_js %}{% endblock %}
 </body>

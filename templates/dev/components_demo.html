@@ -11,12 +11,8 @@
   <header class="page-header">
     <p class="eyebrow">Development only</p>
     <h1>Components</h1>
-    <p class="lede">Every component of <code>_artifact/design/components.md</code>, one under the other. Hover, press and Tab through the interactive ones; toggle the theme to check dark mode. Scroll-reveal items animate as they enter the viewport.</p>
+    <p class="lede">Every component of <code>_artifact/design/components.md</code>, one under the other. Hover, press and Tab through the interactive ones; use “Display settings” at the top to check text sizes, high contrast and dark mode. Scroll-reveal items animate as they enter the viewport.</p>
   </header>
-
-  <div class="demo-toolbar">
-    <button class="btn btn-ghost" type="button" data-theme-toggle>Toggle light / dark</button>
-  </div>
   <ul class="demo-toc">
     <li><a href="#nav">1 · Navigation</a></li>
     <li><a href="#eyebrow">2 · Eyebrow</a></li>
@@ -37,7 +33,13 @@
     <li><a href="#media">17 · Media list</a></li>
     <li><a href="#footer">18 · Footer</a></li>
     <li><a href="#icons">19 · Icons</a></li>
-    <li><a href="#cta">+ Call to action</a></li>
+    <li><a href="#settings">20 · Display settings</a></li>
+    <li><a href="#offers">21 · Offer cards</a></li>
+    <li><a href="#tagline">22 · Tag line</a></li>
+    <li><a href="#figure">23 · Figure</a></li>
+    <li><a href="#more">24 · Show more</a></li>
+    <li><a href="#gallery">25 · Photo gallery</a></li>
+    <li><a href="#cta">26 · Call to action band</a></li>
     <li><a href="#faq">+ Accordion</a></li>
   </ul>
 
@@ -58,8 +60,12 @@
     {% include "includes/section_head.html" with eyebrow="Expertise" title="Where I add the most value" lede="A lede paragraph that sets up the section in a sentence or two." pills=pills only %}
     <p class="demo-label">Sub-section (h3)</p>
     {% include "includes/section_head.html" with eyebrow="Education" title="Research training" level="h3" sub=True only %}
-    <p class="demo-label">With round photo</p>
+    <p class="demo-label">Small subheading</p>
+    {% include "includes/section_head.html" with title="What I bring" level="subhead" only %}
+    <p class="demo-label">With photo</p>
     {% include "includes/section_head.html" with eyebrow="Personal" title="Off the clock" lede="The head becomes a two-column grid." image=photo image_alt="Placeholder portrait" only %}
+    <p class="demo-label">With figure</p>
+    {% include "includes/section_head.html" with eyebrow="About" title="A heading beside a figure" figure=figure only %}
   </div>
 
   <div class="demo-block" id="section">
@@ -115,19 +121,19 @@
     <h2>8 · Hero + iris portrait</h2>
     <p class="demo-hint">Resize the window below 640px: one column, smaller portrait.</p>
     <div class="demo-frame">
-      {% include "includes/hero.html" with eyebrow="Leadership — Multiple areas" first_name="Jane" last_name="Doe" role="A one-line description of the role and scope." badge="Currently at Example Corp" thesis="A two-line introduction that states the thesis of the page in plain words." buttons=hero_buttons portrait=photo portrait_alt="Placeholder portrait" only %}
+      {% include "includes/hero.html" with eyebrow="Consulting & Coaching" first_name="Jane" last_name="Doe" role="A one-line description of the role and scope." thesis="A two-line introduction that states the thesis of the page in plain words." now="Today: Example role at Example Corp." buttons=hero_buttons portrait=photo portrait_alt="Placeholder portrait" only %}
     </div>
   </div>
 
   <div class="demo-block" id="quote">
     <h2>9 · Pull quote</h2>
-    {% include "includes/pull_quote.html" with text="A short quotation that carries a sentence of weight." author="Someone Wise" only %}
+    {% include "includes/pull_quote.html" with text="A short quotation that carries a sentence of weight." author="Someone Wise, letter of 1 May 1700" note="A sentence that says why the quotation matters here." only %}
   </div>
 
   <div class="demo-block" id="cards">
     <h2>10 · Hairline card grids</h2>
-    <p class="demo-label">Service cards</p>
-    {% include "includes/card_grid.html" with variant="service" cards=cards only %}
+    <p class="demo-label">Service cards (h4 titles, under a subheading)</p>
+    {% include "includes/card_grid.html" with variant="service" cards=cards heading_level="h4" only %}
     <p class="demo-label">Off-duty cards (last one wide)</p>
     {% include "includes/card_grid.html" with variant="off_duty" cards=off_cards only %}
   </div>
@@ -138,21 +144,19 @@
     {% include "includes/aside_notes.html" with notes=notes|slice:":1" only %}
     <p class="demo-label">Two side by side</p>
     {% include "includes/aside_notes.html" with notes=notes only %}
-    <p class="demo-label">Offer note</p>
-    <div id="offers">{% include "includes/offer_note.html" with lead="Also available on a freelance basis, for example:" offers=offers only %}</div>
   </div>
 
   <div class="demo-block" id="timeline">
     <h2>12 · Timeline</h2>
-    <p class="demo-label">Basic and with achievements</p>
-    {% include "includes/timeline.html" with label="Industry — 2015 to present" entries=timeline_industry only %}
-    <p class="demo-label">With photos</p>
-    {% include "includes/timeline.html" with label="Research — 2000 to 2010" entries=timeline_research only %}
+    <p class="demo-label">Basic, with a parallel role, achievements (one with a link) and a photo</p>
+    {% include "includes/timeline.html" with label="Industry — 2015 to present" rows=timeline_industry only %}
+    <p class="demo-label">Pair: two entries share one column of photos</p>
+    {% include "includes/timeline.html" with label="Research — 2000 to 2010" rows=timeline_research only %}
   </div>
 
   <div class="demo-block" id="thumbs">
     <h2>13 · Research thumbnail</h2>
-    <p class="demo-hint">Default size 108px; 84px inside a timeline (above). Caption link: normal, hover, press.</p>
+    <p class="demo-hint">Default size 108px; 84px beside a timeline entry, 76px in a pair column (above). Caption link: normal, hover, press.</p>
     <div class="research-photos">
       {% for thumb in thumbs %}{% include "includes/research_thumb.html" with image=thumb.thumb alt=thumb.alt_text caption=thumb.caption link_url=thumb.link_url link_label=thumb.link_label external=thumb.external only %}{% endfor %}
     </div>
@@ -169,8 +173,11 @@
   </div>
 
   <div class="demo-block" id="publications">
-    <h2>16 · Publication rows</h2>
-    {% include "includes/publication.html" with publications=publications pubmed_url="https://example.org/pubmed" only %}
+    <h2>16 · Publications</h2>
+    <p class="demo-label">Highlighted (★, with a note)</p>
+    {% include "includes/publication.html" with publications=featured_publications featured=True only %}
+    <p class="demo-label">Numbered, the rest under “show more”</p>
+    {% include "includes/publication.html" with publications=publications more_publications=more_publications more_label="Show 1 more paper" more_start=3 pubmed_url="https://example.org/pubmed" only %}
   </div>
 
   <div class="demo-block" id="media">
@@ -182,7 +189,7 @@
   <div class="demo-block" id="footer">
     <h2>18 · Footer / contact</h2>
     <div class="demo-frame">
-      {% include "includes/footer.html" with heading="Let's talk." email="jane@example.org" linkedin_url="https://www.linkedin.com/in/example" linkedin_label="linkedin.com/in/example" codes=language_codes holder="Jane Doe" only %}
+      {% include "includes/footer.html" with heading="Let's talk." lede="One sentence about what to get in touch for." email="jane@example.org" linkedin_url="https://www.linkedin.com/in/example" linkedin_label="linkedin.com/in/example" languages_line="Working in English and French" accessibility=accessibility legal_links=legal_links holder="Jane Doe" notice="No reuse without permission." only %}
     </div>
   </div>
 
@@ -193,9 +200,39 @@
     </ul>
   </div>
 
+  <div class="demo-block" id="settings">
+    <h2>20 · Display settings</h2>
+    <p class="demo-hint">The bar at the very top of every page (hidden without JavaScript): text size, high contrast, dark mode, remembered in the browser.</p>
+  </div>
+
+  <div class="demo-block" id="offers">
+    <h2>21 · Offer cards</h2>
+    {% include "includes/offer_cards.html" with offers=offers only %}
+  </div>
+
+  <div class="demo-block" id="tagline">
+    <h2>22 · Tag line</h2>
+    {% include "includes/tag_line.html" with label="Areas" items=pills only %}
+  </div>
+
+  <div class="demo-block" id="figure">
+    <h2>23 · Figure (one or two images)</h2>
+    {% include "includes/figure_pair.html" with images=figure.images title=figure.title caption=figure.caption only %}
+  </div>
+
+  <div class="demo-block" id="more">
+    <h2>24 · Show more</h2>
+    {% include "includes/disclosure.html" with summary="Show more" content="<p>Hidden content, revealed by the summary. Links pointing inside open it.</p>" only %}
+  </div>
+
+  <div class="demo-block" id="gallery">
+    <h2>25 · Photo gallery</h2>
+    {% include "includes/gallery.html" with heading="Gallery heading" images=gallery note="All photographs © Example." protect=True only %}
+  </div>
+
   <div class="demo-block" id="cta">
-    <h2>+ Call to action</h2>
-    {% include "includes/cta.html" with title="A call to action" text="One sentence that explains the next step." label="Get in touch" href="#cta" only %}
+    <h2>26 · Call to action band</h2>
+    {% include "includes/cta.html" with title="A question that leads to the next step?" label="Get in touch" href="#cta" only %}
   </div>
 
   <div class="demo-block" id="faq">
@@ -204,16 +241,4 @@
     {% include "includes/accordion.html" with title="Frequently asked questions" items=faq group="demo-faq" open_first=True only %}
   </div>
 </article>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-  document.querySelector("[data-theme-toggle]").addEventListener("click", function () {
-    var root = document.documentElement;
-    var dark = root.dataset.theme
-      ? root.dataset.theme === "dark"
-      : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    root.dataset.theme = dark ? "light" : "dark";
-  });
-</script>
 {% endblock %}

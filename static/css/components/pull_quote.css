@@ -27,10 +27,25 @@
 .pull-quote cite {
   display: block;
   margin-top: var(--space-16);
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-date);
   color: var(--accent-2);
+  font-style: normal;
+}
+
+/* Commentaire sous la citation : texte courant, ni italique ni serif. */
+.pull-quote .quote-note {
+  margin-top: var(--space-14);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--ink-muted);
+}
+
+:root[data-contrast="high"] .pull-quote p {
   font-style: normal;
 }

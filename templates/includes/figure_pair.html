@@ -1,0 +1,17 @@
+{% comment %}
+  Figure : une ou deux images 4:3 côte à côte, puis un titre et une légende.
+  images : liste de renditions (url, width, height, alt) · title · caption
+{% endcomment %}
+<figure class="figure-pair">
+  <div class="figure-pair__grid{% if images|length == 1 %} figure-pair__grid--single{% endif %}">
+    {% for image in images %}
+    <div class="figure-pair__frame"><img src="{{ image.url }}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt }}" loading="lazy" draggable="false"></div>
+    {% endfor %}
+  </div>
+  {% if title or caption %}
+  <figcaption>
+    {% if title %}<span class="figure-pair__title">{{ title }}</span>{% endif %}
+    {% if caption %}<span class="figure-pair__caption">{{ caption }}</span>{% endif %}
+  </figcaption>
+  {% endif %}
+</figure>

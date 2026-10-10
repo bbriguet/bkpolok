@@ -1,9 +1,10 @@
-{# Cartes de formation. items : liste de {degree, institution}. #}
+{# Cartes de formation. items : liste de {degree, institution, description}. Une carte seule en fin de grille prend toute la largeur. #}
 <div class="edu-grid">
   {% for item in items %}
   <div class="edu-card" data-reveal style="--reveal-i: {{ forloop.counter0 }}">
     <div class="deg">{{ item.degree }}</div>
     <div class="inst">{{ item.institution }}</div>
+    {% if item.description %}<p class="edu-desc">{{ item.description }}</p>{% endif %}
   </div>
   {% endfor %}
 </div>

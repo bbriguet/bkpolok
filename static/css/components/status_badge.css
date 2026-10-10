@@ -8,7 +8,7 @@
   border-radius: var(--radius-pill);
   background: var(--surface-tint);
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--ink-muted);
   letter-spacing: var(--ls-badge);
 }
@@ -20,7 +20,7 @@
   background: var(--accent);
   box-shadow: var(--ring-status);
   flex-shrink: 0;
-  animation: status-pulse var(--dur-pulse) ease-out infinite;
+  animation: status-pulse var(--dur-pulse) var(--ease-out) infinite;
 }
 
 @keyframes status-pulse {
@@ -37,5 +37,16 @@
 @media (prefers-reduced-motion: reduce) {
   .status-dot {
     animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .status-badge {
+    border: var(--bw-hairline) solid CanvasText;
+  }
+
+  .status-dot {
+    forced-color-adjust: none;
+    background: CanvasText;
   }
 }

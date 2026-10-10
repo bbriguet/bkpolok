@@ -1,7 +1,7 @@
 from wagtail import blocks
 
 from . import services
-from .models import Experience, MediaAppearance
+from .models import Experience, MediaAppearance, Publication
 
 TEMPLATE_DIR = "profile/blocks"
 
@@ -20,7 +20,9 @@ class TimelineBlock(blocks.StructBlock):
         context = super().get_context(value, parent_context)
         category = value["category"]
         context["label"] = services.timeline_label(category)
-        context["entries"] = services.list_timeline(category, _profile(context))
+        context["rows"] = services.timeline_rows(
+            services.list_timeline(category, _profile(context))
+        )
         return context
 
     class Meta:
@@ -45,19 +47,73 @@ class EducationBlock(blocks.StructBlock):
 
 
 class PublicationListBlock(blocks.StaticBlock):
-    """Liste numérotée des publications (modèle « Publication »)."""
+    """Ancienne liste de toutes les publications. Gardée pour les migrations qui la citent ;
+    les pages utilisent `PublicationsBlock`."""
+
+    class Meta:
+        icon = "list-ol"
+        label = "Publication list (old)"
+
+
+class PublicationsBlock(blocks.StructBlock):
+    """Publications d'une catégorie (modèle « Publication »).
+
+    Les travaux de medical affairs sont des cartes mises en avant (★) ; les travaux de recherche
+    une liste numérotée dont seules les premières sont visibles, les autres sous « voir plus ».
+    """
+
+    category = blocks.ChoiceBlock(
+        choices=Publication.Category.choices,
+        default=Publication.Category.RESEARCH,
+        label="Category",
+    )
+    visible = blocks.IntegerBlock(
+        label="Papers shown",
+        min_value=0,
+        default=0,
+        required=False,
+        help_text="The others sit under a “show more” button. 0 shows them all.",
+    )
+    more_label = blocks.CharBlock(
+        label="“Show more” label",
+        default="Show {count} more papers",
+        required=False,
+        help_text="{count} is replaced by the number of hidden papers.",
+    )
+    show_pubmed_link = blocks.BooleanBlock(
+        label="Link to the full PubMed record",
+        default=True,
+        required=False,
+        help_text="The address is set in the site profile.",
+    )
+
+    # Le type « publications » était un StaticBlock (valeur None) : les anciens corps de page,
+    # révisions comprises, restent lisibles.
+    def to_python(self, value):
+        return super().to_python(value or {})
+
+    def bulk_to_python(self, values):
+        return super().bulk_to_python([value or {} for value in values])
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context)
         profile = _profile(context)
-        context["publications"] = services.list_publications()
-        context["pubmed_url"] = profile.pubmed_url if profile else ""
+        publications = services.list_publications(value["category"])
+        visible = value["visible"] or len(publications)
+        hidden = publications[visible:]
+        context["featured"] = value["category"] == Publication.Category.MEDICAL_AFFAIRS
+        context["publications"] = publications[:visible]
+        context["more_publications"] = hidden
+        context["more_label"] = (value["more_label"] or "Show {count} more papers").replace(
+            "{count}", str(len(hidden))
+        )
+        context["more_start"] = visible + 1
+        context["pubmed_url"] = profile.pubmed_url if profile and value["show_pubmed_link"] else ""
         return context
 
     class Meta:
         icon = "list-ol"
         label = "Publication list"
-        admin_text = "Lists every publication, in the order set in Profile › Publications."
         template = f"{TEMPLATE_DIR}/publication_list_block.html"
 
 
@@ -79,7 +135,7 @@ class MediaListBlock(blocks.StructBlock):
 
 
 class LanguagesBlock(blocks.StaticBlock):
-    """Pastilles des langues parlées et légende des niveaux (modèle « Language »)."""
+    """Légende des langues parlées et de leurs niveaux (modèle « Language »)."""
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context)
@@ -91,5 +147,5 @@ class LanguagesBlock(blocks.StaticBlock):
     class Meta:
         icon = "site"
         label = "Languages"
-        admin_text = "Lists the languages set in Profile › Languages."
+        admin_text = "Shows the languages set in Profile › Languages and their levels."
         template = f"{TEMPLATE_DIR}/languages_block.html"
