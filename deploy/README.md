@@ -75,8 +75,18 @@ For a new, empty site only, import the prepared pages and editorial content:
 docker compose -f compose.production.yml exec web python manage.py charger_contenu_initial
 ```
 
-Then sign in at `https://YOUR_DOMAIN/admin/`, review and publish the draft pages, and verify the
-contact form and email settings. Once HTTPS works, change `SECURE_HSTS_SECONDS=0` to
+The imported pages are drafts, so the site menu stays empty until they are published. Sign in at
+`https://YOUR_DOMAIN/admin/` and review them, then point the Wagtail site at its public URL
+(taken from `WAGTAILADMIN_BASE_URL`) and publish every draft:
+
+```sh
+docker compose -f compose.production.yml exec web python manage.py publier_site
+docker compose -f compose.production.yml restart web
+```
+
+The restart clears the site URL cache held by each Gunicorn worker; without it, the sitemap and
+canonical links can keep showing `http://localhost`. Then verify the contact form and
+email settings. Once HTTPS works, change `SECURE_HSTS_SECONDS=0` to
 `SECURE_HSTS_SECONDS=2592000` in `.env` and restart the web service.
 
 ## Updates and backups
